@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Text Converter (BETA)</title>
+    
+</head>
+<style>
+    
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    resize: none;
+}
+
+.format-buttons button {
+    background-color: #28a745;
+    margin: 5px;
+}
+
+.format-buttons button:hover {
+    background-color: #218838;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    button {
+        font-size: 0.9em;
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <h1>Voice to Text Converter</h1>
+        <button class="start-btn">Start Recording</button>
+        <button class="stop-btn hidden">Stop Recording</button>
+        <textarea id="output" placeholder="Your text will appear here..." rows="10"></textarea>
+        <div class="format-buttons">
+            <button onclick="formatText('bold')">Bold</button>
+            <button onclick="formatText('uppercase')">Uppercase</button>
+            <button onclick="formatText('lowercase')">Lowercase</button>
+            <button onclick="formatText('underline')">Underline</button>
+            <button onclick="formatText('italic')">Italic</button>
+        </div>
+    </div>
+   
+    <script>
+      
+
+document.addEventListener('DOMContentLoaded', function() {
+    const startBtn = document.querySelector('.start-btn');
+    const stopBtn = document.querySelector('.stop-btn');
+    const output = document.getElementById('output');
+    let recognition;
+
+    try {
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+    } catch (e) {
+        console.error(e);
+        alert('Speech Recognition API is not supported in this browser.');
+        return;
+    }
+
+    startBtn.addEventListener('click', () => {
+        recognition.start();
+        startBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+    });
+
+    stopBtn.addEventListener('click', () => {
+        recognition.stop();
+        startBtn.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+    });
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        output.value += transcript + ' ';
+    };
+
+    recognition.onspeechend = function() {
+        recognition.stop();
+        startBtn.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+    };
+
+    recognition.onerror = function(event) {
+        console.error(event.error);
+        startBtn.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+    };
+});
+
+function formatText(action) {
+    const output = document.getElementById('output');
+    switch(action) {
+        case 'bold':
+            output.style.fontWeight = output.style.fontWeight === 'bold' ? 'normal' : 'bold';
+            break;
+        case 'uppercase':
+            output.value = output.value.toUpperCase();
+            break;
+        case 'lowercase':
+            output.value = output.value.toLowerCase();
+            break;
+        case 'underline':
+            output.style.textDecoration = output.style.textDecoration === 'underline' ? 'none' : 'underline';
+            break;
+        case 'italic':
+            output.style.fontStyle = output.style.fontStyle === 'italic' ? 'normal' : 'italic';
+            break;
+    }
+}
+    </script>
+</body>
+</html>
