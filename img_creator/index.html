@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT UI</title>
+
+</head>
+<style>
+    img {
+        width: 100%;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #36393f;
+        /* Discord dark background color */
+        color: #dcddde;
+        /* Discord text color */
+    }
+
+    #chat-container {
+
+        margin: 20px auto;
+        border: 1px solid #2f3136;
+        /* Discord dark border color */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #chat-messages {
+        padding: 10px;
+        overflow-y: scroll;
+        max-height: 80vh;
+        font-size: 5vw;
+    }
+
+    #user-input {
+
+        position: fixed;
+        bottom: 0px;
+        width: 95vw;
+        display: flex;
+        padding: 10px;
+        background-color: #40444b;
+        /* Discord darker input background color */
+    }
+
+    #message-input {
+        font-size: 5vw;
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #2f3136;
+        border-radius: 3px;
+        margin-right: 10px;
+        background-color: #202225;
+        /* Discord dark input background color */
+        color: #dcddde;
+        /* Discord text color */
+    }
+
+    #send-button,
+    button {
+        padding: 8px 15px;
+        background-color: #4CAF50;
+        /* Your custom color for the send button */
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .bot_balao {
+        background-color: #446645;
+        padding: 5px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .user_balao {
+        background-color: #b5b4b4;
+        padding: 5px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        color: #202225;
+    }
+</style>
+
+<body>
+
+    <div id="chat-container">
+        <div id="chat-messages">
+
+        </div>
+        <div id="user-input">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+
+    <script>
+
+        setTimeout(() => {
+            if (localStorage.getItem('img_gerador_nome')) {
+                appendMessage('Botchat', 'Bem vindo novamente '+localStorage.getItem('img_gerador_nome')+'! Oque deseja hoje?');
+            } else {
+                appendMessage('Botchat', 'Bem vindo, qual o seu nome?');
+            }
+        }, 1000);
+
+        //-------------------
+
+        function sendMessage() {
+            var messageInput = document.getElementById('message-input');
+            var message = messageInput.value.trim();
+
+            if (message !== '') {
+
+                if (!localStorage.getItem('img_gerador_nome')) {
+
+                    if (message.includes(' ')) {
+                        appendMessage('User', message);
+                        messageInput.value = '';
+                        setTimeout(() => {
+                            appendMessage('Botchat', 'Otimo, mas quero apenas o seu primeiro nome.');
+                            //simulateChatGPTResponse('Quero apenas o seu primeiro nome.');
+                        }, 500);
+                    }else{
+                        localStorage.setItem('img_gerador_nome',message)
+                        appendMessage('User', message);
+                        messageInput.value = '';
+                        setTimeout(() => {
+                            appendMessage('Botchat', 'Prazer '+message+', vamos começar. Descreva a imagem, e eu vou tentar criar!');
+                            //simulateChatGPTResponse('Prazer');
+                        }, 500);
+                    }
+
+                }
+                else {
+                    appendMessage(localStorage.getItem('img_gerador_nome'), message);
+                    messageInput.value = '';
+                    setTimeout(() => {
+                        simulateChatGPTResponse('Botchat',message);
+                    }, 500);
+                }
+
+
+
+            }
+        }
+
+        const frases = [
+            'Entendi-usuario-, um momento...',
+            'Certo, um momento-usuario-, vou gerar e ja te envio...',
+            'Otimo-usuario-, vou gerar e ja te mando...',
+            'É pra ja-usuario-!, vou gerar aqui e ja te envio...',
+        ]
+
+        function aleatorio(array) {
+            var i = Math.floor(Math.random() * array.length)
+            var s = array[i]
+            if (array[i].includes('-usuario-')) {
+                s = array[i].replace('-usuario-', ' '+ localStorage.getItem('img_gerador_nome'))
+            }
+            return s
+        }
+
+        function simulateChatGPTResponse(user, message) {
+
+            var explodido = message.split(' ')
+            if(explodido.length < 3){
+                setTimeout(() => {
+                    appendMessage('Botchat', 'Preciso de uma descrição mais detalhada');
+                return
+                }, 1000);
+            }
+
+            var chatMessages = document.getElementById('chat-messages');
+            var response = aleatorio(frases);
+            appendMessage('Botchat', response);
+
+            setTimeout(() => {
+
+                const randomSeed = Math.floor(Math.random() * 1000000000);
+                const imageUrl = `https://image.pollinations.ai/prompt/${message}?nologo=1&seed=${randomSeed}&height=1000&width=1000`;
+
+                response = "<center><img src='"+imageUrl+"'><br><button id='dlButton' style='width:90%'>"+message+"</button></center>";
+                //response = "<img src='imageUrl'><br><center><button style='width:90%'>Baixar</button></center>";
+                appendMessage('Botchat', response);
+                document.getElementById("dlButton").setAttribute("href", imageUrl);
+
+            }, 3000);
+        }
+
+        function appendMessage(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var messageDiv = document.createElement('div');
+            if (sender === 'Botchat') {
+                messageDiv.className = 'bot_balao'
+            }
+            else {
+                messageDiv.className = 'user_balao'
+            }
+            messageDiv.innerHTML = `<strong>${sender}:</strong><br> ${message}`;
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll to the bottom of the chat messages.
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
