@@ -184,17 +184,17 @@
             var response = aleatorio(frases);
             appendMessage('Botchat', response);
 
-            setTimeout(() => {
+            
 
                 const randomSeed = Math.floor(Math.random() * 1000000000);
                 const imageUrl = `https://image.pollinations.ai/prompt/${message}?nologo=1&seed=${randomSeed}&height=1000&width=1000`;
 
-                response = "<center><img src='"+imageUrl+"'><br><button id='dlButton' style='width:90%'>"+message+"</button></center>";
+                response = "<center><img src='"+imageUrl+"'><br></center><i>Carregando...</i>";
                 //response = "<img src='imageUrl'><br><center><button style='width:90%'>Baixar</button></center>";
                 appendMessage('Botchat', response);
-                document.getElementById("dlButton").setAttribute("href", imageUrl);
+                //document.getElementById("dlButton").setAttribute("href", imageUrl);
 
-            }, 3000);
+            
         }
 
         function appendMessage(sender, message) {
