@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+
+</head>
+
+<style>
+
+    * {
+
+        border: none;
+
+        padding: 0;
+
+        margin: 0;
+
+        color: antiquewhite;
+
+    }
+
+
+
+    html,
+
+    body {
+
+        background-color: rgb(70, 67, 118);
+
+    }
+
+
+
+    .ct {
+
+        margin-top: 30px;
+
+        background-color: rgb(117, 112, 189);
+
+        max-width: 70vw;
+
+        border-radius: 15px;
+
+    }
+
+
+
+    button {
+
+        background-color: rgb(103, 54, 195);
+
+        color: aliceblue;
+
+        padding: 5px;
+
+        width: 40vw;
+
+        max-width: 40vw;
+
+        border-radius: 5px;
+
+        cursor: pointer;
+
+    }
+
+
+
+    canvas {
+
+        background-color: aquamarine;
+
+        position: fixed;
+
+        top: -10000px;
+
+        left: -10000px;
+
+    }
+
+
+
+    img {
+
+        width: 30vw;
+
+    }
+
+    textarea{
+
+        background-color: rgb(70, 67, 118);
+
+        border-radius: 5px;
+
+        width: 80%;
+
+        height: 300px;
+
+        resize: none;
+
+    }
+
+</style>
+
+
+
+<body>
+
+    <canvas id="imagem"></canvas>
+
+    <center>
+
+        <div class="ct">
+
+            <h2>IMGtoPIXEL</h2>
+
+            <br>
+
+            <input type="file" name="file" id="file" style="display:none ;">
+
+            <button id="Abrir">Abrir Imagem</button>
+
+
+
+
+
+            <div id="div" style="display: none;">
+
+
+
+                <br>
+
+
+
+                <img src="" id="preview">
+
+                <br>
+
+                <br>
+
+
+
+                <table>
+
+                    <tr>
+
+                        <th>Intervalo de Pixels:</th>
+
+                        <th><input type="range" value="5" id="qualidade"></th>
+
+                        <th><span id="qualidadespan"></span></th>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Tam. do Pixel:</th>
+
+                        <th><input type="range" value="1" min="1" id="tamPixel"></th>
+
+                        <th><span id="tamPixelspan"></span></th>
+
+                    </tr>
+
+                </table>
+
+
+
+                <button id="Processar">Processar</button>
+
+
+
+                
+
+                <br>
+
+            </div>
+
+
+
+            <div id="div2" style="display: none;">
+
+                <br>
+
+                <br>
+
+                <textarea name="" id="textarea" cols="30" rows="10"></textarea>
+
+                <br>
+
+                <br>
+
+                <button id="Copiar">Copiar</button>
+
+            </div>
+
+
+
+
+
+            <br><br><br>
+
+        </div>
+
+    </center>
+
+</body>
+
+<script>
+
+
+
+    var qualidade =5 //1=perfeito
+
+    var tamPixel = 2
+
+     
+
+
+
+    setInterval(() => {
+
+        document.getElementById('qualidadespan').innerHTML = document.getElementById('qualidade').value
+
+        document.getElementById('tamPixelspan').innerHTML = document.getElementById('tamPixel').value
+
+        
+
+        qualidade = parseInt(document.getElementById('qualidade').value)
+
+        tamPixel = parseInt(document.getElementById('tamPixel').value)
+
+
+
+
+
+    }, 1);
+
+
+
+
+
+    const div = document.getElementById('div')
+
+    const div2 = document.getElementById('div2')
+
+    const foto = document.getElementById('imagem')
+
+    const Processar = document.getElementById('Processar')
+
+    const textarea = document.getElementById('textarea')
+
+    const Copiar = document.getElementById('Copiar') 
+
+
+
+
+
+    var W = 0
+
+    var H = 0
+
+    var total = 0
+
+
+
+    document.getElementById('Copiar').addEventListener('click', () => {
+
+        textarea.select()
+
+        document.execCommand('copy')
+
+        setTimeout(() => {
+
+            textarea.value='Copiado..'
+
+        }, 3000);
+
+    })
+
+
+
+    document.getElementById('Abrir').addEventListener('click', () => {
+
+        document.getElementById('file').click()
+
+    })
+
+
+
+    document.getElementById('file').addEventListener('change', (ev) => {
+
+        const file = ev.target.files[0]
+
+        if (file) {
+
+
+
+
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+
+                const img = new Image()
+
+                img.onload = () => {
+
+
+
+                    const ctx = foto.getContext('2d')
+
+
+
+
+
+                    foto.width = img.width
+
+                    foto.height = img.height
+
+
+
+                    W = img.width
+
+                    H = img.height
+
+                    total = W * H
+
+
+
+
+
+                    ctx.clearRect(0, 0, foto.width, foto.height)
+
+
+
+                    //foto.style.height =img.height+'px'
+
+
+
+                    ctx.drawImage(img, 0, 0, foto.width, foto.height)
+
+
+
+
+
+                    div.style.display = 'block'
+
+
+
+
+
+                    
+
+                }
+
+                img.src = e.target.result;
+
+                document.getElementById('preview').src = e.target.result;
+
+
+
+            }
+
+            reader.readAsDataURL(file);
+
+        }
+
+        //abririmg()
+
+    })
+
+
+
+
+
+
+
+
+
+    Processar.addEventListener('click', () => {
+
+
+
+         
+
+
+
+        const ctx = foto.getContext('2d')
+
+        const imageData = ctx.getImageData(0, 0, W, H)
+
+        const { data, width, height } = imageData
+
+
+
+        
+
+
+
+        var s = `<style>.ct{display:flex;margin:0;}.px{width:${tamPixel}px;height:${tamPixel}px;}</style>\n<div class="ct">\n`
+
+
+
+
+
+        for (let y = 0; y < height; y++) {
+
+
+
+            for (let x = 0; x < width; x++) {
+
+
+
+                const index = (y * width + x) * 4
+
+
+
+                const r = data[index]
+
+                const g = data[index + 1]
+
+                const b = data[index + 2]
+
+                 
+
+
+
+                 
+
+
+
+                s += ` <div class="px" style="background-color:rgb(${r},${g},${b})"></div>\n`
+
+
+
+                x += qualidade
+
+            }
+
+            s += '\n</div>\n<div class="ct">\n'
+
+            y += qualidade
+
+        }
+
+        s += '\n</div>'
+
+
+
+        div2.style.display = 'block'
+
+
+
+       
+
+
+
+        textarea.value = s
+
+
+
+
+
+
+
+
+
+    })
+
+
+
+
+
+
+
+</script>
+
+
+
+  </html>
