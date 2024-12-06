@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cocoladora</title>
+
+</head>
+
+<style>
+
+    * {
+
+        margin: 0;
+
+        padding: 0;
+
+        border: none;
+
+        background-color: rgb(89, 56, 56);
+
+        color: aliceblue;
+
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+
+    }
+
+
+
+    div {
+
+        background-color: transparent;
+
+    }
+
+
+
+    .ct {
+
+        align-items: center;
+
+        text-align: center;
+
+        width: 75vw;
+
+        max-width: 600px;
+
+        background-color: rgb(157, 105, 105);
+
+        margin-top: 5vh;
+
+        border-radius: 15px;
+
+        padding: 20px;
+
+    }
+
+
+
+    input,
+
+    button {
+
+        font-size: 10vw;
+
+        width: 75%;
+
+        background-color: rgb(89, 56, 56);
+
+        color: rgb(255, 255, 255);
+
+        border-radius: 10px;
+
+        padding: 2vw;
+
+    }
+
+
+
+    h2,
+
+    h1 {
+
+        font-size: 7vw;
+
+        background-color: transparent;
+
+    }
+
+</style>
+
+
+
+<body>
+
+
+
+    <center>
+
+
+
+        <br>
+
+        <h1 style="font-size: 10vw">&#128169;</h1>
+
+
+
+         
+
+
+
+        <h2 id="totalGanhos"></h2>
+
+
+
+
+
+
+
+        <div class="ct">
+
+
+
+            <div id="calcular">
+
+                <input type="number" id="valorAHora" placeholder="Valor a hora"><br><br>
+
+
+
+
+
+                <input type="time" id="inicio"><br><br>
+
+
+
+                <input type="time" id="fim"><br><br>
+
+
+
+                <button id="submit">Calcular</button><br><br>
+
+
+
+                <br>
+
+                <h2 id="h2"></h2>
+
+
+
+            </div>
+
+
+
+
+
+            <div id="calculo" style="display: none;">
+
+
+
+                <h1>Voce ganhou:</h1>
+
+                 
+
+                <h1 id="vcganhou" style="color:rgb(253, 228, 6)">hhhhhhhhhhhhhhhhhh</h1><br>
+
+                <button id="Adicionar">Adicionar</button><br><br>
+
+                <button id="Voltar">Voltar</button><br><br>
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <br>
+
+        <button id="Zerar" style=" background-color: rgb(157, 105, 105)">Zerar</button><br><br>
+
+
+
+
+
+    </center>
+
+
+
+
+
+
+
+
+
+</body>
+
+<script>
+
+
+
+
+
+
+
+    var valor_pra_armazenar = 0;
+
+
+
+
+
+
+
+    const Zerar = document.getElementById('Zerar')
+
+    const Adicionar = document.getElementById('Adicionar')
+
+    const Voltar = document.getElementById('vcganhou')
+
+    const vcganhou = document.getElementById('vcganhou')
+
+
+
+    const calculo = document.getElementById('calculo')
+
+    const calcular = document.getElementById('calcular')
+
+
+
+    const valorPorHora = document.getElementById('valorAHora')
+
+    const submit = document.getElementById('submit')
+
+    const h2 = document.getElementById('h2')
+
+    const inicio = document.getElementById('inicio')
+
+    const fim = document.getElementById('fim')
+
+
+
+
+
+    if (localStorage.getItem('valorPorHora')) {
+
+        valorPorHora.value = localStorage.getItem('valorPorHora')
+
+    }
+
+
+
+
+
+
+
+    if (!localStorage.getItem('totalGanhos')) {
+
+        localStorage.setItem('totalGanhos', 0.0)
+
+    }
+
+
+
+    document.getElementById('totalGanhos').innerHTML = 'R$ ' + localStorage.getItem('totalGanhos')
+
+
+
+
+
+
+
+    setInterval(() => {
+
+        valorPorHora.style.border = 'none'
+
+        inicio.style.border = 'none'
+
+        fim.style.border = 'none'
+
+
+
+    }, 3000);
+
+
+
+    submit.addEventListener('click', () => {
+
+
+
+        if (inicio.value === '') {
+
+            console.log('inicio vazio')
+
+            inicio.style.border = '2px solid red'
+
+            return
+
+        }
+
+
+
+        if (fim.value === '') {
+
+            console.log('fim vazio')
+
+            fim.style.border = '2px solid red'
+
+            return
+
+        }
+
+
+
+        if (valorPorHora.value === '') {
+
+            console.log('valorPorHora vazio')
+
+            valorPorHora.style.border = '2px solid red'
+
+            return
+
+        }
+
+
+
+
+
+        localStorage.setItem('valorPorHora', valorPorHora.value)
+
+
+
+        const horaEntrada = parseInt(inicio.value.split(':')[0])
+
+        const minutoEntrada = parseInt(inicio.value.split(':')[1])
+
+
+
+        const horaSaida = parseInt(fim.value.split(':')[0])
+
+        const minutoSaida = parseInt(fim.value.split(':')[1])
+
+
+
+        var horas = 0
+
+        var minutos = 0
+
+
+
+        var minutos = minutoSaida - minutoEntrada
+
+
+
+        if (minutoSaida < minutoEntrada) {
+
+            minutos = 60 - ((minutoSaida - minutoEntrada) * -1)
+
+
+
+
+
+        }
+
+        if ((horaSaida - horaEntrada > 0)) {
+
+            horas = (horaSaida - horaEntrada) * 60
+
+        }
+
+
+
+        const totalMinutos = minutos + horas
+
+
+
+        var valorAHora = parseFloat(valorPorHora.value)
+
+
+
+
+
+        h2.innerHTML = 'minutos: ' + minutos + '<br>horas: ' + horas + '<br>total: ' + totalMinutos +
+
+            '<br><br>transf em horas: ' + (totalMinutos / 60) +
+
+            '<br>Ganhos: ' + valorAHora * (totalMinutos / 60)
+
+
+
+
+
+        vcganhou.innerHTML = 'R$ ' + (valorAHora * (totalMinutos / 60)).toFixed(2)
+
+
+
+        valor_pra_armazenar = parseFloat((valorAHora * (totalMinutos / 60)).toFixed(2))
+
+
+
+        calculo.style.display = 'block'
+
+        calcular.style.display = 'none'
+
+
+
+
+
+
+
+        //--------------------
+
+        console.log('valor_pra_armazenar: ' + valor_pra_armazenar)
+
+        console.log('valorPorHora: ' + localStorage.getItem('valorPorHora'))
+
+        console.log('totalGanhos: ' + localStorage.getItem('totalGanhos'))
+
+
+
+         
+
+
+
+      
+
+
+
+    })
+
+
+
+    Adicionar.addEventListener('click', () => {
+
+
+
+        if (localStorage.getItem('totalGanhos')) {
+
+            var totalGanhos = parseFloat(localStorage.getItem('totalGanhos'))
+
+            totalGanhos = totalGanhos + valor_pra_armazenar
+
+
+
+            localStorage.setItem('totalGanhos', totalGanhos)
+
+            window.location.reload()
+
+
+
+        }
+
+    })
+
+
+
+    Voltar.addEventListener('click', () => {
+
+        window.location.reload()
+
+    })
+
+
+
+    Zerar.addEventListener('click', () => {
+
+
+
+        //totalGanhos
+
+        ///valorPorHora
+
+        localStorage.removeItem('totalGanhos')
+
+        localStorage.removeItem('valorPorHora')
+
+        window.location.reload()
+
+    })
+
+
+
+
+
+</script>
+
+
+
+  </html>
