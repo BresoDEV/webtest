@@ -11,3 +11,6 @@ https://bresodev.github.io/webtest/voz
 
 Tira foto da camera:
 https://bresodev.github.io/webtest/camera
+
+Cocoladora:
+https://bresodev.github.io/webtest/Cocoladora
