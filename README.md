@@ -12,5 +12,8 @@ https://bresodev.github.io/webtest/voz
 Tira foto da camera:
 https://bresodev.github.io/webtest/camera
 
+Localizador do Celular:
+https://bresodev.github.io/webtest/GPS
+
 Cocoladora:
 https://bresodev.github.io/webtest/Cocoladora
