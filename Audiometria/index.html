@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reprodução de Frequências</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    html,
+    body {
+        background: linear-gradient(to right, rgb(215, 215, 215), rgb(224, 220, 220));
+    }
+
+    div {
+        width: 75vw;
+        padding: 5vw;
+        background: rgba(0, 0, 0, 0.193);
+        margin-top: 10vh;
+        font-size: 5vw;
+        border-radius: 2vh;
+    }
+
+    button,
+    input {
+        padding: 5px;
+        font-size: 5vw;
+        width: 75%;
+        border-radius: 10px;
+        background: linear-gradient(to right, rgb(215, 215, 215), rgb(224, 220, 220));
+    }
+</style>
+
+<body>
+    <center>
+        <div id="splash">
+            <h1>Audiometria</h1>
+            <br>
+            <br>
+            <h2>&#127911;</h2>
+            <h3>Vá para um lugar silencioso e use fones para fazer o teste</h3>
+            <br><br>
+            <button id="esconder_splash">Iniciar</button>
+
+        </div>
+
+        <div id="div_principal" style="display:none ;">
+
+            <h2>Sua Idade:</h2>
+
+            <input type="number" id="idade">
+
+            <br>
+            <br>
+            <h2 id="h2"></h2>
+            <br>
+            <button id="Iniciar">Iniciar Teste</button>
+            <br>
+            <button style="display:none;" id="ouvi">Sim &#9989;</button>
+            <br>
+            <button style="display:none;" id="nouvi">Não &#10062;</button>
+
+        </div>
+
+    </center>
+
+    <!--
+        <h1> &#127925; &#127926; &#9989; &#10062; &#128266;</h1>
+
+    -->
+
+    <script>
+
+
+
+
+        document.getElementById('esconder_splash').addEventListener('click', () => {
+            document.getElementById('splash').style.display = 'none'
+            document.getElementById('div_principal').style.display = 'block'
+        })
+
+
+
+        const idade = document.getElementById('idade');
+        const Iniciar = document.getElementById('Iniciar');
+        const h2 = document.getElementById('h2');
+        const ouvi = document.getElementById('ouvi');
+        const nouvi = document.getElementById('nouvi');
+
+        var freqPointer = 0
+        var oscilador
+
+        ouvi.addEventListener('click', () => {
+
+            oscilador.stop()
+
+            if (freqPointer !== 20000) {
+                freqPointer += 50
+                h2.innerHTML = freqPointer + 'hz &#128266;<br><h3>Está ouvindo?</h3>'
+                tocarSom()
+            }
+
+        })
+
+        nouvi.addEventListener('click', () => {
+            freqPointer -= 100
+            oscilador.stop()
+
+            h2.innerHTML = calcular(idade.value, freqPointer)
+
+            ouvi.style.display = 'none'
+            nouvi.style.display = 'none'
+            Iniciar.style.display = 'block'
+
+            Iniciar.innerHTML = 'Reiniciar teste'
+        })
+
+        Iniciar.addEventListener('click', () => {
+
+            console.log(idade.value)
+
+            if (idade.value === '') {
+                idade.style.background ='linear-gradient(to right, red, rgb(224, 220, 220))'
+                setTimeout(() => {
+                    idade.style.background ='linear-gradient(to right, rgb(224, 220, 220), rgb(224, 220, 220))'
+                }, 1000);
+                return
+            }
+
+            ouvi.style.display = 'block'
+            nouvi.style.display = 'block'
+            Iniciar.style.display = 'none'
+
+            if (idade.value > 0 && idade.value <= 20) {
+                freqPointer = 17000
+            }
+
+            if (idade.value > 20 && idade.value <= 30) {
+                freqPointer = 15000
+            }
+
+            if (idade.value > 30 && idade.value <= 50) {
+                freqPointer = 11000
+            }
+
+            if (idade.value > 50) {
+                freqPointer = 6000
+            }
+
+
+            tocarSom()
+            h2.innerHTML = freqPointer + 'hz &#128266;<br><h3>Está ouvindo?</h3>'
+        })
+
+
+
+
+
+
+
+        function tocarSom() {
+            const volume = 1
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            oscilador = audioContext.createOscillator();
+            const ganho = audioContext.createGain();
+            oscilador.frequency.setValueAtTime(freqPointer, audioContext.currentTime);
+            oscilador.type = "sine";
+            ganho.gain.setValueAtTime(volume, audioContext.currentTime);
+            oscilador.connect(ganho);
+            ganho.connect(audioContext.destination);
+            oscilador.start();
+        }
+
+
+        function calcular(idade, frequenciaOuvida) {
+
+            var veredito = 'Indefinido'
+
+            if (idade > 0 && idade <= 20) {
+                if (frequenciaOuvida >= 18000) {
+                    if (frequenciaOuvida >= 19000) {
+                        veredito = 'Audição perfeita para a idade'
+                    }
+                    else {
+                        veredito = 'Atendeu ao minimo para a idade'
+                    }
+                }
+                else {
+                    veredito = 'Abaixo do desejavel para a idade'
+                }
+            }
+
+            if (idade > 20 && idade <= 30) {
+                if (frequenciaOuvida >= 16000) {
+                    if (frequenciaOuvida >= 18000) {
+                        veredito = 'Audição perfeita para a idade'
+                    }
+                    else {
+                        veredito = 'Atendeu ao minimo para a idade'
+                    }
+                }
+                else {
+                    veredito = 'Abaixo do desejavel para a idade'
+                }
+            }
+
+            if (idade > 30 && idade <= 50) {
+                if (frequenciaOuvida >= 12000) {
+                    if (frequenciaOuvida >= 16000) {
+                        veredito = 'Audição perfeita para a idade'
+                    }
+                    else {
+                        veredito = 'Atendeu ao minimo para a idade'
+                    }
+                }
+                else {
+                    veredito = 'Abaixo do desejavel para a idade'
+                }
+            }
+
+            if (idade > 50) {
+                if (frequenciaOuvida >= 8000) {
+                    if (frequenciaOuvida >= 12000) {
+                        veredito = 'Audição perfeita para a idade'
+                    }
+                    else {
+                        veredito = 'Atendeu ao minimo para a idade'
+                    }
+                }
+                else {
+                    veredito = 'Abaixo do desejavel para a idade'
+                }
+            }
+
+            return veredito
+        }
+
+
+    </script>
+</body>
+
+</html>
