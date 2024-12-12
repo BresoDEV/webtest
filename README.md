@@ -17,3 +17,6 @@ https://bresodev.github.io/webtest/GPS
 
 Cocoladora:
 https://bresodev.github.io/webtest/Cocoladora
+
+Audiometria:
+https://bresodev.github.io/webtest/Audiometria
