@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+		border: none;
+	}
+	html,body{
+		background-color: rgb(149, 175, 224);
+	}
+	table{
+		width: 100%;
+		background-color: rgb(41, 96, 197); 
+	}
+	table tr th, a{
+		padding: 5px;
+		color: aliceblue;
+		cursor: pointer;
+		text-decoration: none;
+	}
+	details{
+		margin-left: 4vw;
+		background-color: rgb(57, 118, 231);
+		width: 80vw;
+		padding: 10px;
+		margin-bottom: 10px;
+		border-radius: 5px;
+		color: aliceblue;
+		cursor: pointer;
+	}
+	textarea{
+		resize: none;
+		width: 90%;
+		border-radius: 5px;
+		padding: 5px;
+		background-color: rgb(65, 64, 64);
+		color: aliceblue;
+	}
+</style>
+<body>
+
+
+
+</body>
+<script>
+
+
+	const menus = [
+		['C++', 'Titulo C++ 1', '<center> <textarea>Teste</textarea> </center>'],
+		['C++', 'Titulo C++ 2', 'artigo2 C++'],
+		['C++', 'Titulo C++ 3', 'artigo3 C++'],
+
+		['C#', 'Titulo C# 1', 'artigo1 C#'],
+		['C#', 'Titulo C# 2', 'artigo2 C#'],
+		['C#', 'Titulo C# 3', 'artigo3 C#'],
+
+		['PHP', 'Titulo PHP 1', 'artigo1 PHP'],
+		['PHP', 'Titulo PHP 2', 'artigo2 PHP'],
+		['PHP', 'Titulo PHP 3', 'artigo3 PHP'],
+
+		['Sigs', 'Titulo PHP 1', 'artigo1 PHP'],
+		['Sigs', 'Titulo PHP 2', 'artigo2 PHP'],
+		['Sigs', 'Titulo PHP 3', 'artigo3 PHP'],
+
+		['Tutorial', 'Titulo Tutorial 1', 'artigo1 Tutorial'],
+		['Tutorial', 'Titulo Tutorial 2', 'artigo2 Tutorial'],
+		['Tutorial', 'Titulo Tutorial 3', 'artigo3 Tutorial'],
+	]
+
+
+	const link = window.location.href
+	var linguagem = ''
+	var abas = 'C++,C#,PHP,Javascript,Lua,CE Sigs'
+
+	//---------------
+
+	if (link.includes('Tutorial')) {
+		linguagem = 'Tutorial' 
+	}
+	if (link.includes('C++')) {
+		linguagem = 'C++' 
+	}
+
+	if (link.includes('C#')) {
+		linguagem = 'C#' 
+	}
+
+	if (link.includes('PHP')) {
+		linguagem = 'PHP' 
+	}
+
+	if (link.includes('Javascript')) {
+		linguagem = 'Javascript' 
+	}
+
+	if (link.includes('Lua')) {
+		linguagem = 'Lua' 
+	}
+
+	if (link.includes('Sigs')) {
+		linguagem = 'Sigs' 
+	}
+
+	//------------------------construcao dos menus------------
+
+	var table = '<table><tr>'
+	abas.split(',').forEach(e => {
+		if(e!==''){
+			table+= '<th><a href="index.html?l='+e+'">'+e+'</a></th>'
+		}
+	});
+	table += '</tr></table><br>'
+	document.body.innerHTML += table
+
+
+
+	//---------------montagem dos posts---------
+	if (linguagem !== '') {
+		var menu = ''
+		menus.forEach(e => {
+			if (e[0] == linguagem) {
+				menu += '<details><summary>' + e[1] + '</summary><br><p>' + e[2] + '</p><br></details>'
+			}
+		}); 
+		document.body.innerHTML += menu
+	}
+	//---------------------
+
+
+
+
+
+
+</script>
+
+</html>
