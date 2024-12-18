@@ -20,3 +20,9 @@ https://bresodev.github.io/webtest/Cocoladora
 
 Audiometria:
 https://bresodev.github.io/webtest/Audiometria
+
+The Forest CheatTable:
+https://bresodev.github.io/webtest/TheForest/
+
+Blog:
+https://bresodev.github.io/webtest/Blog/
