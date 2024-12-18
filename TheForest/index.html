@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	html,body{
+		background: linear-gradient(to right,rgb(3, 255, 242), rgb(178, 75, 207));
+	}
+	textarea {
+		top: -300px;
+		position: fixed;
+	}
+
+	div {
+		padding: 5vw;
+		width: 50vw;
+		background: linear-gradient(to right, rgb(178, 75, 207), rgb(3, 255, 242));
+		 border-radius: 20px;
+	}
+	input,button{
+		font-size: 5vw;
+		width: 90%;
+		border-radius: 20px;
+		border: none;
+		margin-top: 20px;
+		text-align: center;
+	}
+	button{
+		background:  rgb(49, 138, 73);
+		color: antiquewhite;
+	}
+</style>
+
+<body>
+
+	<textarea name="" id="textarea" cols="30" rows="10"></textarea>
+
+<br>
+<br>
+<br>
+	<center>
+		<div>
+			<center>
+				<h2>TheForest32.exe Cheat Table</h2>
+				<input type="text" name="snacks" id="snacks" placeholder="Memoria snacks" value="0A0B0C0D">
+			<button id="processar">Gerar</button>
+	
+			</center>
+		</div>
+	</center>
+
+
+</body>
+<script>
+
+	document.getElementById('processar').addEventListener('click', () => {
+
+		const base = document.getElementById('snacks').value
+		const textarea = document.getElementById('textarea')
+
+		const coca = (parseInt(base, 16) + 0xA8).toString(16)
+		const folhas = (parseInt(base, 16) + 0x48).toString(16)
+		const graveto = (parseInt(base, 16) - 0x48).toString(16)
+		const pedra = (parseInt(base, 16) - 0x30).toString(16)
+		const boozer = (parseInt(base, 16) + 0x90).toString(16)
+		const ossos = (parseInt(base, 16) - 0x1C8).toString(16)
+		const caveiras = (parseInt(base, 16) - 0x78).toString(16)
+		const Moedas = (parseInt(base, 16) + 0x255D88).toString(16)
+		const pele_veado = (parseInt(base, 16) + 0xC6EA0).toString(16)
+		const casco_tartaruga = (parseInt(base, 16) - 0x288).toString(16)
+		const trapos = (parseInt(base, 16) + 0x30).toString(16)
+		const gasolina = (parseInt(base, 16) + 0xC0).toString(16)
+
+		const toras = (parseInt(base, 16) + 0x1A777AC).toString(16)
+
+
+		//const gggggg = (parseInt(base,16) + 0x01).toString(16)
+
+		const gabarito = `<?xml version="1.0" encoding="utf-8"?>
+		<CheatTable>
+  			<CheatEntries>
+	
+	
+				<CheatEntry>
+      				<ID>0</ID>
+      				<Description>"Biscoitos"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${base}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>1</ID>
+      				<Description>"Cocas"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${coca}</Address>
+    			</CheatEntry>
+
+
+				<CheatEntry>
+      				<ID>2</ID>
+      				<Description>"Folhas"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${folhas}</Address>
+    			</CheatEntry>
+
+	
+				<CheatEntry>
+      				<ID>3</ID>
+      				<Description>"Gravetos"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${graveto}</Address>
+    			</CheatEntry>
+
+	
+				<CheatEntry>
+      				<ID>4</ID>
+      				<Description>"Pedras"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${pedra}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>5</ID>
+      				<Description>"Boozer"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${boozer}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>6</ID>
+      				<Description>"Ossos"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${ossos}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>7</ID>
+      				<Description>"Caveiras"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${caveiras}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>8</ID>
+      				<Description>"Moedas"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${Moedas}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>9</ID>
+      				<Description>"Peles de Veado"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${pele_veado}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>10</ID>
+      				<Description>"Cascos de Tartaruga"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${casco_tartaruga}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>11</ID>
+      				<Description>"Trapos"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${trapos}</Address>
+    			</CheatEntry>
+
+				<CheatEntry>
+      				<ID>12</ID>
+      				<Description>"Gasolina"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${gasolina}</Address>
+    			</CheatEntry>
+
+	
+				<CheatEntry>
+      				<ID>13</ID>
+      				<Description>"Toras (testar)"</Description>
+      				<ShowAsSigned>0</ShowAsSigned>
+      				<VariableType>4 Bytes</VariableType>
+      				<Address>${toras}</Address>
+    			</CheatEntry>
+
+	
+			</CheatEntries>
+  		<UserdefinedSymbols/>
+		<Comments>
+			by BresoDEV
+		</Comments>
+		</CheatTable>`
+
+
+
+		textarea.value = gabarito
+		setTimeout(() => {
+			downloadTextFile()
+		}, 1000);
+
+	})
+
+	function downloadTextFile() {
+		// Pegar o conteúdo da textarea
+		var textareaContent = document.getElementById('textarea').value;
+
+		// Criar um blob com o conteúdo do texto
+		var blob = new Blob([textareaContent], { type: 'text/plain' });
+
+		// Criar um link temporário
+		var link = document.createElement('a');
+		link.download = 'TheForest32.CT';
+
+		// Anexar o blob ao link
+		link.href = window.URL.createObjectURL(blob);
+
+		// Disparar o clique no link
+		link.click();
+
+		// Limpar o URL do objeto criado
+		window.URL.revokeObjectURL(link.href);
+
+	}
+</script>
+
+</html>
