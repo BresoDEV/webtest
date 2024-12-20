@@ -2,208 +2,337 @@
 <html lang="pt-br">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheForest</title>
 </head>
 <style>
-	html,body{
-		background: linear-gradient(to right,rgb(3, 255, 242), rgb(178, 75, 207));
-	}
-	textarea {
-		top: -300px;
-		position: fixed;
-	}
+    body,
+    html {
+        background: linear-gradient(to right, rgb(17, 37, 29), rgb(2, 6, 6));
+        color: aliceblue;
+    }
 
-	div {
-		padding: 5vw;
-		width: 50vw;
-		background: linear-gradient(to right, rgb(178, 75, 207), rgb(3, 255, 242));
-		 border-radius: 20px;
-	}
-	input,button{
-		font-size: 5vw;
-		width: 90%;
-		border-radius: 20px;
-		border: none;
-		margin-top: 20px;
-		text-align: center;
-	}
-	button{
-		background:  rgb(49, 138, 73);
-		color: antiquewhite;
-	}
+    * {
+        font-family: Verdana;
+    }
+
+    td {
+        padding: 1px 5px;
+    }
+
+    table {
+        width: 100%;
+        border: 2px solid green;
+    }
+
+    .sig {
+        background-color: rgb(82, 81, 81);
+        color: aliceblue;
+        width: 90%;
+        padding: 5px;
+        border: none;
+    }
+
+    #gerarCT {
+        width: 50%;
+        padding: 6px;
+        border: none;
+        border-radius: 8px;
+        background-color: rgb(50, 121, 198);
+        color: antiquewhite;
+        font-size: large;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    input {
+        background-color: rgb(108, 108, 108);
+        color: aliceblue;
+    }
 </style>
 
 <body>
 
-	<textarea name="" id="textarea" cols="30" rows="10"></textarea>
+    <center>
+        <h1>TheForest Itens Hack</h1>
+    </center>
+    <table>
+        <tr>
+            <td id="tabela1">
+            </td>
+            <!----------------------------------------------------------------->
+            <td id="tabela2">
+            </td>
 
-<br>
-<br>
-<br>
-	<center>
-		<div>
-			<center>
-				<h2>TheForest32.exe Cheat Table</h2>
-				<input type="text" name="snacks" id="snacks" placeholder="Memoria snacks" value="0A0B0C0D">
-			<button id="processar">Gerar</button>
-	
-			</center>
-		</div>
-	</center>
+        </tr>
+
+    </table>
+
+    <br>
+    <br>
+
+    <center>
+        <button id="gerarCT">Gerar e baixar Cheat Table atualizada</button>
+    </center>
+
+    <br>
+    <hr>
+    <br>
+    <table id="sigs">
+        <tr>
+            <th colspan="2">Sigs</th>
+        </tr>
+        <tr>
+            <td>Chocolates</td>
+            <td><input type="text" class="sig" value="44 ff 00 00 00 00 "></td>
+        </tr>
+        <tr>
+            <td>Coca-Cola</td>
+            <td><input type="text" class="sig" value="44 ff 00 ff 00 ff 00"></td>
+        </tr>
+    </table>
 
 
+    <br><br><br><br><br><br>
 </body>
 <script>
 
-	document.getElementById('processar').addEventListener('click', () => {
-
-		const base = document.getElementById('snacks').value
-		const textarea = document.getElementById('textarea')
-
-		const coca = (parseInt(base, 16) + 0xA8).toString(16)
-		const folhas = (parseInt(base, 16) + 0x48).toString(16)
-		const graveto = (parseInt(base, 16) - 0x48).toString(16)
-		const pedra = (parseInt(base, 16) - 0x30).toString(16)
-		const boozer = (parseInt(base, 16) + 0x90).toString(16)
-		const ossos = (parseInt(base, 16) - 0x1C8).toString(16)
-		const caveiras = (parseInt(base, 16) - 0x78).toString(16)
-		const Moedas = (parseInt(base, 16) + 0x255D88).toString(16)
-		const pele_veado = (parseInt(base, 16) + 0xC6EA0).toString(16)
-		const casco_tartaruga = (parseInt(base, 16) - 0x288).toString(16)
-		const trapos = (parseInt(base, 16) + 0x30).toString(16)
-		const gasolina = (parseInt(base, 16) + 0xC0).toString(16)
-
-		const toras = (parseInt(base, 16) + 0x1A777AC).toString(16)
 
 
-		//const gggggg = (parseInt(base,16) + 0x01).toString(16)
 
-		const gabarito = `<?xml version="1.0" encoding="utf-8"?>
+
+    //pra inserir mais itens, so add uma descriçao
+    //e o sistema automatiza todo resto
+
+    var descricoes = [
+        ' Chocolate',
+        'Coca',
+        'Gravetos',
+        'Pedras',
+        'Dinamite',
+        'Sinalizador',
+        'Pedrinha',
+        'Chicoria',
+        'Ossos',
+        'Relogio',
+        'Corda',
+        'Cranios',
+        'Trapos',
+        'Placa de Circuito',
+        'Moedas',
+        'Dinheiro',
+        'Fita',
+        'Folhas',
+        'Gasolina',
+        'Boozer',
+        'Baterias',
+        'Remedios',
+        'Dentes',
+        'Casco de Tartaruga',
+        'Molotov',
+        'Penas',
+        'Seiva',
+        'Flechas',
+
+    ]
+
+
+
+
+
+    descricoes.sort()
+
+
+    //-----------monta a tabela lateral
+    var t = `
+    <table>
+        <tr>
+            <th>Snacks (base):</th>
+            <th><input type="text" id="base"></th>
+        </tr>`
+
+    descricoes.forEach(element => {
+        t += `
+            <tr>
+                <td>${element}</td>
+                <td id="${element}_final"></td>
+            </tr>`
+    });
+    t += '</table>'
+    document.getElementById('tabela2').innerHTML = t
+
+
+
+    //-----------recalcular enderecos
+    document.getElementById('base').addEventListener('input', () => {
+
+        const base = document.getElementById('base').value.toString(16).toUpperCase()
+
+        if (base !== '') {
+            descricoes.forEach(e => {
+
+                if (e !== ' Chocolate') {
+                    if (localStorage.getItem(e + '_diferenca')) {
+                        document.getElementById(e + '_final').innerHTML = calcular(base, localStorage.getItem(e + '_operacao'), localStorage.getItem(e + '_diferenca'))
+                    }
+                }
+                else {
+                    document.getElementById(e + '_final').innerHTML = base
+
+
+                    //localStorage.setItem(e + '_novo_endereco','')
+                }
+
+
+
+
+            });
+        }
+
+    })
+
+
+    function calcular(base_, operador, differenca) {
+        /*
+        base +localStorage.getItem(e + '_operacao') + localStorage.getItem(e + '_diferenca') 
+                    */
+        if (operador == '+') {
+            return (parseInt(base_) + parseInt(differenca)).toString(16).toUpperCase()
+        }
+        else {
+            return (parseInt(base_) - parseInt(differenca)).toString(16).toUpperCase()
+        }
+    }
+
+
+    //-----------monta a tabela
+
+    var bill = '<table>'
+    descricoes.forEach(e => {
+        bill += `
+            <tr>
+                <td>${e}</td>
+                <td><input type="text" id="${e}_input"></td>
+                <td><button id="${e}_salvar">Salvar</button></td>
+                <td><button id="${e}_remover">Deletar</button></td>
+            </tr>
+        `
+    });
+    bill += '</table>'
+    document.getElementById('tabela1').innerHTML = bill
+
+    //-----------------------------------
+
+
+
+
+    //-------add as funcoes de clicks
+
+    descricoes.forEach(e => {
+
+        var verde = 'rgb(100 200 100)'
+        var vermelho = 'rgb(200 100 100)'
+        var amarelo = 'rgb(250 250 100)'
+
+        //exibe no input, caso exista valor salvo
+        if (localStorage.getItem(e + '_gabarito')) {
+            document.getElementById(e + '_input').value = localStorage.getItem(e + '_gabarito')
+
+            document.getElementById(e + '_salvar').style.backgroundColor = verde
+        } else {
+            document.getElementById(e + '_salvar').style.backgroundColor = amarelo
+        }
+
+        //salva o valor do input no localStorage
+        document.getElementById(e + '_salvar').addEventListener('click', () => {
+            localStorage.setItem(e + '_gabarito', document.getElementById(e + '_input').value)
+            document.getElementById(e + '_salvar').style.backgroundColor = verde
+
+            if (e !== ' Chocolate') {
+                var diferenca = 0
+
+                var endChocolate = parseInt(localStorage.getItem(' Chocolate_gabarito'))
+                var endAtual = parseInt(localStorage.getItem(e + '_gabarito'), 16)
+
+                if (endAtual < endChocolate) {
+                    diferenca = parseInt(endChocolate) - parseInt(endAtual)
+                    localStorage.setItem(e + '_operacao', '-')
+                } else {
+                    diferenca = parseInt(endAtual) - parseInt(endChocolate)
+                    localStorage.setItem(e + '_operacao', '+')
+                }
+
+                localStorage.setItem(e + '_diferenca', diferenca)
+
+
+
+
+                //console.log(' Chocolate_gabarito: '+localStorage.getItem(' Chocolate_gabarito'))
+
+                //console.log('diferenca: '+diferenca)
+                //console.log('diferenca sto: '+localStorage.getItem(e + '_diferenca'))
+                //console.log('diferenca 16: '+parseInt(diferenca,16))
+                //console.log('operacao: '+localStorage.getItem(e + '_operacao'))
+
+
+            }
+
+
+
+
+        })
+
+        //muda o botao pra vermelho ao alterar o endereço
+        document.getElementById(e + '_input').addEventListener('input', () => {
+            document.getElementById(e + '_salvar').style.backgroundColor = vermelho
+        })
+
+        //deleta o valor do localStorage
+        document.getElementById(e + '_remover').addEventListener('click', () => {
+            localStorage.removeItem(e + '_gabarito')
+            localStorage.removeItem(e + '_operacao')
+            localStorage.removeItem(e + '_diferenca')
+
+            document.getElementById(e + '_input').value = ''
+
+            document.getElementById(e + '_salvar').style.backgroundColor = amarelo
+        })
+    });
+
+
+
+
+
+    document.getElementById('gerarCT').addEventListener('click', () => {
+
+        var id = 0
+
+        var gabarito = `<?xml version="1.0" encoding="utf-8"?>
 		<CheatTable>
-  			<CheatEntries>
-	
-	
-				<CheatEntry>
-      				<ID>0</ID>
-      				<Description>"Biscoitos"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${base}</Address>
-    			</CheatEntry>
+  			<CheatEntries>`
 
-				<CheatEntry>
-      				<ID>1</ID>
-      				<Description>"Cocas"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${coca}</Address>
-    			</CheatEntry>
+        descricoes.forEach(e => {
 
+            if (document.getElementById(e + '_final').innerHTML !== '') {
+                gabarito += `
+                        <CheatEntry>
+      		            		<ID>${id}</ID>
+      		            		<Description>"${e}"</Description>
+      		            		<ShowAsSigned>0</ShowAsSigned>
+      		            		<VariableType>4 Bytes</VariableType>
+      		            		<Address>${document.getElementById(e + '_final').innerHTML}</Address>
+    		            	</CheatEntry>
+                            `
+            }
 
-				<CheatEntry>
-      				<ID>2</ID>
-      				<Description>"Folhas"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${folhas}</Address>
-    			</CheatEntry>
+            id++
+        });
 
-	
-				<CheatEntry>
-      				<ID>3</ID>
-      				<Description>"Gravetos"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${graveto}</Address>
-    			</CheatEntry>
-
-	
-				<CheatEntry>
-      				<ID>4</ID>
-      				<Description>"Pedras"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${pedra}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>5</ID>
-      				<Description>"Boozer"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${boozer}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>6</ID>
-      				<Description>"Ossos"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${ossos}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>7</ID>
-      				<Description>"Caveiras"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${caveiras}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>8</ID>
-      				<Description>"Moedas"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${Moedas}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>9</ID>
-      				<Description>"Peles de Veado"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${pele_veado}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>10</ID>
-      				<Description>"Cascos de Tartaruga"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${casco_tartaruga}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>11</ID>
-      				<Description>"Trapos"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${trapos}</Address>
-    			</CheatEntry>
-
-				<CheatEntry>
-      				<ID>12</ID>
-      				<Description>"Gasolina"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${gasolina}</Address>
-    			</CheatEntry>
-
-	
-				<CheatEntry>
-      				<ID>13</ID>
-      				<Description>"Toras (testar)"</Description>
-      				<ShowAsSigned>0</ShowAsSigned>
-      				<VariableType>4 Bytes</VariableType>
-      				<Address>${toras}</Address>
-    			</CheatEntry>
-
-	
-			</CheatEntries>
+        gabarito += `</CheatEntries>
   		<UserdefinedSymbols/>
 		<Comments>
 			by BresoDEV
@@ -211,35 +340,47 @@
 		</CheatTable>`
 
 
+        var are = document.createElement('textarea')
+        are.style.width = '100%'
+        are.style.height = '300px'
+        are.style.resize = 'none'
+        are.style.backgroundColor = 'black'
+        are.style.color = 'white'
+        are.value = gabarito
+        document.body.append(are)
 
-		textarea.value = gabarito
-		setTimeout(() => {
-			downloadTextFile()
-		}, 1000);
 
-	})
+        setTimeout(() => {
 
-	function downloadTextFile() {
-		// Pegar o conteúdo da textarea
-		var textareaContent = document.getElementById('textarea').value;
+            // Pegar o conteúdo da textarea
+            var textareaContent = are.value;
 
-		// Criar um blob com o conteúdo do texto
-		var blob = new Blob([textareaContent], { type: 'text/plain' });
+            // Criar um blob com o conteúdo do texto
+            var blob = new Blob([textareaContent], { type: 'text/plain' });
 
-		// Criar um link temporário
-		var link = document.createElement('a');
-		link.download = 'TheForest32.CT';
+            // Criar um link temporário
+            var link = document.createElement('a');
+            link.download = 'TheForest32.CT';
 
-		// Anexar o blob ao link
-		link.href = window.URL.createObjectURL(blob);
+            // Anexar o blob ao link
+            link.href = window.URL.createObjectURL(blob);
 
-		// Disparar o clique no link
-		link.click();
+            // Disparar o clique no link
+            link.click();
 
-		// Limpar o URL do objeto criado
-		window.URL.revokeObjectURL(link.href);
+            // Limpar o URL do objeto criado
+            window.URL.revokeObjectURL(link.href);
 
-	}
+            setTimeout(() => {
+                are.remove()
+            }, 1000);
+
+        }, 1000);
+    })
+
+
+
+
 </script>
 
 </html>

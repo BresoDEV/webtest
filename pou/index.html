@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<style>
+	html,
+	body {
+		background: linear-gradient(to left, rgb(201, 90, 203), rgb(18, 237, 215), rgb(44, 130, 211));
+	}
+
+	table {
+		width: 100%;
+		border: 1px solid white;
+	}
+	tr,td{
+		border: 1px solid white;
+	}
+
+	#vida {
+		border: none;
+		padding: 0;
+		width: 100%;
+		color: aliceblue;
+		border-radius: 5px;
+		height: 100%;
+	}
+
+	.vida {
+		border-radius: 5px;
+		background-color: transparent;
+		width: 100%;
+		border: 2px solid black;
+	}
+</style>
+
+<body>
+	<table>
+		<tr>
+			<td>
+				<button onclick="comer()">Comer</button>
+			</td>
+			<td>
+				<div class="vida">
+					<div id="vida">&nbsp;</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button onclick="beberagua()">Beber Agua</button>
+			</td>
+			<td>
+				<div class="vida">
+					<div id="agua">&nbsp;</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button onclick="tomarbanho()">Tomar Banho</button>
+			</td>
+			<td>
+				<div class="vida">
+					<div id="sujeira">&nbsp;</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+
+	
+	<br>
+	
+	<br>
+	
+	<br>
+	<br>
+	
+	
+	
+</body>
+<script>
+
+	var vida = 100
+	var agua = 100
+	var sujeira = 0
+
+	if (localStorage.getItem('sujeira')) {
+		sujeira = localStorage.getItem('sujeira')
+	} else {
+		localStorage.setItem('sujeira', sujeira)
+	}
+
+
+	if (localStorage.getItem('vida')) {
+		vida = localStorage.getItem('vida')
+	} else {
+		localStorage.setItem('vida', vida)
+	}
+
+
+	if (localStorage.getItem('agua')) {
+		agua = localStorage.getItem('agua')
+	} else {
+		localStorage.setItem('agua', agua)
+	}
+	var agora = Date.now()
+	if (localStorage.getItem('agora')) {
+		agora = localStorage.getItem('agora')
+	} else {
+		localStorage.setItem('agora', agora)
+	}
+
+
+	if (vida && agora && sujeira) {
+		const ta = Date.now()
+		const ds = Math.floor((ta - parseInt(agora)) / 1000)
+		const d = Math.floor(ds / 10)
+		vida = Math.max(0, parseInt(vida) - d)
+		agua = Math.max(0, parseInt(agua) - d)
+		sujeira = Math.max(0, parseInt(sujeira) + d)
+	}
+
+
+	function salvarEstado() {
+		localStorage.setItem('vida', vida)
+		localStorage.setItem('agua', agua)
+		localStorage.setItem('sujeira', sujeira)
+		localStorage.setItem('agora', Date.now())
+	}
+
+	function atualizarValorsujeira() {
+		console.log('sujeira: '+sujeira)
+		if (sujeira !== 100) {
+			sujeira += 1
+			salvarEstado()
+		}
+
+	}
+
+	function atualizarValorFome() {
+		if (vida > 0) {
+			vida -= 1
+			salvarEstado()
+			if (vida === 0) {
+				alert('moleu fome')
+			}
+		}
+
+	}
+	function atualizarValorSede() {
+		if (agua > 0) {
+			agua -= 1
+			salvarEstado()
+			if (agua === 0) {
+				alert('moleu sede')
+			}
+		}
+
+	}
+
+
+	setInterval(() => {
+		atualizarValorFome()
+	}, 840000/*840000*/);//14 min
+
+	setInterval(() => {
+		atualizarValorSede()
+	}, 1000000/*840000*/);//14 min
+
+	setInterval(() => {
+		atualizarValorsujeira()
+	}, 950000/*840000*/);//14 min
+
+	setInterval(() => {
+		document.getElementById('vida').style.width = vida + '%'
+		document.getElementById('vida').innerHTML = '&nbsp;&nbsp;&nbsp;' + vida
+
+		document.getElementById('sujeira').style.width = sujeira + '%'
+		document.getElementById('sujeira').style.backgroundColor = 'brown'
+		document.getElementById('sujeira').innerHTML = '&nbsp;&nbsp;&nbsp;' + sujeira
+		document.getElementById('sujeira').style.color = 'white'
+
+		document.getElementById('agua').style.width = agua + '%'
+		document.getElementById('agua').innerHTML = '&nbsp;&nbsp;&nbsp;' + agua
+		document.getElementById('agua').style.backgroundColor = 'rgb(4, 134, 220)'
+		document.getElementById('agua').style.color = 'white'
+
+		if (vida > 5) {
+			document.getElementById('vida').style.backgroundColor = 'red'
+		}
+		if (vida > 30) {
+			document.getElementById('vida').style.backgroundColor = 'orange'
+		}
+		if (vida > 70) {
+			//darkgreen
+			document.getElementById('vida').style.backgroundColor = 'darkgreen'
+		}
+
+
+	}, 1);
+
+	function comer() {
+		if (vida !== 100) {
+			if (vida == 96 || vida == 97 || vida == 98 || vida == 99) {
+				vida = 100
+			}
+			else {
+				vida += 5
+			}
+			localStorage.setItem('sujeira', sujeira)
+			localStorage.setItem('vida', vida)
+			localStorage.setItem('agua', agua)
+			localStorage.setItem('agora', new Date().getTime())
+		}
+		else {
+			console.log('sem fome')
+		}
+	}
+
+	function beberagua() {
+		if (agua !== 100) {
+			if (agua == 96 || agua == 97 || agua == 98 || agua == 99) {
+				agua = 100
+			}
+			else {
+				agua += 5
+			}
+			localStorage.setItem('sujeira', sujeira)
+			localStorage.setItem('vida', vida)
+			localStorage.setItem('agua', agua)
+			localStorage.setItem('agora', new Date().getTime())
+		}
+		else {
+			console.log('sem sede')
+		}
+	}
+
+	function tomarbanho() {
+		if (sujeira !== 0) {
+			if (sujeira == 1 || sujeira == 2 || sujeira == 3 || sujeira == 4) {
+				sujeira = 0
+			}
+			else {
+				sujeira -= 5
+			}
+			localStorage.setItem('vida', vida)
+			localStorage.setItem('agua', agua)
+			localStorage.setItem('sujeira', sujeira)
+			localStorage.setItem('agora', new Date().getTime())
+		}
+		else {
+			console.log('limpo')
+		}
+	}
+
+
+
+</script>
+
+</html>
