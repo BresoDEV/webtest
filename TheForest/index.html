@@ -171,8 +171,8 @@
     document.getElementById('base').addEventListener('input', () => {
 
         //const base = document.getElementById('base').value.toString(16).toUpperCase()
-        const base = parseInt(document.getElementById('base').value)
-        console.log('base:'+base)
+        const base = document.getElementById('base').value
+        console.log('base 1:'+base)
 
         if (base !== '') {
             descricoes.forEach(e => {
@@ -180,7 +180,12 @@
                 if (e !== ' Chocolate') {
                     if (localStorage.getItem(e + '_diferenca')) {
 
+                        console.log('Entrada do calculo:')
                         console.log('item : '+e)
+                        console.log('base : '+base)
+                        console.log('operacao : '+localStorage.getItem(e + '_operacao'))
+                        console.log('diferenca : '+localStorage.getItem(e + '_diferenca'))
+						
                         document.getElementById(e + '_final').innerHTML = calcular(base, localStorage.getItem(e + '_operacao'), localStorage.getItem(e + '_diferenca'))
                     }
                 }
@@ -204,7 +209,8 @@
         /*
         base +localStorage.getItem(e + '_operacao') + localStorage.getItem(e + '_diferenca') 
                     */
-       //console.log('base_: '+parseInt(base_)) 
+       console.log('operador: '+operador) 
+       console.log('base_ calcular: '+parseInt(base_ ,16)) 
        
        let int1 = parseInt(base_, 16); 
        let int2 = parseInt(differenca, 16);
@@ -273,12 +279,12 @@
                 console.log('endChocolate: '+ endChocolate)
                 console.log('endAtual: '+ endAtual)
 
-                if (endAtual < endChocolate) {
-                    diferenca = endChocolate - endAtual
-                    localStorage.setItem(e + '_operacao', '-')
-                } else {
-                    diferenca =  (endAtual - endChocolate) * -1
+                if (endAtual > endChocolate) {
+                    diferenca = endAtual - endChocolate    
                     localStorage.setItem(e + '_operacao', '+')
+                } else {
+                    diferenca =  endChocolate - endAtual  
+                    localStorage.setItem(e + '_operacao', '-')
                 }
 
                 console.log('diferenca: '+ parseInt(diferenca).toString(16))
