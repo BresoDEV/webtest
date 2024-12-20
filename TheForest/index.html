@@ -267,6 +267,8 @@
 
                 var endChocolate = parseInt(localStorage.getItem(' Chocolate_gabarito'),16)
                 var endAtual = parseInt(localStorage.getItem(e + '_gabarito'), 16)
+				
+				 
 
                 console.log('endChocolate: '+ endChocolate)
                 console.log('endAtual: '+ endAtual)
@@ -275,17 +277,17 @@
                     diferenca = endChocolate - endAtual
                     localStorage.setItem(e + '_operacao', '-')
                 } else {
-                    diferenca = endAtual + endChocolate
+                    diferenca =  (endAtual - endChocolate) * -1
                     localStorage.setItem(e + '_operacao', '+')
                 }
 
                 console.log('diferenca: '+ parseInt(diferenca).toString(16))
-                console.log('---------------')
+                
 
                 
                 localStorage.setItem(e + '_diferenca', parseInt(diferenca).toString(16))
 
-
+console.log('---------------')
 
 
                 //console.log(' Chocolate_gabarito: '+localStorage.getItem(' Chocolate_gabarito'))
@@ -293,7 +295,7 @@
                 //console.log('diferenca: '+diferenca)
                 //console.log('diferenca sto: '+localStorage.getItem(e + '_diferenca'))
                 //console.log('diferenca 16: '+parseInt(diferenca,16))
-                console.log('operacao: '+localStorage.getItem(e + '_operacao'))
+                 
 
 
             }
