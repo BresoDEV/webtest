@@ -268,6 +268,9 @@
                 var endChocolate = parseInt(localStorage.getItem(' Chocolate_gabarito'),16)
                 var endAtual = parseInt(localStorage.getItem(e + '_gabarito'), 16)
 
+                console.log('endChocolate: '+ endChocolate)
+                console.log('endAtual: '+ endAtual)
+
                 if (endAtual < endChocolate) {
                     diferenca = endChocolate - endAtual
                     localStorage.setItem(e + '_operacao', '-')
@@ -276,7 +279,10 @@
                     localStorage.setItem(e + '_operacao', '+')
                 }
 
-                //console.log('diferenca: '+ parseInt(diferenca).toString(16))
+                console.log('diferenca: '+ parseInt(diferenca).toString(16))
+                console.log('---------------')
+
+                
                 localStorage.setItem(e + '_diferenca', parseInt(diferenca).toString(16))
 
 
