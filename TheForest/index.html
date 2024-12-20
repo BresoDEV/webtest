@@ -152,7 +152,7 @@
     <table>
         <tr>
             <th>Snacks (base):</th>
-            <th><input type="text" id="base"></th>
+            <th><input type="text" id="base" value="56304954"></th>
         </tr>`
 
     descricoes.forEach(element => {
@@ -170,13 +170,17 @@
     //-----------recalcular enderecos
     document.getElementById('base').addEventListener('input', () => {
 
-        const base = document.getElementById('base').value.toString(16).toUpperCase()
+        //const base = document.getElementById('base').value.toString(16).toUpperCase()
+        const base = parseInt(document.getElementById('base').value)
+        console.log('base:'+base)
 
         if (base !== '') {
             descricoes.forEach(e => {
 
                 if (e !== ' Chocolate') {
                     if (localStorage.getItem(e + '_diferenca')) {
+
+                        console.log('item : '+e)
                         document.getElementById(e + '_final').innerHTML = calcular(base, localStorage.getItem(e + '_operacao'), localStorage.getItem(e + '_diferenca'))
                     }
                 }
@@ -200,11 +204,17 @@
         /*
         base +localStorage.getItem(e + '_operacao') + localStorage.getItem(e + '_diferenca') 
                     */
-        if (operador == '+') {
-            return (parseInt(base_) + parseInt(differenca)).toString(16).toUpperCase()
+       //console.log('base_: '+parseInt(base_)) 
+       
+       let int1 = parseInt(base_, 16); 
+            let int2 = parseInt(differenca, 16);
+                
+        if (operador !== '+') {
+ 
+            return (int1 - int2).toString(16).toUpperCase()
         }
         else {
-            return (parseInt(base_) - parseInt(differenca)).toString(16).toUpperCase()
+            return (int1 + int2).toString(16).toUpperCase()
         }
     }
 
@@ -255,18 +265,19 @@
             if (e !== ' Chocolate') {
                 var diferenca = 0
 
-                var endChocolate = parseInt(localStorage.getItem(' Chocolate_gabarito'))
+                var endChocolate = parseInt(localStorage.getItem(' Chocolate_gabarito'),16)
                 var endAtual = parseInt(localStorage.getItem(e + '_gabarito'), 16)
 
                 if (endAtual < endChocolate) {
-                    diferenca = parseInt(endChocolate) - parseInt(endAtual)
+                    diferenca = endChocolate - endAtual
                     localStorage.setItem(e + '_operacao', '-')
                 } else {
-                    diferenca = parseInt(endAtual) - parseInt(endChocolate)
+                    diferenca = endAtual + endChocolate
                     localStorage.setItem(e + '_operacao', '+')
                 }
 
-                localStorage.setItem(e + '_diferenca', diferenca)
+                //console.log('diferenca: '+ parseInt(diferenca).toString(16))
+                localStorage.setItem(e + '_diferenca', parseInt(diferenca).toString(16))
 
 
 
