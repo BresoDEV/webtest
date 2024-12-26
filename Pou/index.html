@@ -1,184 +1,561 @@
- 
 <!DOCTYPE html>
+
 <html lang="pt-br">
 
+
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
+
 </head>
+
 <style>
+
     b {
+
         font-size: 60vw;
+
     }
+
+
 
     * {
+
         margin: 0;
+
         padding: 0;
+
         font-size: 5vw;
-        user-select: none;
+
+
+
         cursor: pointer;
+
+
+
+        -webkit-tap-highlight-color: transparent;
+
+        -webkit-touch-callout: none;
+
     }
+
+
+
+
 
     html,
+
     body {
-        background: linear-gradient(to right, rgba(179, 57, 220, 0.502), rgba(35, 211, 230, 0.402));
+
+        background: #222;
+
         color: rgb(0, 0, 0);
+
         height: 100vh;
+
     }
+
+
 
     .dormindo {
+
         width: 100vw;
+
         height: 100vh;
+
         position: fixed;
+
         background-color: rgba(0, 0, 0, 0.478);
+
     }
 
+
+
     div {
+
         border-radius: 5px;
+
     }
+
+
+
+    #dinheiro {
+
+        color: rgb(31, 203, 31);
+
+        position: absolute;
+
+        top: 3vw;
+
+        right: 30px;
+
+        font-size: 10vw;
+
+        font-weight: bolder;
+
+    }
+
+
+
+    #dinheiro_add {
+
+        color: green;
+
+        position: fixed;
+
+        top: 15vw;
+
+        right: 30px; 
+
+    }
+
+
+
+    button {
+
+        font-size: 15px;
+
+        background-color: transparent;
+
+        border: 1px solid #aaa;
+
+        color: #aaa;
+
+        width: 100%;
+
+        padding: 5px;
+
+    }
+
+
+
+    #abrir_loja {
+
+        width: auto;
+
+        font-size: 10vw;
+
+        border: none;
+
+        padding: 8px;
+
+        border-radius: 5px;
+
+        position: absolute;
+
+        top: 10px;
+
+        left: 10px;
+
+    }
+
+
+
+    #voltar {
+
+        width: auto;
+
+        font-size: 10vw;
+
+        border: none;
+
+        padding: 8px;
+
+        border-radius: 5px;
+
+        position: absolute;
+
+        top: 10px;
+
+        left: 10px;
+
+    }
+
+
+
+    #rosto {
+
+        font-size: 40vw;
+
+    }
+
+
+
+    table {
+
+        width: 90vw;
+
+        border: 1px solid #aaa;
+
+        color: #aaa;
+
+        text-align: center;
+
+
+
+    }
+
+
+
+    td {
+
+        border-right: 1px solid #aaa;
+
+        font-size: 5vw;
+
+    }
+
+
+
+    td button {
+
+        height: 100%;
+
+        width: 80%;
+
+        background-color: rgb(58, 85, 75);
+
+        color: aliceblue;
+
+        font-size: 5vw;
+
+    }
+
 </style>
+
+
 
 <body>
 
-    
 
+
+
+
+    <span id="dinheiro">R$ </span>
+
+    <span id="dinheiro_add"></span>
 
     <div class="dormindo" id="dormindo" style="display: none;">&nbsp;</div>
 
     <center>
 
+        <br>
+
+        <br>
+
         <b id="rosto"></b>
+
         <br>
+
         <br>
-
-
-
 
     </center>
 
+    <div style="width: 80vw;border:2px solid #aaa;margin-left: 10vw;">
 
-    <div style="width: 80vw;border:2px solid black;margin-left: 10vw;">
-        <div id="vida" style="background-color:green;height: 100%"></div>
+        <div id="vida" style="background-color:green;height: 100%;padding: 10px 0px;"></div>
+
     </div>
 
     <br>
 
+    <div style="width: 80vw;border:2px solid #aaa;margin-left: 10vw;">
 
-    <div style="width: 80vw;border:2px solid black;margin-left: 10vw;">
-        <div id="sede" style="background-color:rgb(83, 192, 255);height: 100%"></div>
+        <div id="sede" style="background-color:rgb(83, 218, 255);height: 100%;padding: 10px 0px;"></div>
+
     </div>
 
+    <br>
+
+    <br>
+
+
+
+    <button id="abrir_loja">&#128722;</button>
+
+
+
+
+
 </body>
+
 <script>
 
-    
+
+
+
+
+
+
     var hamburguer = 0
+
     var coxinha = 0
 
+
+
+    var dinheiro = 100
+
+
+
     var vida = 100
+
     var sede = 100
 
+
+
     var agora_vida = 0
+
     var agora_sede = 0
 
+
+
     var tempo_diminuir_vida = 1000 * 60 * 15//15min
+
     var tempo_diminuir_sede = 1000 * 60 * 30//25min
 
+
+
     console.log('tempo_diminuir_vida: ' + tempo_diminuir_vida)
+
     console.log('tempo_diminuir_sede: ' + tempo_diminuir_sede)
 
+
+
     const rosto1 = '&#128512;'//😀
+
     const rosto2 = '&#128578;'//🙂
+
     const rosto3 = '&#129402;'//🥺
+
     const rosto4 = '&#128580;'//🙄
+
     const rosto5 = '&#129393;'//🥱
+
     const rosto6 = '&#128528;'//😐
+
     const rosto7 = '&#128577;'//🙁
+
     const rosto8 = '&#128542;'//😞
+
     const rosto9 = '&#129299;'//🤓
+
     const rosto10 = '&#128564;'//😴
+
     const rosto11 = '&#128526;'//😎
+
     const rosto12 = '&#129314;'//🤢
 
-    const icone1 = '&#128703;'//🚿
-    const icone2 = '&#129533;'//🧽
+
+
+    //const icone1 = '&#128703;'//🚿
+
+    //const icone2 = '&#129533;'//🧽
+
     const icone3 = '&#128167;'//💧
+
     const icone4 = '&#127828;'//🍔
+
     const icone5 = '&#127830;'//🍖
+
+    const icone6 = '&#127813;'//🍅
+
+    const icone7 = '&#129373;'//🥝
+
+    const icone8 = '&#127805;'//🌽
+
+    const icone9 = '&#127815;'//🍇
+
+    const icone10 = '&#127822;'//🍎
+
+    const icone11 = '&#127827;'//🍓
+
+    const icone12 = '&#127849;'//🍩
+
+    const icone13 = '&#127829;'//🍕
+
+    const icone14 = '&#127839;'//🍟
+
+    const icone15 = '&#129386;'//🥪
+
+    const icone16 = '&#127789;'//🌭
+
+
+
+
+
+
+
+
 
 
 
     if (localStorage.getItem('vida')) {
+
         vida = parseInt(localStorage.getItem('vida'))
+
     } else {
+
         localStorage.setItem('vida', vida)
+
         vida = parseInt(localStorage.getItem('vida'))
+
     }
+
     //-------------
+
     if (localStorage.getItem('sede')) {
+
         sede = parseInt(localStorage.getItem('sede'))
+
     } else {
+
         localStorage.setItem('sede', sede)
+
         sede = parseInt(localStorage.getItem('sede'))
+
     }
+
     //-------------------
+
     if (localStorage.getItem('agora_vida')) {
+
         agora_vida = parseInt(localStorage.getItem('agora_vida'))
+
     } else {
+
         localStorage.setItem('agora_vida', Date.now())
+
         agora_vida = parseInt(localStorage.getItem('agora_vida'))
+
     }
+
+
 
     //-------------------
+
     if (localStorage.getItem('agora_sede')) {
+
         agora_sede = parseInt(localStorage.getItem('agora_sede'))
+
     } else {
+
         localStorage.setItem('agora_sede', Date.now())
+
         agora_sede = parseInt(localStorage.getItem('agora_sede'))
-    }
-    //---------------------------
-    if (localStorage.getItem('hamburguer')) {
-        hamburguer = parseInt(localStorage.getItem('hamburguer'))
-    } else {
-        localStorage.setItem('hamburguer', 0)
-        hamburguer = parseInt(localStorage.getItem('hamburguer'))
+
     }
 
     //---------------------------
-    if (localStorage.getItem('coxinha')) {
-        coxinha = parseInt(localStorage.getItem('coxinha'))
+
+    if (localStorage.getItem('hamburguer')) {
+
+        hamburguer = parseInt(localStorage.getItem('hamburguer'))
+
     } else {
-        localStorage.setItem('coxinha', 0)
-        coxinha = parseInt(localStorage.getItem('coxinha'))
+
+        localStorage.setItem('hamburguer', 0)
+
+        hamburguer = parseInt(localStorage.getItem('hamburguer'))
+
     }
+
+
+
+    //---------------------------
+
+    if (localStorage.getItem('coxinha')) {
+
+        coxinha = parseInt(localStorage.getItem('coxinha'))
+
+    } else {
+
+        localStorage.setItem('coxinha', 0)
+
+        coxinha = parseInt(localStorage.getItem('coxinha'))
+
+    }
+
+
+
+    //---------------------------
+
+    if (localStorage.getItem('dinheiro')) {
+
+        dinheiro = parseInt(localStorage.getItem('dinheiro'))
+
+    } else {
+
+        localStorage.setItem('dinheiro', 100)
+
+        dinheiro = parseInt(localStorage.getItem('dinheiro'))
+
+    }
+
+
+
+
 
 
 
     var quantoRemover = Math.floor(quantos_segundos_se_passaram(agora_vida) / (tempo_diminuir_vida / 1000))
 
+
+
     console.log('vida quantoRemover:' + quantoRemover)
 
+
+
     if (quantoRemover > 0) {
+
         if ((vida - quantoRemover) <= 0) {
+
             vida = 0
+
         } else {
+
             vida -= quantoRemover
+
         }
+
     }
+
     //-----------
+
     quantoRemover = Math.floor(quantos_segundos_se_passaram(agora_sede) / (tempo_diminuir_sede / 1000))
+
+
 
     console.log('sede quantoRemover:' + quantoRemover)
 
+
+
     if (quantoRemover > 0) {
+
         if ((sede - quantoRemover) <= 0) {
+
             sede = 0
+
         } else {
+
             sede -= quantoRemover
+
         }
+
     }
+
+
+
+
+
+
+
 
 
 
@@ -186,362 +563,947 @@
 
 
     save_progress()
+
     attBarras()
+
     attCorBarraVida()
+
     attRosto()
 
 
 
 
+
+
+
+
+
     //da um bocejo de sono por alguns segundos, se passou das 22:00
+
     setTimeout(() => {
+
         var a = new Date().getHours()
+
         if (a >= 22) {
+
             document.getElementById('rosto').innerHTML = rosto5
+
             document.getElementById('dormindo').style.display = 'none'
+
         }
+
     }, 1000);
+
+
+
+
+
 
 
 
 
     //att vida e sede
+
     setInterval(() => {
+
+
 
         if (vida > 0) {
 
+
+
             if (Date.now() > (agora_vida + tempo_diminuir_vida)) {
+
                 localStorage.setItem('agora_vida', Date.now())
+
                 agora_vida = parseInt(localStorage.getItem('agora_vida'))
+
+
 
                 vida--
 
+
+
                 save_progress()
+
             }
 
+
+
         }
+
         if (sede > 0) {
 
+
+
             if (Date.now() > (agora_sede + tempo_diminuir_sede)) {
+
                 localStorage.setItem('agora_sede', Date.now())
+
                 agora_sede = parseInt(localStorage.getItem('agora_sede'))
+
+
 
                 sede--
 
+
+
                 save_progress()
+
             }
+
+
 
         }
 
+
+
     }, 1000);
+
+
+
+
+
+
 
 
 
 
 
     //att barras e rosto
+
     setInterval(() => {
+
+
 
         attBarras()
 
+
+
         attRosto()
+
+
 
         attCorBarraVida()
 
 
+
+
+
         //corrige caso os stats bugem
+
         if (vida > 100 || sede > 100) {
+
             vida = 100
+
             sede = 100
+
             localStorage.setItem('sede', sede)
+
             localStorage.setItem('vida', vida)
+
         }
+
+
+
 
 
     }, 3000);
 
 
+
+
+
     function attBarras() {
 
+
+
         if (document.getElementById('vida')) {
+
             document.getElementById('vida').style.width = vida + '%'
+
             document.getElementById('vida').innerHTML = '&nbsp;&nbsp;' + vida
+
         }
+
+
 
         if (document.getElementById('sede')) {
+
             document.getElementById('sede').style.width = sede + '%'
+
             document.getElementById('sede').innerHTML = '&nbsp;&nbsp;' + sede
+
         }
 
+
+
+        if (document.getElementById('dinheiro')) {
+
+            document.getElementById('dinheiro').innerHTML = 'R$ ' + dinheiro + '.00'
+
+        }
+
+
+
     }
+
+
 
     function attCorBarraVida() {
 
-        if(document.getElementById('vida')){
-//cor da barra
-if (vida >= 20) {
-            document.getElementById('vida').style.backgroundColor = 'red'
-            if (vida >= 40) {
-                document.getElementById('vida').style.backgroundColor = 'orange'
 
-                if (vida >= 60) {
-                    document.getElementById('vida').style.backgroundColor = 'yellow'
 
-                    if (vida >= 80) {
-                        document.getElementById('vida').style.backgroundColor = 'green'
-                    }
+        if (document.getElementById('vida')) {
 
-                }
+            //cor da barra
 
-            }
-        } else {
-            document.getElementById('vida').style.backgroundColor = 'brown'
-
-        }
-        }
-        
-    }
-
-    function attRosto() {
-
-        if (document.getElementById('rosto')) {
             if (vida >= 20) {
 
-                document.getElementById('rosto').innerHTML = rosto7
+                document.getElementById('vida').style.backgroundColor = 'red'
 
                 if (vida >= 40) {
 
-                    document.getElementById('rosto').innerHTML = rosto6
+                    document.getElementById('vida').style.backgroundColor = 'orange'
+
+
 
                     if (vida >= 60) {
 
-                        document.getElementById('rosto').innerHTML = rosto2
+                        document.getElementById('vida').style.backgroundColor = 'yellow'
+
+
 
                         if (vida >= 80) {
 
-                            document.getElementById('rosto').innerHTML = rosto1
+                            document.getElementById('vida').style.backgroundColor = 'green'
+
                         }
+
+
 
                     }
 
+
+
                 }
+
             } else {
 
-                document.getElementById('rosto').innerHTML = rosto8
-            }
+                document.getElementById('vida').style.backgroundColor = 'brown'
 
-            //===================
-
-            var a = new Date().getHours()
-            if (a < 8) {
-                //dormindo
-                document.getElementById('rosto').innerHTML = rosto10
-                document.getElementById('dormindo').style.display = 'block'
-
-            }
-            else {
-                document.getElementById('dormindo').style.display = 'none'
 
 
             }
+
         }
 
 
 
     }
+
+
+
+    function attRosto() {
+
+
+
+        if (document.getElementById('rosto')) {
+
+            if (vida >= 20) {
+
+
+
+                document.getElementById('rosto').innerHTML = rosto7
+
+
+
+                if (vida >= 40) {
+
+
+
+                    document.getElementById('rosto').innerHTML = rosto6
+
+
+
+                    if (vida >= 60) {
+
+
+
+                        document.getElementById('rosto').innerHTML = rosto2
+
+
+
+                        if (vida >= 80) {
+
+
+
+                            document.getElementById('rosto').innerHTML = rosto1
+
+                        }
+
+
+
+                    }
+
+
+
+                }
+
+            } else {
+
+
+
+                document.getElementById('rosto').innerHTML = rosto8
+
+            }
+
+
+
+            //===================
+
+
+
+            var a = new Date().getHours()
+
+            if (a < 8) {
+
+                //dormindo
+
+                document.getElementById('rosto').innerHTML = rosto10
+
+                document.getElementById('dormindo').style.display = 'block'
+
+
+
+            }
+
+            else {
+
+                document.getElementById('dormindo').style.display = 'none'
+
+
+
+
+
+            }
+
+        }
+
+
+
+
+
+
+
+    }
+
+
+
+
 
 
 
     var devMenu = 0
 
 
-    document.getElementById('rosto').addEventListener('click', () => {
-        devMenu++
-        if (devMenu > 10) {
-            devMenu = 0
 
-            abrirDevMenu()
-        }
+    document.getElementById('rosto').addEventListener('click', () => {
+
+        devMenu++
+
     })
+
+
 
     document.getElementById('dormindo').addEventListener('click', () => {
-        devMenu++
-        if (devMenu > 10) {
-            devMenu = 0
 
-            abrirDevMenu()
-        }
+        devMenu++
+
     })
 
+
+
+    //se a cada 4s nao tem clicks suficientes,zera os click
+
+    setInterval(() => {
+
+        if (devMenu > 10) {
+
+            abrirDevMenu()
+
+        }
+
+        devMenu = 0
+
+    }, 4000);
+
+
+
     function abrirDevMenu() {
+
         const dev = document.createElement('div')
+
         dev.style.position = 'fixed'
+
         dev.style.width = '50vw'
-        dev.style.height = '50vh'
-        dev.style.top = '10px'
-        dev.style.right = '10px'
+
+        dev.style.bottom = '10px'
+
+        dev.style.left = '10px'
+
         dev.style.cursor = 'pointer'
+
         dev.style.padding = '30px'
+
         dev.style.backgroundColor = '#333'
 
+
+
         const bt1 = document.createElement('button')
+
         bt1.textContent = 'Max All'
-        bt1.style.width = '100%'
-        bt1.style.border = '1px solid #aaa'
-        bt1.style.color = '#aaa'
-        bt1.style.backgroundColor = '#333'
-        bt1.style.padding = '5px'
+
+
 
         const bt2 = document.createElement('button')
+
         bt2.textContent = 'Clear Storage'
-        bt2.style.width = '100%'
-        bt2.style.border = '1px solid #aaa'
-        bt2.style.color = '#aaa'
-        bt2.style.backgroundColor = '#333'
-        bt2.style.marginTop = '10px'
-        bt2.style.padding = '5px'
+
+
 
         const bt3 = document.createElement('button')
+
         bt3.textContent = 'Fast Decrease'
-        bt3.style.width = '100%'
-        bt3.style.border = '1px solid #aaa'
-        bt3.style.color = '#aaa'
-        bt3.style.backgroundColor = '#333'
-        bt3.style.marginTop = '10px'
-        bt3.style.padding = '5px'
+
+
 
         const bt4 = document.createElement('button')
+
         bt4.textContent = 'Save'
-        bt4.style.width = '100%'
-        bt4.style.border = '1px solid #aaa'
-        bt4.style.color = '#aaa'
-        bt4.style.backgroundColor = '#333'
-        bt4.style.marginTop = '10px'
+
+
+
+
+
+
 
         const bt5 = document.createElement('button')
+
         bt5.innerHTML = '&#127828; +'
-        bt5.style.border = '1px solid #aaa'
-        bt5.style.color = '#aaa'
-        bt5.style.backgroundColor = '#333'
-        bt5.style.marginTop = '10px'
-        bt5.style.marginRight = '10px'
+
+        bt5.style.width = '25%'
+
+        bt5.style.marginRight = '5px'
+
+
 
         const bt7 = document.createElement('button')
+
         bt7.innerHTML = '&#127830; +'
-        bt7.style.border = '1px solid #aaa'
-        bt7.style.color = '#aaa'
-        bt7.style.backgroundColor = '#333'
-        bt7.style.marginTop = '10px'
-        bt7.style.marginRight = '10px'
+
+        bt7.style.width = '25%'
+
+        bt7.style.marginRight = '5px'
+
+
+
+
 
 
 
         const bt6 = document.createElement('button')
+
         bt6.textContent = 'Sair'
-        //bt6.style.width = '100%'
+
         bt6.style.border = 'none'
+
         bt6.style.color = 'white'
+
         bt6.style.backgroundColor = 'red'
+
         bt6.style.marginTop = '10px'
+
         bt6.style.padding = '5px'
+
         bt6.style.borderRadius = '10px'
+
         bt6.style.float = 'right'
 
 
 
 
+
+        const bt8 = document.createElement('button')
+
+        bt8.textContent = 'Dinheiro +'
+
+
+
+
+
         dev.append(bt1)
+
         dev.append(bt2)
+
         dev.append(bt3)
+
         dev.append(bt5)
+
         dev.append(bt7)
+
+        dev.append(bt8)
+
+
+
 
 
         dev.append(bt4)
+
         dev.append(bt6)
+
+
 
         document.body.appendChild(dev)
 
+
+
         bt1.addEventListener('click', () => {
+
             vida = 100
+
             sede = 100
+
         })
+
+
 
         bt2.addEventListener('click', () => {
+
             localStorage.removeItem('agora_vida')
+
             localStorage.removeItem('agora_sede')
+
             localStorage.removeItem('vida')
+
             localStorage.removeItem('sede')
+
             localStorage.removeItem('hamburguer')
 
+            localStorage.removeItem('dinheiro')
+
+
+
         })
+
+
 
         bt3.addEventListener('click', () => {
+
             tempo_diminuir_vida = Math.floor(Math.random() * 4000) + 1000
+
             tempo_diminuir_sede = Math.floor(Math.random() * 4000) + 1000
+
         })
+
+
 
         bt5.addEventListener('click', () => {
+
             hamburguer++
+
         })
+
         bt7.addEventListener('click', () => {
+
             coxinha++
+
         })
+
+
 
         bt4.addEventListener('click', () => {
+
             save_progress()
-        })
-        bt6.addEventListener('click', () => {
-            dev.remove()
+
         })
 
+        bt6.addEventListener('click', () => {
+
+            dev.remove()
+
+        })
+
+
+
+        bt8.addEventListener('click', () => {
+
+            addDinheiro(100)
+
+        })
+
+
+
     }
+
+
+
+
+
+    function addDinheiro(q) {
+
+        dinheiro += q
+
+        localStorage.setItem('dinheiro', dinheiro)
+
+        document.getElementById('dinheiro_add').style.color = 'lime'
+
+        document.getElementById('dinheiro_add').innerHTML = '+ R$ ' + q
+
+        setTimeout(() => {
+
+            document.getElementById('dinheiro_add').innerHTML = ''
+
+        }, 4000);
+
+    }
+
+
+
+    function remDinheiro(q) {
+
+        if (dinheiro >= q) {
+
+            dinheiro -= q
+
+            localStorage.setItem('dinheiro', dinheiro)
+
+            document.getElementById('dinheiro_add').style.color = 'red'
+
+            document.getElementById('dinheiro_add').innerHTML = '- R$ ' + q
+
+            setTimeout(() => {
+
+                document.getElementById('dinheiro_add').innerHTML = ''
+
+            }, 4000);
+
+        }
+
+
+
+    }
+
+    function temDinheiro(q) {
+
+        if (dinheiro >= q) {
+
+            return true
+
+        }
+
+        return false
+
+    }
+
+
 
     function save_progress() {
+
         localStorage.setItem('sede', sede)
+
         localStorage.setItem('vida', vida)
+
         localStorage.setItem('hamburguer', hamburguer)
+
         localStorage.setItem('coxinha', coxinha)
+
+        localStorage.setItem('dinheiro', dinheiro)
+
     }
+
+
+
+
+
+
+
+
+
+
+
+    const arrayAlimentos = [
+
+        //icone     vida ou agua   regeneracao    valor       tag
+
+        ['🍔', '❤️', '7', '7', 'hamburguer'],
+
+        ['🍖', '❤️', '7', '6', 'coxinha'],
+
+        ['🍅', '❤️', '5', '7', 'tomate'],
+
+        ['🥝', '❤️', '5', '4', 'kiwi'],
+
+        ['🌽', '❤️', '4', '2', 'milho'],
+
+        ['🍇', '❤️', '4', '2', 'uva'],
+
+        ['🍎', '❤️', '3', '5', 'maca'],
+
+        ['🍓', '❤️', '3', '5', 'morango'],
+
+        ['🍩', '❤️', '6', '5', 'rosca'],
+
+        ['🍕', '❤️', '6', '5', 'pizza'],
+
+        ['🍟', '❤️', '5', '6', 'batata'],
+
+        ['🌭', '❤️', '3', '5', 'hotdog'],
+
+
+
+        ['☕', '💧','5', '5', 'cafe'],
+
+        ['🧃', '💧','7', '3', 'suco'],
+
+        ['🥛', '💧', '4', '5', 'leite'],
+
+        ['🍹', '💧', '4', '4', 'drink'],
+
+        ['🍺', '💧', '9', '5', 'cerveja'],
+
+        ['🍷', '💧', '5', '5', 'vinho'],
+
+
+
+    ]
+
+
+
+    document.getElementById('abrir_loja').addEventListener('click', () => {
+
+        var s = `
+
+        <span id="dinheiro">R$ </span>
+
+        <span id="dinheiro_add"></span>
+
+        <button id="voltar">&#11013;&#65039;</button> 
+
+
+
+        <br>
+
+        <br>
+
+        <br>
+
+        <br> 
+
+
+
+        <center>
+
+            <table>
+
+        `
+
+
+
+        arrayAlimentos.forEach(e => {
+
+
+
+            if(dinheiro>=e[3]){
+
+
+
+                s += `
+
+            <tr>
+
+                    <td>${e[0]}</td>
+
+                    <td>${e[1]} (${e[2]})</td>
+
+                    <td>R$ ${e[3]}.00</td>
+
+                    <td>
+
+                        <button id='compar_${e[4]}'>Comprar</button>
+
+                    </td>
+
+                </tr>
+
+
+
+                `
+
+
+
+            setTimeout(() => {
+
+                document.getElementById('compar_'+e[4]).addEventListener('click', () => {
+
+                    if (temDinheiro(e[3])) {
+
+                        hamburguer += 1
+
+                        remDinheiro(e[3])
+
+                        save_progress()
+
+                    }
+
+                })
+
+            }, 100);
+
+
+
+            }
+
+            
+
+        });
+
+
+
+        s += '</table></center><br><br><br><br> '
+
+
+
+        document.body.innerHTML = s
+
+
+
+
+
+        document.getElementById('voltar').addEventListener('click', () => {
+
+            window.location.reload()
+
+        })
+
+
+
+        document.getElementById('compar_hamburguer').addEventListener('click', () => {
+
+            if (temDinheiro(7)) {
+
+                hamburguer += 1
+
+                remDinheiro(7)
+
+                save_progress()
+
+            }
+
+        })
+
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     function quantos_segundos_se_passaram(inicio, fim = Date.now()) {
+
         return Math.floor((parseInt(fim) - parseInt(inicio)) / 1000)
+
     }
+
+
 
     function quantos_minutos_se_passaram(inicio, fim = Date.now()) {
+
         return Math.floor((parseInt(fim) - parseInt(inicio)) / (60 * 1000))
+
     }
 
+
+
     function quantas_horas_se_passaram(inicio, fim = Date.now()) {
+
         return Math.floor((parseInt(fim) - parseInt(inicio)) / (60 * (60 * 1000)))
+
     }
+
     function quantos_dias_se_passaram(inicio, fim = Date.now()) {
+
         return Math.floor((parseInt(fim) - parseInt(inicio)) / (24 * (60 * (60 * 1000))))
+
     }
+
+
+
 
 
     function um_dia() {
+
         return 24 * (60 * (60 * 1000))
+
     }
+
     function uma_hora() {
+
         return 60 * (60 * 1000)
+
     }
+
     function um_minuto() {
+
         return 60 * 1000
+
     }
+
+
 
     function add_horas(num) {
+
         return num * (60 * (60 * 1000))
+
     }
 
+
+
     function add_minutos(num) {
+
         return (60 * 1000) * num
+
     }
+
+
+
+
 
 
 
 </script>
+
+
 
 </html>
