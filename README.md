@@ -28,4 +28,4 @@ Blog:
 https://bresodev.github.io/webtest/Blog/
 
 Pow:
-https://bresodev.github.io/webtest/pou/
+https://bresodev.github.io/webtest/Pou/
