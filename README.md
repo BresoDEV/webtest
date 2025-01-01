@@ -27,5 +27,4 @@ https://bresodev.github.io/webtest/TheForest/
 Blog:
 https://bresodev.github.io/webtest/Blog/
 
-Pow:
-https://bresodev.github.io/webtest/Pou/
+
