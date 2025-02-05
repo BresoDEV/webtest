@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagem para Texto e Vice-Versa</title>
+    <title>Criptografia de Imagem</title>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
     <input type="file" id="inputImagem" accept="image/*">
     <br><br>
 
-    <h3>Texto da Imagem (Base64):</h3>
+    <h3>Texto da Imagem (Criptografado):</h3>
     <textarea id="saidaTexto" rows="10" cols="50"></textarea>
     <br><br>
 
@@ -21,34 +21,96 @@
     <img id="imgResultado" style="max-width: 300px; display: none;">
 
     <script>
-        // Quando o usuário seleciona uma imagem
-        document.getElementById("inputImagem").addEventListener("change", function(event) {
+        const chaveSecreta = "minha_chave_super_secreta"; // Deve ser armazenada com segurança!
+
+        async function gerarChave() {
+            const encoder = new TextEncoder();
+            return crypto.subtle.importKey(
+                "raw",
+                encoder.encode(chaveSecreta),
+                { name: "AES-GCM" },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function criptografarDados(dados) {
+            const chave = await gerarChave();
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const dadosCriptografados = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv },
+                chave,
+                dados
+            );
+            return {
+                iv: btoa(String.fromCharCode(...iv)),
+                data: btoa(String.fromCharCode(...new Uint8Array(dadosCriptografados)))
+            };
+        }
+
+        async function descriptografarDados(ivBase64, dadosBase64) {
+            try {
+                const chave = await gerarChave();
+                const iv = new Uint8Array(atob(ivBase64).split("").map(c => c.charCodeAt(0)));
+                const dadosCriptografados = new Uint8Array(atob(dadosBase64).split("").map(c => c.charCodeAt(0)));
+                
+                const dadosDescriptografados = await crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv },
+                    chave,
+                    dadosCriptografados
+                );
+                return new Uint8Array(dadosDescriptografados);
+            } catch (e) {
+                console.error("Erro na descriptografia:", e);
+                return null;
+            }
+        }
+
+        document.getElementById("inputImagem").addEventListener("change", async function(event) {
             let arquivo = event.target.files[0];
             if (arquivo) {
                 let leitor = new FileReader();
 
-                leitor.onload = function(e) {
-                    // Convertendo os dados da imagem para Base64
-                    let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
-                    document.getElementById("saidaTexto").value = base64;
+                leitor.onload = async function(e) {
+                    let base64 = e.target.result.split(',')[1]; // Remove "data:image/png;base64,"
+
+                    // Converte Base64 para ArrayBuffer
+                    let dadosBinarios = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+                    // Criptografa os dados
+                    let { iv, data } = await criptografarDados(dadosBinarios);
+
+                    // Exibe no textarea
+                    document.getElementById("saidaTexto").value = iv + ":" + data;
                 };
 
-                // Lendo a imagem como uma URL Base64
                 leitor.readAsDataURL(arquivo);
             }
         });
 
-        // Função para converter o texto de volta para imagem
-        function converterParaImagem() {
-            let base64 = document.getElementById("saidaTexto").value.trim();
-            
-            if (base64) {
-                let img = document.getElementById("imgResultado");
-                img.src = "data:image/png;base64," + base64; // Reconstruindo a URL Base64
-                img.style.display = "block";
-            } else {
-                alert("O campo de texto está vazio!");
+        async function converterParaImagem() {
+            let texto = document.getElementById("saidaTexto").value.trim();
+            if (!texto.includes(":")) {
+                alert("Texto inválido!");
+                return;
             }
+
+            let [iv, dadosCriptografados] = texto.split(":");
+
+            // Descriptografa os dados
+            let dadosImagem = await descriptografarDados(iv, dadosCriptografados);
+            if (!dadosImagem) {
+                alert("Erro na descriptografia!");
+                return;
+            }
+
+            // Converte ArrayBuffer para Base64
+            let base64 = btoa(String.fromCharCode(...dadosImagem));
+
+            // Exibe a imagem
+            let img = document.getElementById("imgResultado");
+            img.src = "data:image/png;base64," + base64;
+            img.style.display = "block";
         }
     </script>
 
