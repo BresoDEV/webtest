@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criptografia de Imagem</title>
+    <title>Criptografia Compacta</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
 </head>
 <body>
 
@@ -11,7 +12,7 @@
     <input type="file" id="inputImagem" accept="image/*">
     <br><br>
 
-    <h3>Texto da Imagem (Criptografados):</h3>
+    <h3>Texto da Imagem (Criptografado + Compactado):</h3>
     <textarea id="saidaTexto" rows="10" cols="50"></textarea>
     <br><br>
 
@@ -21,46 +22,33 @@
     <img id="imgResultado" style="max-width: 300px; display: none;">
 
     <script>
-        const chaveSecreta = "minha_chave_super_secreta"; // Chave fixa (não recomendado em produção)
+        const chaveSecreta = "minha_chave_super_secreta"; // Chave fixa para testes
 
-        // Converte uma string para um ArrayBuffer
-        function stringParaArrayBuffer(str) {
-            return new TextEncoder().encode(str);
-        }
-
-        // Converte um ArrayBuffer para string
-        function arrayBufferParaString(buffer) {
-            return new TextDecoder().decode(buffer);
-        }
-
-        // Gera a chave criptográfica
         async function gerarChave() {
+            const encoder = new TextEncoder();
             return crypto.subtle.importKey(
                 "raw",
-                stringParaArrayBuffer(chaveSecreta),
+                encoder.encode(chaveSecreta),
                 { name: "AES-GCM" },
                 false,
                 ["encrypt", "decrypt"]
             );
         }
 
-        // Criptografa os dados
         async function criptografarDados(dados) {
             const chave = await gerarChave();
-            const iv = crypto.getRandomValues(new Uint8Array(12)); // Vetor de inicialização
+            const iv = crypto.getRandomValues(new Uint8Array(12));
             const dadosCriptografados = await crypto.subtle.encrypt(
                 { name: "AES-GCM", iv },
                 chave,
                 dados
             );
-
             return {
-                iv: btoa(String.fromCharCode(...iv)), // Converte IV para Base64
-                data: btoa(String.fromCharCode(...new Uint8Array(dadosCriptografados))) // Converte os dados para Base64
+                iv: btoa(String.fromCharCode(...iv)),
+                data: btoa(String.fromCharCode(...new Uint8Array(dadosCriptografados)))
             };
         }
 
-        // Descriptografa os dados
         async function descriptografarDados(ivBase64, dadosBase64) {
             try {
                 const chave = await gerarChave();
@@ -79,20 +67,22 @@
             }
         }
 
-        // Processa a imagem selecionada
         document.getElementById("inputImagem").addEventListener("change", async function(event) {
             let arquivo = event.target.files[0];
             if (arquivo) {
                 let leitor = new FileReader();
 
                 leitor.onload = async function(e) {
-                    let base64 = e.target.result.split(',')[1]; // Remove "data:image/png;base64,"
+                    let base64 = e.target.result.split(',')[1]; // Obtém apenas os dados da imagem
 
                     // Converte Base64 para ArrayBuffer
                     let dadosBinarios = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
 
+                    // Compacta os dados com pako (gzip)
+                    let dadosCompactados = pako.deflate(dadosBinarios);
+
                     // Criptografa os dados
-                    let { iv, data } = await criptografarDados(dadosBinarios);
+                    let { iv, data } = await criptografarDados(dadosCompactados);
 
                     // Exibe no textarea
                     document.getElementById("saidaTexto").value = iv + ":" + data;
@@ -102,7 +92,6 @@
             }
         });
 
-        // Converte o texto criptografado de volta para imagem
         async function converterParaImagem() {
             let texto = document.getElementById("saidaTexto").value.trim();
             if (!texto.includes(":")) {
@@ -113,11 +102,14 @@
             let [iv, dadosCriptografados] = texto.split(":");
 
             // Descriptografa os dados
-            let dadosImagem = await descriptografarDados(iv, dadosCriptografados);
-            if (!dadosImagem) {
+            let dadosDescompactados = await descriptografarDados(iv, dadosCriptografados);
+            if (!dadosDescompactados) {
                 alert("Erro na descriptografia!");
                 return;
             }
+
+            // Descompacta os dados
+            let dadosImagem = pako.inflate(dadosDescompactados);
 
             // Converte ArrayBuffer para Base64
             let base64 = btoa(String.fromCharCode(...dadosImagem));
