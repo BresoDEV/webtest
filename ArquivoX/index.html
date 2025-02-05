@@ -24,16 +24,19 @@
     <script>
         const chaveSecreta = "minha_chave_super_secreta"; // Chave fixa para testes
 
-        async function gerarChave() {
-            const encoder = new TextEncoder();
-            return crypto.subtle.importKey(
-                "raw",
-                encoder.encode(chaveSecreta),
-                { name: "AES-GCM" },
-                false,
-                ["encrypt", "decrypt"]
-            );
-        }
+       async function gerarChave() {
+    const senha = "minha_chave_super_secreta"; // Pode ser qualquer string
+    const encoder = new TextEncoder();
+    const hash = await crypto.subtle.digest("SHA-256", encoder.encode(senha));
+
+    return crypto.subtle.importKey(
+        "raw",
+        hash.slice(0, 16), // Pegamos apenas 128 bits do hash SHA-256
+        { name: "AES-GCM" },
+        false,
+        ["encrypt", "decrypt"]
+    );
+}
 
         async function criptografarDados(dados) {
             const chave = await gerarChave();
