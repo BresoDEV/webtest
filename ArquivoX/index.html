@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leitura de Imagem como Texto</title>
+    <title>Imagem para Texto e Vice-Versa</title>
 </head>
 <body>
 
@@ -11,10 +11,17 @@
     <input type="file" id="inputImagem" accept="image/*">
     <br><br>
 
-    <h3>Texto da Imagem:</h3>
+    <h3>Texto da Imagem (Base64):</h3>
     <textarea id="saidaTexto" rows="10" cols="50"></textarea>
+    <br><br>
+
+    <button onclick="converterParaImagem()">Converter para Imagem</button>
+
+    <h3>Imagem Restaurada:</h3>
+    <img id="imgResultado" style="max-width: 300px; display: none;">
 
     <script>
+        // Quando o usuário seleciona uma imagem
         document.getElementById("inputImagem").addEventListener("change", function(event) {
             let arquivo = event.target.files[0];
             if (arquivo) {
@@ -30,7 +37,20 @@
                 leitor.readAsDataURL(arquivo);
             }
         });
+
+        // Função para converter o texto de volta para imagem
+        function converterParaImagem() {
+            let base64 = document.getElementById("saidaTexto").value.trim();
+            
+            if (base64) {
+                let img = document.getElementById("imgResultado");
+                img.src = "data:image/png;base64," + base64; // Reconstruindo a URL Base64
+                img.style.display = "block";
+            } else {
+                alert("O campo de texto está vazio!");
+            }
+        }
     </script>
 
 </body>
-  </html>
+</html>
