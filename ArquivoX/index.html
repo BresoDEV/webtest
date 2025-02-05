@@ -11,7 +11,7 @@
     <input type="file" id="inputImagem" accept="image/*">
     <br><br>
 
-    <h3>Texto da Imagem (Criptografado):</h3>
+    <h3>Texto da Imagem (Criptografados):</h3>
     <textarea id="saidaTexto" rows="10" cols="50"></textarea>
     <br><br>
 
@@ -21,33 +21,46 @@
     <img id="imgResultado" style="max-width: 300px; display: none;">
 
     <script>
-        const chaveSecreta = "minha_chave_super_secreta"; // Deve ser armazenada com segurança!
+        const chaveSecreta = "minha_chave_super_secreta"; // Chave fixa (não recomendado em produção)
 
+        // Converte uma string para um ArrayBuffer
+        function stringParaArrayBuffer(str) {
+            return new TextEncoder().encode(str);
+        }
+
+        // Converte um ArrayBuffer para string
+        function arrayBufferParaString(buffer) {
+            return new TextDecoder().decode(buffer);
+        }
+
+        // Gera a chave criptográfica
         async function gerarChave() {
-            const encoder = new TextEncoder();
             return crypto.subtle.importKey(
                 "raw",
-                encoder.encode(chaveSecreta),
+                stringParaArrayBuffer(chaveSecreta),
                 { name: "AES-GCM" },
                 false,
                 ["encrypt", "decrypt"]
             );
         }
 
+        // Criptografa os dados
         async function criptografarDados(dados) {
             const chave = await gerarChave();
-            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const iv = crypto.getRandomValues(new Uint8Array(12)); // Vetor de inicialização
             const dadosCriptografados = await crypto.subtle.encrypt(
                 { name: "AES-GCM", iv },
                 chave,
                 dados
             );
+
             return {
-                iv: btoa(String.fromCharCode(...iv)),
-                data: btoa(String.fromCharCode(...new Uint8Array(dadosCriptografados)))
+                iv: btoa(String.fromCharCode(...iv)), // Converte IV para Base64
+                data: btoa(String.fromCharCode(...new Uint8Array(dadosCriptografados))) // Converte os dados para Base64
             };
         }
 
+        // Descriptografa os dados
         async function descriptografarDados(ivBase64, dadosBase64) {
             try {
                 const chave = await gerarChave();
@@ -66,6 +79,7 @@
             }
         }
 
+        // Processa a imagem selecionada
         document.getElementById("inputImagem").addEventListener("change", async function(event) {
             let arquivo = event.target.files[0];
             if (arquivo) {
@@ -88,6 +102,7 @@
             }
         });
 
+        // Converte o texto criptografado de volta para imagem
         async function converterParaImagem() {
             let texto = document.getElementById("saidaTexto").value.trim();
             if (!texto.includes(":")) {
