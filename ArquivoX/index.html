@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitura de Imagem como Texto</title>
+</head>
+<body>
+
+    <h2>Selecione uma imagem:</h2>
+    <input type="file" id="inputImagem" accept="image/*">
+    <br><br>
+
+    <h3>Texto da Imagem:</h3>
+    <textarea id="saidaTexto" rows="10" cols="50"></textarea>
+
+    <script>
+        document.getElementById("inputImagem").addEventListener("change", function(event) {
+            let arquivo = event.target.files[0];
+            if (arquivo) {
+                let leitor = new FileReader();
+
+                leitor.onload = function(e) {
+                    // Convertendo os dados da imagem para Base64
+                    let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
+                    document.getElementById("saidaTexto").value = base64;
+                };
+
+                // Lendo a imagem como uma URL Base64
+                leitor.readAsDataURL(arquivo);
+            }
+        });
+    </script>
+
+</body>
+  </html>
