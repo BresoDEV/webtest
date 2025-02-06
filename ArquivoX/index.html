@@ -44,6 +44,7 @@
 
         <br>
         <button id="Revelation">Revelar codigo</button>
+        <button id="Salvarlocal">Salvar codigo</button>
 
         <br>
         <hr><br>
@@ -64,7 +65,7 @@
     <script>
 
         const arrayFotos = [
-            
+
             '',
             '',
             '',
@@ -72,44 +73,55 @@
             '',
         ]
 
+        //carrega o storage
+        carregarStorage()
+
+
+        //carrega o array
+
         const center = document.createElement('center')
 
         var idct = 0
 
         arrayFotos.forEach(foto => {
-            if(foto !==''){
+            if (foto !== '') {
                 const div = document.createElement('div')
 
-            const textarea = document.createElement('textarea')
-            textarea.style.display = 'none'
-            textarea.id = 'textarea_'+idct
-            textarea.value = foto
+                const textarea = document.createElement('textarea')
+                textarea.style.display = 'none'
+                textarea.id = 'textarea_' + idct
+                textarea.value = foto
 
-            const input = document.createElement('input')
-            input.type = 'text'
-            input.placeholder = "nome marido da marquito minusculo"
-            input.id = 'input_'+idct
+                const input = document.createElement('input')
+                input.type = 'text'
+                input.placeholder = "nome marido da marquito minusculo"
+                input.id = 'input_' + idct
 
-            const button = document.createElement('button')
-            button.innerHTML = 'Revelar'
-            button.id = 'button_'+idct
+                const button = document.createElement('button')
+                button.innerHTML = 'Revelar'
+                button.id = 'button_' + idct
 
-            div.append(textarea)
-            div.append(input)
-            div.append(button)
-            center.append(div)
+                div.append(textarea)
+                div.append(input)
+                div.append(button)
+                center.append(div)
 
-            button.addEventListener('click', () => {
-                revelar(textarea, input)
-            })
+                button.addEventListener('click', () => {
+                    revelar(textarea, input)
+                })
 
-            idct++
+                idct++
             }
         });
 
         document.body.append(center)
 
 
+
+
+        document.getElementById('Salvarlocal').addEventListener('click', () => {
+            salvarStorage(document.getElementById("saidaTexto").value)
+        })
 
 
         document.getElementById('Revelation').addEventListener('click', () => {
@@ -181,9 +193,59 @@
         });
 
 
+        function salvarStorage(img){
+
+            var idct = 0
+            while (localStorage.getItem('imagem_' + idct)) {
+                idct++
+            }
+            localStorage.setItem('imagem_' + idct,img)
+            window.location.reload()
+        }
 
 
-        //0x4646E655
+        function carregarStorage() {
+
+            const center = document.createElement('center')
+
+            var idct = 0
+
+            while (localStorage.getItem('imagem_' + idct)) {
+
+                const div = document.createElement('div')
+
+                const textarea = document.createElement('textarea')
+                textarea.style.display = 'none'
+                textarea.id = 'textarea_' + idct
+                textarea.value = localStorage.getItem('imagem_' + idct)
+
+                const input = document.createElement('input')
+                input.type = 'text'
+                //input.placeholder = "nome marido da marquito minusculo"
+                input.id = 'input_' + idct
+
+                const button = document.createElement('button')
+                button.innerHTML = 'Revelar'
+                button.id = 'button_' + idct
+
+                div.append(textarea)
+                div.append(input)
+                div.append(button)
+                center.append(div)
+
+                button.addEventListener('click', () => {
+                    revelar(textarea, input)
+                })
+
+                idct++
+            }
+
+
+
+            document.body.append(center)
+
+        }
+
     </script>
 
 </body>
