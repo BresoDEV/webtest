@@ -275,21 +275,18 @@
 
 
 
-    if (!localStorage.getItem('imagem_0')) {
+    if (!localStorage.getItem('imagem_1')) {
 
         for (var i = 1; i < 30; i++){
 
-            setTimeout(() => {
-                
-                fetch("img (" + i + ").txt")
+            fetch("img (" + i + ").txt")
                     .then(response => response.text())
                     .then(data => {
-                        // console.log(data);
+                        console.log('Arquivo '+ i +' encontrado');
                         localStorage.setItem('imagem_' + i, data)	// Exibe o conteúdo do arquivo no console
                     })
                     .catch(error => console.error("Erro ao carregar o arquivo:", error));
 
-            }, 1000);
         }
         document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
         setTimeout(() => {
