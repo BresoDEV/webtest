@@ -291,13 +291,20 @@
 
    //}
 
-   fetch("img (1).txt")
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log('Arquivo 1 encontrado');
-                        localStorage.setItem('imagem_1', data)	// Exibe o conteúdo do arquivo no console
-                    })
-                    .catch(error => {/*88888*/});
+   for (let i = 1; i < 30; i++) {
+    fechh(i)
+   }
+   
+
+   function fechh(index){
+    fetch(`img (${index}).txt`)
+    .then(response => response.text())
+    .then(data => {
+        console.log(`Arquivo ${index} encontrado`);
+        localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
+    })
+    .catch(error => {/*88888*/});
+   }
 
 
 
