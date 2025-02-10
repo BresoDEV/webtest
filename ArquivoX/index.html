@@ -1,253 +1,363 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagem para Texto e Vice-Versa</title>
+    <title>Página Responsiva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            resize: none;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: #3700b3;
+        }
+
+        .line-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .line-buttons input {
+            width: 70%;
+        }
+
+        .line-buttons button {
+            width: 15%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .line-buttons button:hover {
+            background-color: #3700b3;
+        }
+
+        @media (max-width: 600px) {
+
+            .line-buttons input,
+            .line-buttons button {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .buttons button {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
-<style>
-    textarea,
-    input {
-        resize: none;
-        border-radius: 5px;
-        background-color: bisque;
-        color: rgb(0, 0, 0);
-    }
-
-    button {
-        resize: none;
-        border-radius: 5px;
-        background-color: rgb(146, 228, 154);
-        color: rgb(0, 0, 0);
-    }
-
-    body {
-        color: bisque;
-        background-color: rgb(50 50 50);
-    }
-</style>
 
 <body>
 
-    <center>
-        <h2>Selecione uma imagem:</h2>
+    <div class="container" id="container">
+        <center>
+            <h1>IMGtoString</h1>
 
-        <input type="text" id="senha" placeholder="Senha"><br>
-        <br>
-        <input type="file" id="inputImagem" accept="image/*">
-        <br>
-        <br>
+            <div class="form-group">
+                <input type="text" id="senha" placeholder="Chave de Acesso">
+            </div>
 
+            <div class="form-group">
+                <input type="file" id="inputImagem" accept="image/*">
+            </div>
 
-        <textarea id="saidaTexto" rows="5" cols="50"></textarea>
+            <div class="buttons">
+                <center>
+                    <button id="Revelation">Revelar Codigo</button>
+                    <button id="Salvarlocal">Salvar Codigo</button>
+                </center>
+            </div>
 
-        <br>
-        <button id="Revelation">Revelar codigo</button>
-        <button id="Salvarlocal">Salvar codigo</button>
+            <div class="form-group">
+                <textarea id="saidaTexto" rows="4" placeholder="Codigo da imagem...."></textarea>
+            </div>
 
-        <br>
-        <hr><br>
+            <div class="buttons">
+                <center>
+                    <button>Selecionar tudo e copiar</button>
+                </center>
+            </div>
 
-
-
-        <img id="imgResultado" style="max-width: 80%; display: none;">
-
-
-
-        <!---------------------->
-
-        <!---------------------->
-
-
-    </center>
-
-    <script>
-
-        const arrayFotos = [
-
-            '',
-            '',
-            '',
-            '',
-            '',
-        ]
-
-        //carrega o storage
-        carregarStorage()
+            <img id="imgResultado" style="max-width: 80%;width: 80%; display: none;border:1px solid white">
+            <br>
+            <br>
+            <br>
 
 
-        //carrega o array
+        </center>
+    </div>
+
+</body>
+
+<script>
+ 
+
+    //carrega o storage
+    carregarStorage()
+
+
+     
+
+
+    document.getElementById('Salvarlocal').addEventListener('click', () => {
+        salvarStorage(document.getElementById("saidaTexto").value)
+    })
+
+
+    document.getElementById('Revelation').addEventListener('click', () => {
+        revelar(document.getElementById("saidaTexto"), document.getElementById("senha"))
+    })
+
+
+
+
+    function revelar(textarrea, key) {
+        let base64 = textarrea.value.trim();
+
+        if (base64) {
+            let img = document.getElementById("imgResultado");
+            img.src = "data:image/png;base64," + decrip(base64, joaat(key.value)); // Reconstruindo a URL Base64
+            img.style.display = "block";
+
+
+
+        } else {
+            alert("O campo de texto está vazio!");
+        }
+    }
+
+    function encrip(text, key) {
+        let e = ''
+        for (let i = 0; i < text.length; i++) {
+            e += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length))
+        }
+        console.log('Tamanho: ' + e.length)
+        return lzwEncode(btoa(e))
+    }
+    function decrip(text, key) {
+        let e = atob(lzwDecode(text))
+        let d = ''
+        for (let i = 0; i < e.length; i++) {
+            d += String.fromCharCode(e.charCodeAt(i) ^ key.charCodeAt(i % key.length))
+        }
+        console.log('Tamanho: ' + d.length)
+        return d
+    }
+
+
+    function joaat(s) {
+        s = s.toLowerCase();
+        let h = 0;
+        for (let i = 0; i < s.length; i++) {
+            h += s.charCodeAt(i);
+            h += (h << 10);
+            h ^= (h >> 6);
+        }
+        h += (h << 3);
+        h ^= (h >> 11);
+        h += (h << 15);
+        h = h >>> 0;
+        return '0x' + h.toString(16).toUpperCase();
+    }
+
+    // Quando o usuário seleciona uma imagem
+    document.getElementById("inputImagem").addEventListener("change", function (event) {
+        let arquivo = event.target.files[0];
+        if (arquivo) {
+            let leitor = new FileReader();
+
+            leitor.onload = function (e) {
+                // Convertendo os dados da imagem para Base64
+                let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
+                document.getElementById("saidaTexto").value = encrip(base64, joaat(document.getElementById("senha").value));
+            };
+
+            // Lendo a imagem como uma URL Base64
+            leitor.readAsDataURL(arquivo);
+        }
+    });
+
+
+    function salvarStorage(img) {
+
+        var idct = 0
+        while (localStorage.getItem('imagem_' + idct)) {
+            idct++
+        }
+        localStorage.setItem('imagem_' + idct, img)
+        window.location.reload()
+    }
+
+
+    function carregarStorage() {
 
         const center = document.createElement('center')
 
         var idct = 0
 
-        arrayFotos.forEach(foto => {
-            if (foto !== '') {
-                const div = document.createElement('div')
+        while (localStorage.getItem('imagem_' + idct)) {
 
-                const textarea = document.createElement('textarea')
-                textarea.style.display = 'none'
-                textarea.id = 'textarea_' + idct
-                textarea.value = foto
+            const div = document.createElement('div')
+            div.className = 'line-buttons'
+            div.style.width = '90%'
 
-                const input = document.createElement('input')
-                input.type = 'text'
-                input.placeholder = "nome marido da marquito minusculo"
-                input.id = 'input_' + idct
+            const textarea = document.createElement('textarea')
+            textarea.style.display = 'none'
+            textarea.id = 'textarea_' + idct
+            textarea.value = localStorage.getItem('imagem_' + idct)
 
-                const button = document.createElement('button')
-                button.innerHTML = 'Revelar'
-                button.id = 'button_' + idct
+            const local = localStorage.getItem('imagem_' + idct)
 
-                div.append(textarea)
-                div.append(input)
-                div.append(button)
-                center.append(div)
+            const input = document.createElement('input')
+            input.type = 'text'
+            input.style.margin = '3px'
+            //input.placeholder = "nome marido da marquito minusculo"
+            input.id = 'input_' + idct
 
-                button.addEventListener('click', () => {
-                    revelar(textarea, input)
-                })
+            const button = document.createElement('button')
+            button.innerHTML = 'Revelar'
+            button.style.margin = '3px'
+            button.id = 'button_' + idct
 
-                idct++
-            }
-        });
+            const apagar = document.createElement('button')
+            apagar.innerHTML = 'Apagar'
+            apagar.style.margin = '3px'
+            apagar.id = 'button_apagar_' + idct
 
-        document.body.append(center)
+            div.append(textarea)
+            div.append(input)
+            div.append(button)
+            div.append(apagar)
+            center.append(div)
 
+            button.addEventListener('click', () => {
+                revelar(textarea, input)
+                document.getElementById("saidaTexto").value = local
+                document.getElementById("senha").value = input.value
+            })
 
+            const index = idct
 
+            apagar.addEventListener('click', () => {
+                localStorage.removeItem('imagem_' + index)
+                window.location.reload()
+            })
 
-        document.getElementById('Salvarlocal').addEventListener('click', () => {
-            salvarStorage(document.getElementById("saidaTexto").value)
-        })
-
-
-        document.getElementById('Revelation').addEventListener('click', () => {
-            revelar(document.getElementById("saidaTexto"), document.getElementById("senha"))
-        })
-
-
-
-
-        function revelar(textarrea, key) {
-            let base64 = textarrea.value.trim();
-
-            if (base64) {
-                let img = document.getElementById("imgResultado");
-                img.src = "data:image/png;base64," + decrip(base64, joaat(key.value)); // Reconstruindo a URL Base64
-                img.style.display = "block";
-            } else {
-                alert("O campo de texto está vazio!");
-            }
-        }
-
-        function encrip(text, key) {
-            let e = ''
-            for (let i = 0; i < text.length; i++) {
-                e += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length))
-            }
-            return btoa(e)
-        }
-        function decrip(text, key) {
-            let e = atob(text)
-            let d = ''
-            for (let i = 0; i < e.length; i++) {
-                d += String.fromCharCode(e.charCodeAt(i) ^ key.charCodeAt(i % key.length))
-            }
-            return d
+            idct++
         }
 
 
-        function joaat(s) {
-            s = s.toLowerCase();
-            let h = 0;
-            for (let i = 0; i < s.length; i++) {
-                h += s.charCodeAt(i);
-                h += (h << 10);
-                h ^= (h >> 6);
-            }
-            h += (h << 3);
-            h ^= (h >> 11);
-            h += (h << 15);
-            h = h >>> 0;
-            return '0x' + h.toString(16).toUpperCase();
-        }
-
-        // Quando o usuário seleciona uma imagem
-        document.getElementById("inputImagem").addEventListener("change", function (event) {
-            let arquivo = event.target.files[0];
-            if (arquivo) {
-                let leitor = new FileReader();
-
-                leitor.onload = function (e) {
-                    // Convertendo os dados da imagem para Base64
-                    let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
-                    document.getElementById("saidaTexto").value = encrip(base64, joaat(document.getElementById("senha").value));
-                };
-
-                // Lendo a imagem como uma URL Base64
-                leitor.readAsDataURL(arquivo);
-            }
-        });
 
 
-        function salvarStorage(img){
+        document.getElementById('container').append(center)
 
-            var idct = 0
-            while (localStorage.getItem('imagem_' + idct)) {
-                idct++
-            }
-            localStorage.setItem('imagem_' + idct,img)
-            window.location.reload()
-        }
+    }
 
+    function lzwEncode(s) {
+        //let dict = {}, data = (s + "").split(""), out = [], currChar,
+        //    phrase = data[0], code = 256;
+        //for (let i = 1; i < data.length; i++) {
+        //    currChar = data[i];
+        //    if (dict[phrase + currChar] !== undefined) {
+        //        phrase += currChar;
+        //    } else {
+        //        out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+        //        dict[phrase + currChar] = code;
+        //        code++;
+        //        phrase = currChar;
+        //    }
+        //}
+        //out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+        //return out.map(c => String.fromCharCode(c)).join("");
 
-        function carregarStorage() {
+        return s;
+    }
 
-            const center = document.createElement('center')
-
-            var idct = 0
-
-            while (localStorage.getItem('imagem_' + idct)) {
-
-                const div = document.createElement('div')
-
-                const textarea = document.createElement('textarea')
-                textarea.style.display = 'none'
-                textarea.id = 'textarea_' + idct
-                textarea.value = localStorage.getItem('imagem_' + idct)
-
-                const input = document.createElement('input')
-                input.type = 'text'
-                //input.placeholder = "nome marido da marquito minusculo"
-                input.id = 'input_' + idct
-
-                const button = document.createElement('button')
-                button.innerHTML = 'Revelar'
-                button.id = 'button_' + idct
-
-                div.append(textarea)
-                div.append(input)
-                div.append(button)
-                center.append(div)
-
-                button.addEventListener('click', () => {
-                    revelar(textarea, input)
-                })
-
-                idct++
-            }
-
-
-
-            document.body.append(center)
-
-        }
-
-    </script>
-
-</body>
+    function lzwDecode(s) {
+        // let dict = {}, data = (s + "").split(""), currChar = data[0],
+        //     oldPhrase = currChar, out = [currChar], code = 256, phrase;
+        // for (let i = 1; i < data.length; i++) {
+        //     let currCode = data[i].charCodeAt(0);
+        //     phrase = currCode < 256 ? data[i] : dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+        //     out.push(phrase);
+        //     currChar = phrase.charAt(0);
+        //     dict[code] = oldPhrase + currChar;
+        //     code++;
+        //     oldPhrase = phrase;
+        // }
+        // return out.join("");
+        return s;
+    }
+</script>
 
 </html>
