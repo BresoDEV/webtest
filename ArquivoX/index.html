@@ -121,7 +121,7 @@
 
     <div class="container" id="container">
         <center>
-            <h1>IMGtoString</h1>
+            <h1 id="ArquivoX">ArquivoX</h1>
 
             <div class="form-group">
                 <input type="text" autocomplete="off" id="senha" placeholder="Chave de Acesso">
@@ -160,27 +160,27 @@
 </body>
 
 <script>
- 
+
 
     //carrega o storage
     carregarStorage()
 
 
-     
+
 
 
     document.getElementById('copiarSelecionar').addEventListener('click', () => {
-	
-         let textarea = document.getElementById("saidaTexto");
-    
-    // Seleciona o texto dentro da textarea
-    textarea.select();
-    textarea.setSelectionRange(0, 999999); // Para compatibilidade com dispositivos móveis
 
-    // Copia o texto para a área de transferência
-    navigator.clipboard.writeText(textarea.value)
-        .then(() => alert("Texto copiado!"))
-        .catch(err => console.error("Erro ao copiar:", err));
+        let textarea = document.getElementById("saidaTexto");
+
+        // Seleciona o texto dentro da textarea
+        textarea.select();
+        textarea.setSelectionRange(0, 999999); // Para compatibilidade com dispositivos móveis
+
+        // Copia o texto para a área de transferência
+        navigator.clipboard.writeText(textarea.value)
+            .then(() => alert("Texto copiado!"))
+            .catch(err => console.error("Erro ao copiar:", err));
     })
 
 
@@ -272,27 +272,37 @@
         localStorage.setItem('imagem_' + idct, img)
         window.location.reload()
     }
-	
-	
-	
-	
-	if(!localStorage.getItem('imagem_0')){
-	for(var i = 1; i< 100;i++){
-	
-	fetch("img ("+i+").txt")
-  .then(response => response.text())
-  .then(data => {
-   // console.log(data);
-localStorage.setItem('imagem_' + i,data)	// Exibe o conteúdo do arquivo no console
-  })
-  .catch(error => console.error("Erro ao carregar o arquivo:", error));
-  
-	}
-	}
-	
-	
-	
-	
+
+
+
+    if (!localStorage.getItem('imagem_0')) {
+
+        for (var i = 1; i < 30; i++){
+
+            setTimeout(() => {
+                
+                fetch("img (" + i + ").txt")
+                    .then(response => response.text())
+                    .then(data => {
+                        // console.log(data);
+                        localStorage.setItem('imagem_' + i, data)	// Exibe o conteúdo do arquivo no console
+                    })
+                    .catch(error => console.error("Erro ao carregar o arquivo:", error));
+
+            }, 1000);
+        }
+        document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
+        setTimeout(() => {
+            window.location.reload()
+        }, 3000);
+
+    }
+
+    
+
+
+
+
 
 
 
@@ -320,7 +330,7 @@ localStorage.setItem('imagem_' + i,data)	// Exibe o conteúdo do arquivo no cons
             input.style.margin = '3px'
             input.placeholder = "nome marido da marquito minusculo"
             input.id = 'input_' + idct
-			input.setAttribute("autocomplete", "off");
+            input.setAttribute("autocomplete", "off");
 
 
             const button = document.createElement('button')
