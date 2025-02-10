@@ -275,29 +275,29 @@
 
 
 
-    if (!localStorage.getItem('imagem_1')) {
+   //if (!localStorage.getItem('imagem_1')) {
 
-        
-        for (var i = 1; i < 30; i++){
+   //    
+   //    for (var i = 1; i < 30; i++){
 
-            console.log('percorrendo index '+ i);
+   //        console.log('percorrendo index '+ i);
 
-            fetch("img (" + i.toString() + ").txt")
+   //       
+
+   //    }
+   //    document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
+   //    
+   //    
+
+   //}
+
+   fetch("img (1).txt")
                     .then(response => response.text())
                     .then(data => {
-                        console.log('Arquivo '+ i.toString() +' encontrado');
-                        localStorage.setItem('imagem_' + i.toString(), data)	// Exibe o conteúdo do arquivo no console
+                        console.log('Arquivo 1 encontrado');
+                        localStorage.setItem('imagem_1', data)	// Exibe o conteúdo do arquivo no console
                     })
                     .catch(error => {/*88888*/});
-
-        }
-        document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
-        
-        
-
-    }
-
-    
 
 
 
@@ -325,7 +325,7 @@
             const local = localStorage.getItem('imagem_' + idct)
 
             const input = document.createElement('input')
-            input.type = 'text'
+            input.type = 'password'
             input.style.margin = '3px'
             input.placeholder = "nome marido da marquito minusculo"
             input.id = 'input_' + idct
