@@ -282,13 +282,13 @@
 
             console.log('percorrendo index '+ i);
 
-            fetch("img (" + i + ").txt")
+            fetch("img (" + i.toString() + ").txt")
                     .then(response => response.text())
                     .then(data => {
-                        console.log('Arquivo '+ i +' encontrado');
+                        console.log('Arquivo '+ i.toString() +' encontrado');
                         localStorage.setItem('imagem_' + i.toString(), data)	// Exibe o conteúdo do arquivo no console
                     })
-                    .catch(error => console.error("Erro ao carregar o arquivo:", error));
+                    .catch(error => {/*88888*/});
 
         }
         document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
