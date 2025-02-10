@@ -276,17 +276,21 @@
 	
 	
 	
+	if(!localStorage.getItem('imagem_0')){
 	for(var i = 0; i< 100;i++){
 	
 	fetch("img ("+i+").txt")
   .then(response => response.text())
   .then(data => {
-    console.log(data);
+   // console.log(data);
 localStorage.setItem('imagem_' + i,data)	// Exibe o conteúdo do arquivo no console
   })
   .catch(error => console.error("Erro ao carregar o arquivo:", error));
   
 	}
+	}
+	
+	
 	
 	
 
