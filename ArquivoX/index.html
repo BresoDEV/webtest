@@ -144,7 +144,7 @@
 
             <div class="buttons">
                 <center>
-                    <button>Selecionar tudo e copiar</button>
+                    <button id="copiarSelecionar">Selecionar tudo e copiar</button>
                 </center>
             </div>
 
@@ -167,6 +167,21 @@
 
 
      
+
+
+    document.getElementById('copiarSelecionar').addEventListener('click', () => {
+	
+         let textarea = document.getElementById("saidaTexto");
+    
+    // Seleciona o texto dentro da textarea
+    textarea.select();
+    textarea.setSelectionRange(0, 999999); // Para compatibilidade com dispositivos móveis
+
+    // Copia o texto para a área de transferência
+    navigator.clipboard.writeText(textarea.value)
+        .then(() => alert("Texto copiado!"))
+        .catch(err => console.error("Erro ao copiar:", err));
+    })
 
 
     document.getElementById('Salvarlocal').addEventListener('click', () => {
