@@ -277,7 +277,10 @@
 
     if (!localStorage.getItem('imagem_1')) {
 
+        
         for (var i = 1; i < 30; i++){
+
+            console.log('percorrendo index '+ i);
 
             fetch("img (" + i + ").txt")
                     .then(response => response.text())
