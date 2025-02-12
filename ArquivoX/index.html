@@ -275,43 +275,64 @@
 
 
 
-   //if (!localStorage.getItem('imagem_1')) {
+    //if (!localStorage.getItem('imagem_1')) {
 
-   //    
-   //    for (var i = 1; i < 30; i++){
+    //    
+    //    for (var i = 1; i < 30; i++){
 
-   //        console.log('percorrendo index '+ i);
+    //        console.log('percorrendo index '+ i);
 
-   //       
+    //       
 
-   //    }
-   //    document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
-   //    
-   //    
+    //    }
+    //    document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
+    //    
+    //    
 
-   //}
+    //}
+
+
+    var fetchIndex = 1
+    fetch('lista.json')
+  .then(response => response.json()) // Converte a resposta para JSON
+  .then(data => {
+    if (Array.isArray(data)) { // Verifica se é um array
+      data.forEach(item => 
+      {
+        localStorage.setItem(`imagem_${fetchIndex}`, item)
+        fetchIndex++
+      }); 
+    } else {
+      console.error('O JSON não é um array.');
+    }
+  })
+  .catch(error => console.error('Erro ao buscar o JSON:', error));
 
 
 
-   //Carrega as imagens locais e add no localStorage
+    //Carrega as imagens locais e add no localStorage
 
-   if(!localStorage.getItem('imagem_1')){
-    for (let i = 1; i < 50; i++) {
-    fechh(i)
-   }
-   }
-   
 
-   function fechh(index){
-    fetch(`img (${index}).txt`)
-    .then(response => response.text())
-    .then(data => {
-        console.log(`Arquivo ${index} encontrado`);
-        localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
-    })
-    .catch(error => {/*88888*/});
-   }
-//------------------------------
+
+
+    //if (!localStorage.getItem('imagem_1')) {
+    //    for (let i = 1; i < 50; i++) {
+    //        fechh(i)
+    //    }
+//
+    //}
+
+
+    //function fechh(index) {
+    //    fetch(`img (${index}).txt`)
+    //        .then(response => response.text())
+    //        .then(data => {
+    //            console.log(`Arquivo ${index} encontrado`);
+    //            localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
+    //        })
+    //        .catch(error => {/*88888*/ });
+    //}
+    //------------------------------
 
 
 
