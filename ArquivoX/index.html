@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>99toIntervalNumerado</title>
+    <title>99Carregando</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -377,28 +377,34 @@
     //    for (let i = 1; i < 50; i++) {
     //        fechh(i)
     //    }
-//
+    //
     //}
 
     let i = 1
     setInterval(() => {
-        if(i < 50){
+        if (i < 50) {
             if (!localStorage.getItem('imagem_' + i.toString())) {
-            fechh(i)
-            i++
+                fechh(i)
+                i++
+            }
         }
+        else{
+            window.location.reload()
         }
-    }, 1000);
+    }, 500);
 
 
     function fechh(index) {
         fetch(`img (${index}).txt`)
             .then(response => response.text())
             .then(data => {
-                console.log(`Arquivo ${index} encontrado`);
+
+                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Arquivo ${index} encontrado`
                 localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
             })
-            .catch(error => {/*88888*/ });
+            .catch(error => {
+                ocument.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>ERRO: Arquivo ${index} nao encontrado`
+            });
     }
     //------------------------------
 
@@ -429,7 +435,7 @@
             const input = document.createElement('input')
             input.type = 'password'
             input.style.margin = '3px'
-            input.placeholder = "Foto: "+idct+" - nome marido da marquito minusculo"
+            input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
             input.id = 'input_' + idct
             input.setAttribute("autocomplete", "off");
 
