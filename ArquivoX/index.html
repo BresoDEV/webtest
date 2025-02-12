@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouCanRunYouCanFight</title>
+    <title>Recarregar Banco</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -135,6 +135,7 @@
                 <center>
                     <button id="Revelation">Revelar Codigo</button>
                     <button id="Salvarlocal">Salvar Codigo</button>
+                    <button id="RecarregarBanco">Recarregar Banco</button>
                 </center>
             </div>
 
@@ -166,6 +167,14 @@
     carregarStorage()
 
 
+
+
+
+    document.getElementById('RecarregarBanco').addEventListener('click', () => {
+
+        localStorage.clear()
+        window.location.reload()
+    })
 
 
 
