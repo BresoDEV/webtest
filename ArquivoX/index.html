@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breso X Files</title>
+    <title>Breso X Files mouseover</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -467,6 +467,19 @@
             div.append(button)
             center.append(div)
 
+
+
+            button.addEventListener('mouseover', () => {
+                 
+                let base64 = textarea.value.trim();
+
+         var ooo = "data:image/png;base64," + decrip(base64, joaat(input.value));
+                
+                console.log(
+  '%c ',
+  `font-size: 0; padding: 50px; background: url(${ooo}) no-repeat center; background-size: contain;`
+);
+            })
             button.addEventListener('click', () => {
                 revelar(textarea, input)
                 document.getElementById("saidaTexto").value = imgemtexto
