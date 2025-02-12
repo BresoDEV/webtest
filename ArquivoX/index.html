@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FeltrinTHUG</title>
+    <title>X Files</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -164,7 +164,7 @@
 
 
     //carrega o storage
-     
+
 
 
 
@@ -393,13 +393,13 @@
     setInterval(() => {
         if (i < 50) {
             //if (!localStorage.getItem('imagem_' + i.toString())) {
-                fechh(i)
-                i++
-                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: <font style="color:lime">${i}</font> `
+            fechh(i)
+            i++
+            document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: <font style="color:lime">${i}</font> `
             //}
         }
-         
-    }, 2000);
+
+    }, 1000);
 
 
     function fechh(index) {
@@ -408,8 +408,8 @@
             .then(data => {
 
                 carregarStorage(data)
-                
-               // localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
+
+                // localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
             })
             .catch(error => {
                 console.log(error)
@@ -421,55 +421,58 @@
 
 
 
-var idct = 1
+    var idct = 1
 
     function carregarStorage(imgemtexto) {
 
-        const center = document.createElement('center')
-
-         
-
-         
-            const div = document.createElement('div')
-            div.className = 'line-buttons'
-            div.style.width = '90%'
-
-            const textarea = document.createElement('textarea')
-            textarea.style.display = 'none'
-            textarea.id = 'textarea_' + idct
-            textarea.value = imgemtexto
-
-             
-            const input = document.createElement('input')
-            input.type = 'password'
-            input.style.margin = '3px'
-            input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
-            input.id = 'input_' + idct
-            input.setAttribute("autocomplete", "off");
+        if(imgemtexto !== '')
+        {
+            const center = document.createElement('center')
 
 
-            const button = document.createElement('button')
-            button.innerHTML = 'Revelar'
-            button.style.margin = '3px'
-            button.id = 'button_' + idct
- 
 
-            div.append(textarea)
-            div.append(input)
-            div.append(button) 
-            center.append(div)
 
-            button.addEventListener('click', () => {
-                revelar(textarea, input)
-                document.getElementById("saidaTexto").value = imgemtexto
-                document.getElementById("senha").value = input.value
-            })
+        const div = document.createElement('div')
+        div.className = 'line-buttons'
+        div.style.width = '90%'
 
-           
- 
+        const textarea = document.createElement('textarea')
+        textarea.style.display = 'none'
+        textarea.id = 'textarea_' + idct
+        textarea.value = imgemtexto
+
+
+        const input = document.createElement('input')
+        input.type = 'password'
+        input.style.margin = '3px'
+        input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
+        input.id = 'input_' + idct
+        input.setAttribute("autocomplete", "off");
+
+
+        const button = document.createElement('button')
+        button.innerHTML = 'Revelar'
+        button.style.margin = '3px'
+        button.id = 'button_' + idct
+
+
+        div.append(textarea)
+        div.append(input)
+        div.append(button)
+        center.append(div)
+
+        button.addEventListener('click', () => {
+            revelar(textarea, input)
+            document.getElementById("saidaTexto").value = imgemtexto
+            document.getElementById("senha").value = input.value
+        })
+
+
+
         document.getElementById('container').append(center)
 
         idct++
+        }
     }
 
     function lzwEncode(s) {
