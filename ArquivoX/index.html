@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ball and Chain</title>
+    <title>Lime</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -395,7 +395,7 @@
             if (!localStorage.getItem('imagem_' + i.toString())) {
                 fechh(i)
                 i++
-                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: ${i} `
+                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: <font style="color:lime">${i}</font> `
             }
         }
         else{
@@ -413,8 +413,7 @@
                 localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
             })
             .catch(error => {
-                i = 100000000000
-                 
+                console.log(error)
             });
     }
     //------------------------------
