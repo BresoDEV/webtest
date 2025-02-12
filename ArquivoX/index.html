@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>99Carregando</title>
+    <title>YouCanRunYouCanFight</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -386,6 +386,7 @@
             if (!localStorage.getItem('imagem_' + i.toString())) {
                 fechh(i)
                 i++
+                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: ${i} `
             }
         }
         else{
@@ -399,11 +400,12 @@
             .then(response => response.text())
             .then(data => {
 
-                document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Arquivo ${index} encontrado`
+                
                 localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
             })
             .catch(error => {
-                ocument.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>ERRO: Arquivo ${index} nao encontrado`
+                i = 100000000000
+                 
             });
     }
     //------------------------------
