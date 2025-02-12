@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X Files</title>
+    <title>Breso X Files</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -403,18 +403,25 @@
 
 
     function fechh(index) {
+
         fetch(`img (${index}).txt`)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! Status: ${response.status}`);
+                }
+                return response.text();  
+            })
             .then(data => {
-
+                console.log('Dados recebidos:', data);
                 carregarStorage(data)
-
-                // localStorage.setItem(`imagem_${index}`, data)	// Exibe o conteúdo do arquivo no console
             })
             .catch(error => {
+                console.error('Erro na requisição:', error);
                 console.log(error)
                 i = 10000 //finaliza o hook
             });
+
+ 
     }
     //------------------------------
 
@@ -425,53 +432,52 @@
 
     function carregarStorage(imgemtexto) {
 
-        if(imgemtexto !== '')
-        {
+        if (imgemtexto !== '') {
             const center = document.createElement('center')
 
 
 
 
-        const div = document.createElement('div')
-        div.className = 'line-buttons'
-        div.style.width = '90%'
+            const div = document.createElement('div')
+            div.className = 'line-buttons'
+            div.style.width = '90%'
 
-        const textarea = document.createElement('textarea')
-        textarea.style.display = 'none'
-        textarea.id = 'textarea_' + idct
-        textarea.value = imgemtexto
-
-
-        const input = document.createElement('input')
-        input.type = 'password'
-        input.style.margin = '3px'
-        input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
-        input.id = 'input_' + idct
-        input.setAttribute("autocomplete", "off");
+            const textarea = document.createElement('textarea')
+            textarea.style.display = 'none'
+            textarea.id = 'textarea_' + idct
+            textarea.value = imgemtexto
 
 
-        const button = document.createElement('button')
-        button.innerHTML = 'Revelar'
-        button.style.margin = '3px'
-        button.id = 'button_' + idct
+            const input = document.createElement('input')
+            input.type = 'password'
+            input.style.margin = '3px'
+            input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
+            input.id = 'input_' + idct
+            input.setAttribute("autocomplete", "off");
 
 
-        div.append(textarea)
-        div.append(input)
-        div.append(button)
-        center.append(div)
-
-        button.addEventListener('click', () => {
-            revelar(textarea, input)
-            document.getElementById("saidaTexto").value = imgemtexto
-            document.getElementById("senha").value = input.value
-        })
+            const button = document.createElement('button')
+            button.innerHTML = 'Revelar'
+            button.style.margin = '3px'
+            button.id = 'button_' + idct
 
 
+            div.append(textarea)
+            div.append(input)
+            div.append(button)
+            center.append(div)
 
-        document.getElementById('container').append(center)
+            button.addEventListener('click', () => {
+                revelar(textarea, input)
+                document.getElementById("saidaTexto").value = imgemtexto
+                document.getElementById("senha").value = input.value
+            })
 
-        idct++
+
+
+            document.getElementById('container').append(center)
+
+            idct++
         }
     }
 
