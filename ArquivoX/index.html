@@ -297,10 +297,64 @@
   .then(response => response.json()) // Converte a resposta para JSON
   .then(data => {
     if (Array.isArray(data)) { // Verifica se é um array
+
+        const center = document.createElement('center')
+
+        var idct = 1
+
+
       data.forEach(item => 
       {
-        localStorage.setItem(`imagem_${fetchIndex}`, item)
-        fetchIndex++
+        const div = document.createElement('div')
+            div.className = 'line-buttons'
+            div.style.width = '90%'
+
+            const textarea = document.createElement('textarea')
+            textarea.style.display = 'none'
+            textarea.id = 'textarea_' + idct
+            textarea.value = data
+
+            const local = data
+
+            const input = document.createElement('input')
+            input.type = 'password'
+            input.style.margin = '3px'
+            input.placeholder = "nome marido da marquito minusculo"
+            input.id = 'input_' + idct
+            input.setAttribute("autocomplete", "off");
+
+
+            const button = document.createElement('button')
+            button.innerHTML = 'Revelar'
+            button.style.margin = '3px'
+            button.id = 'button_' + idct
+
+            const apagar = document.createElement('button')
+            apagar.innerHTML = 'Apagar'
+            apagar.style.margin = '3px'
+            apagar.style.backgroundColor = 'rgb(200,100,100)'
+            apagar.id = 'button_apagar_' + idct
+
+            div.append(textarea)
+            div.append(input)
+            div.append(button)
+            div.append(apagar)
+            center.append(div)
+
+            button.addEventListener('click', () => {
+                revelar(textarea, input)
+                document.getElementById("saidaTexto").value = local
+                document.getElementById("senha").value = input.value
+            })
+
+            const index = idct
+
+            apagar.addEventListener('click', () => {
+                localStorage.removeItem('imagem_' + index)
+                window.location.reload()
+            })
+
+            idct++
       }); 
     } else {
       console.error('O JSON não é um array.');
