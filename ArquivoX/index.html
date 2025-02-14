@@ -239,19 +239,43 @@
     }
 
 
-    function joaat(s) {
-        s = s.toLowerCase();
-        let h = 0;
-        for (let i = 0; i < s.length; i++) {
-            h += s.charCodeAt(i);
-            h += (h << 10);
-            h ^= (h >> 6);
-        }
-        h += (h << 3);
-        h ^= (h >> 11);
-        h += (h << 15);
-        h = h >>> 0;
-        return '0x' + h.toString(16).toUpperCase();
+    function joaat(text) {
+        if (!text) {
+  	return 0;
+  }
+  var value = 0, temp;
+  var index = 0;
+  var quoted = false;
+  if (text.charCodeAt(index) === 34) {
+    quoted = true;
+    index = (index + 1) | 0;
+  }
+  text = text.toLowerCase();
+  for (; index < text.length; index = (index + 1) | 0) {
+    var v = text.charCodeAt(index);
+    if (quoted && (v === 34)) {
+      break;
+    }
+    if (v === 92) {
+      v = 47;
+    }
+    temp = v;
+    temp = (temp + value) >>> 0;
+    value = (temp << 10) >>> 0;
+    temp = (temp + value) >>> 0;
+    value = temp >>> 6;
+    value = (value ^ temp) >>> 0;
+  }
+  temp = (value << 3) >>> 0;
+  temp = (value + temp) >>> 0;
+  var temp2 = temp >>> 11;
+  temp = (temp2 ^ temp) >>> 0;
+  temp2 = (temp << 15) >>> 0;
+  value = (temp2 + temp) >>> 0;
+  if (value < 2) {
+    value = (value + 2) >>> 0;
+  }
+  return '0x' + value.toString(16).toUpperCase();
     }
 
     // Quando o usuário seleciona uma imagem
