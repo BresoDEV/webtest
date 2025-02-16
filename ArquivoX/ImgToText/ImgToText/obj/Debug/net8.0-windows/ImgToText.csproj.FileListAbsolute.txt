@@ -1,0 +1,16 @@
+C:\Users\User\source\repos\ImgToText\ImgToText\bin\Debug\net8.0-windows\ImgToText.exe
+C:\Users\User\source\repos\ImgToText\ImgToText\bin\Debug\net8.0-windows\ImgToText.deps.json
+C:\Users\User\source\repos\ImgToText\ImgToText\bin\Debug\net8.0-windows\ImgToText.runtimeconfig.json
+C:\Users\User\source\repos\ImgToText\ImgToText\bin\Debug\net8.0-windows\ImgToText.dll
+C:\Users\User\source\repos\ImgToText\ImgToText\bin\Debug\net8.0-windows\ImgToText.pdb
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.Form1.resources
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.csproj.GenerateResource.cache
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.AssemblyInfo.cs
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.dll
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\refint\ImgToText.dll
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.pdb
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ImgToText.genruntimeconfig.cache
+C:\Users\User\source\repos\ImgToText\ImgToText\obj\Debug\net8.0-windows\ref\ImgToText.dll

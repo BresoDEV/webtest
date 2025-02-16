@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\User\\source\\repos\\ImgToText Console\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E67F111F-7C45-4231-98FC-BD76E6550569}|ImgToText Console\\ImgToText Console.csproj|c:\\users\\user\\source\\repos\\imgtotext console\\imgtotext console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67F111F-7C45-4231-98FC-BD76E6550569}|ImgToText Console\\ImgToText Console.csproj|solutionrelative:imgtotext console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\ImgToText Console\\ImgToText Console\\Program.cs",
+              "RelativeDocumentMoniker": "ImgToText Console\\Program.cs",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\ImgToText Console\\ImgToText Console\\Program.cs",
+              "RelativeToolTip": "ImgToText Console\\Program.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAD8AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T01:51:25.376Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
