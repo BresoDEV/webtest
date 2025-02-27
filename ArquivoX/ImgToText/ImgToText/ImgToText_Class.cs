@@ -107,7 +107,7 @@ namespace ImgToText
         {
             public static string ImgtoText(string password)
             {
-                using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Imagens|*.jpg;*.png;*.bmp" })
+                using (OpenFileDialog openFileDialog = new OpenFileDialog {  })
                 {
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
@@ -223,6 +223,7 @@ namespace ImgToText
                 }
             }
         }
+ 
         public class Processamento
         {
             public static void converter_todas_imagens_da_pasta_para_txt(string password)
@@ -234,19 +235,25 @@ namespace ImgToText
                 {
                     arquivosImagens = arquivosImagens.Concat(Directory.GetFiles(diretorio, extensao)).ToArray();
                 }
+
                 int ct = 0;
                 foreach (var imagem in arquivosImagens)
                 {
+                    
                     Diversos.SalvarTXT(Sem_OpenDialog.ImgtoText(imagem, password));
                     ct++;
+                    
                 }
                 MessageBox.Show(ct + " imagens convertidas");
+                 
             }
             public static void converter_todos_txt_da_pasta_para_png(PictureBox pictureBox,string password)
             {
                 int ct = 1;
 
-                while(File.Exists("img (" + ct + ").txt"))
+              
+
+                while (File.Exists("img (" + ct + ").txt"))
                 {
                     pictureBox.Image = Sem_OpenDialog.Text_to_Img(File.ReadAllText("img (" + ct + ").txt"), password);
                      

@@ -10,10 +10,12 @@ namespace ImgToText
         public Form1()
         {
             InitializeComponent();
-
+            richTextBox1.Text = "";
 
         }
         public static bool boleta = false;
+
+        List<string> bruteforceCombinacoes = new List<string>();
 
 
 
@@ -61,33 +63,92 @@ namespace ImgToText
             Diversos.SalvarIMG(pictureBox1);
         }
 
+
+
+
+
+        static bool VerificarImagemValida(PictureBox pictureBox)
+        {
+            // Verifica se a propriedade Image não é nula
+            if (pictureBox.Image != null)
+            {
+                // Verifica se a imagem possui um formato válido (uma verificação simples, pode ser expandida)
+                try
+                {
+                    using (var img = pictureBox.Image)
+                    {
+                        // Testa se a imagem tem um formato válido
+                        return true;  // Imagem válida
+                    }
+                }
+                catch
+                {
+                    // Caso a imagem não seja válida (por exemplo, corrompida ou com formato inválido)
+                    return false;
+                }
+            }
+            return false;  // Não há imagem (Image é null)
+        }
+
+
+
         private void timer1_Tick(object sender, EventArgs e)
         {
+
+
+
             pictureBox1.Size = new Size(trackBar1.Value, trackBar2.Value);
 
             if (boleta)
             {
                 string g = "";
-                try
+
+                g = Diversos.gerarSenha(bruteforceNumCaracteres);
+
+                if (!bruteforceCombinacoes.Contains(g))
                 {
-                    g = Diversos.gerarSenha(1);
-                    if (g == "1")
+                    bruteforceCombinacoes.Add(g);
+                    try
                     {
-                        MessageBox.Show("bin");
+
+                        this.Text = "Combinações: " + bruteforceCombinacoes.Count + " / " + Math.Pow(62, bruteforceNumCaracteres);
+
+                        progressBar1.Maximum = (int)Math.Pow(62, bruteforceNumCaracteres);
+                        progressBar1.Value = bruteforceCombinacoes.Count;
+
+                        pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, g);
+
+                        boleta = false;
+                        MessageBox.Show("Senha encontrada:\n" + g);
+
+                        progressBar1.Maximum = 0;
+                        progressBar1.Value = 0;
+
                     }
-                    pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, g);
-                    boleta = false;
-                    MessageBox.Show(g);
+                    catch { }
+
+
+
+                    // if (VerificarImagemValida(pictureBox1))
+                    // {
+                    //     boleta = false;
+                    //     // MessageBox.Show(g);
+                    // }
                 }
-                catch (Exception ex)
-                {
-                    this.Text = g;
-                }
+
+
+
             }
         }
 
+        public static int bruteforceNumCaracteres = 0;
+
         private void button7_Click(object sender, EventArgs e)
         {
+            bruteforceNumCaracteres = (int)numericUpDown1.Value;
+
+            pictureBox1.Image = null;
+
             boleta = true;
         }
     }

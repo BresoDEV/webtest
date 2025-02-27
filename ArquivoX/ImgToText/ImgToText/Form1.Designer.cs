@@ -46,12 +46,15 @@
             trackBar2 = new TrackBar();
             timer1 = new System.Windows.Forms.Timer(components);
             button7 = new Button();
+            numericUpDown1 = new NumericUpDown();
+            progressBar1 = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // textBox1
@@ -234,7 +237,7 @@
             button7.BackColor = Color.FromArgb(50, 50, 50);
             button7.FlatStyle = FlatStyle.Flat;
             button7.ForeColor = SystemColors.AppWorkspace;
-            button7.Location = new Point(222, 286);
+            button7.Location = new Point(221, 371);
             button7.Name = "button7";
             button7.Size = new Size(134, 36);
             button7.TabIndex = 12;
@@ -242,12 +245,32 @@
             button7.UseVisualStyleBackColor = false;
             button7.Click += button7_Click;
             // 
+            // numericUpDown1
+            // 
+            numericUpDown1.BackColor = Color.FromArgb(50, 50, 50);
+            numericUpDown1.ForeColor = SystemColors.MenuBar;
+            numericUpDown1.Location = new Point(221, 338);
+            numericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(134, 23);
+            numericUpDown1.TabIndex = 13;
+            numericUpDown1.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(221, 309);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(134, 23);
+            progressBar1.TabIndex = 14;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(50, 50, 50);
             ClientSize = new Size(732, 477);
+            Controls.Add(progressBar1);
+            Controls.Add(numericUpDown1);
             Controls.Add(button7);
             Controls.Add(trackBar2);
             Controls.Add(trackBar1);
@@ -268,6 +291,7 @@
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -291,5 +315,7 @@
         private TrackBar trackBar2;
         private System.Windows.Forms.Timer timer1;
         private Button button7;
+        private NumericUpDown numericUpDown1;
+        private ProgressBar progressBar1;
     }
 }
