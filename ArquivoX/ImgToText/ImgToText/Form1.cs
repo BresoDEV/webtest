@@ -67,31 +67,10 @@ namespace ImgToText
 
 
 
-        static bool VerificarImagemValida(PictureBox pictureBox)
-        {
-            // Verifica se a propriedade Image não é nula
-            if (pictureBox.Image != null)
-            {
-                // Verifica se a imagem possui um formato válido (uma verificação simples, pode ser expandida)
-                try
-                {
-                    using (var img = pictureBox.Image)
-                    {
-                        // Testa se a imagem tem um formato válido
-                        return true;  // Imagem válida
-                    }
-                }
-                catch
-                {
-                    // Caso a imagem não seja válida (por exemplo, corrompida ou com formato inválido)
-                    return false;
-                }
-            }
-            return false;  // Não há imagem (Image é null)
-        }
 
 
 
+        public static int ggggg = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
 
@@ -101,44 +80,14 @@ namespace ImgToText
 
             if (boleta)
             {
-                string g = "";
-
-                g = Diversos.gerarSenha(bruteforceNumCaracteres);
-
-                if (!bruteforceCombinacoes.Contains(g))
+                for(int i = 0; i < 100; i++)
                 {
-                    bruteforceCombinacoes.Add(g);
-                    try
-                    {
-
-                        this.Text = "Combinações: " + bruteforceCombinacoes.Count + " / " + Math.Pow(62, bruteforceNumCaracteres);
-
-                        progressBar1.Maximum = (int)Math.Pow(62, bruteforceNumCaracteres);
-                        progressBar1.Value = bruteforceCombinacoes.Count;
-
-                        pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, g);
-
-                        boleta = false;
-                        MessageBox.Show("Senha encontrada:\n" + g);
-
-                        progressBar1.Maximum = 0;
-                        progressBar1.Value = 0;
-
-                    }
-                    catch { }
-
-
-
-                    // if (VerificarImagemValida(pictureBox1))
-                    // {
-                    //     boleta = false;
-                    //     // MessageBox.Show(g);
-                    // }
+                    ggggg++;
+                    brute();
                 }
-
-
-
             }
+            
+            this.Text = "Combinações: " + bruteforceCombinacoes.Count + " / " + Math.Pow(62, bruteforceNumCaracteres);
         }
 
         public static int bruteforceNumCaracteres = 0;
@@ -150,6 +99,39 @@ namespace ImgToText
             pictureBox1.Image = null;
 
             boleta = true;
+        }
+
+         
+
+        public void brute()
+        {
+            string g = "";
+
+            g = Diversos.gerarSenha(bruteforceNumCaracteres);
+
+            if (!bruteforceCombinacoes.Contains(g))
+            {
+                bruteforceCombinacoes.Add(g);
+                try
+                {
+
+                    
+
+                    progressBar1.Maximum = (int)Math.Pow(62, bruteforceNumCaracteres);
+                    progressBar1.Value = bruteforceCombinacoes.Count;
+
+                    pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, g);
+
+                    boleta = false;
+                    MessageBox.Show("Senha encontrada:\n" + g);
+
+                    progressBar1.Maximum = 0;
+                    progressBar1.Value = 0;
+                    bruteforceCombinacoes.Clear();
+
+                }
+                catch { }
+            }
         }
     }
 }
