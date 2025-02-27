@@ -60,12 +60,13 @@
             // textBox1
             // 
             textBox1.BackColor = Color.FromArgb(50, 50, 50);
-            textBox1.ForeColor = SystemColors.AppWorkspace;
+            textBox1.ForeColor = SystemColors.ButtonFace;
             textBox1.Location = new Point(6, 22);
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "Senha";
             textBox1.Size = new Size(180, 23);
             textBox1.TabIndex = 0;
+            textBox1.MouseHover += textBox1_MouseHover;
             // 
             // button1
             // 
@@ -89,6 +90,7 @@
             richTextBox1.Size = new Size(180, 115);
             richTextBox1.TabIndex = 2;
             richTextBox1.Text = "\n";
+            richTextBox1.MouseHover += richTextBox1_MouseHover;
             // 
             // button2
             // 
@@ -149,6 +151,7 @@
             // button6
             // 
             button6.BackColor = Color.FromArgb(50, 50, 50);
+            button6.Enabled = false;
             button6.FlatStyle = FlatStyle.Flat;
             button6.ForeColor = SystemColors.AppWorkspace;
             button6.Location = new Point(211, 21);
@@ -282,6 +285,7 @@
             Controls.Add(pictureBox1);
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "Form1";
+            Opacity = 0.98D;
             Text = "3";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox1.ResumeLayout(false);

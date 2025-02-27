@@ -49,25 +49,36 @@ namespace ImgToText
             } 
             public static void SalvarIMG(PictureBox picturebox)
             {
-                const string caracteresPermitidos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                StringBuilder senha = new StringBuilder();
-
-                // Instanciar um gerador de números aleatórios
-                Random random = new Random();
-
-                // Gerar a senha
-                for (int i = 0; i < 10; i++)
+                try
                 {
-                    // Escolher um caractere aleatório da string de caracteresPermitidos
-                    int indice = random.Next(caracteresPermitidos.Length);
-                    senha.Append(caracteresPermitidos[indice]);
+                    const string caracteresPermitidos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                    StringBuilder senha = new StringBuilder();
+
+                    // Instanciar um gerador de números aleatórios
+                    Random random = new Random();
+
+                    // Gerar a senha
+                    for (int i = 0; i < 10; i++)
+                    {
+                        // Escolher um caractere aleatório da string de caracteresPermitidos
+                        int indice = random.Next(caracteresPermitidos.Length);
+                        senha.Append(caracteresPermitidos[indice]);
+                    }
+
+                    string filePath = senha.ToString() + ".png";
+
+                    if(picturebox.Image != null)
+                    {
+                        using (Bitmap copia = new Bitmap(picturebox.Image))
+                        {
+                            copia.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                    }
+                    
                 }
+                catch(Exception o) {
+                    MessageBox.Show(o.ToString());
 
-                string filePath = senha.ToString()+".png";
-
-                using (Bitmap copia = new Bitmap(picturebox.Image))
-                {
-                    copia.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
                 }
             }
             public static string joaat_hexadecimal(string input)
@@ -187,40 +198,44 @@ namespace ImgToText
             }
             public static Image Text_to_Img(string texto, string password)
             {
-                string input = password;
-                uint hash = 0;
-                foreach (char c in input)
+                try
                 {
-                    hash += (uint)c; 
-                    hash += (hash << 10); 
-                    hash ^= (hash >> 6); 
+                    string input = password;
+                    uint hash = 0;
+                    foreach (char c in input)
+                    {
+                        hash += (uint)c;
+                        hash += (hash << 10);
+                        hash ^= (hash >> 6);
+                    }
+
+                    hash += (hash << 3);
+                    hash ^= (hash >> 11);
+                    hash += (hash << 15);
+
+
+                    string key = "0x" + hash.ToString("X");
+                    string base64Decoded = Encoding.UTF8.GetString(Convert.FromBase64String(texto));
+
+
+                    StringBuilder d = new StringBuilder();
+                    for (int i = 0; i < base64Decoded.Length; i++)
+                    {
+                        d.Append((char)(base64Decoded[i] ^ key[i % key.Length]));
+                    }
+
+
+
+                    byte[] imageBytes = Convert.FromBase64String(d.ToString());
+
+                    // Cria um stream a partir dos bytes da imagem
+                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    {
+                        // Carrega a imagem no PictureBox
+                        return System.Drawing.Image.FromStream(ms);
+                    }
                 }
-
-                hash += (hash << 3); 
-                hash ^= (hash >> 11); 
-                hash += (hash << 15); 
-
-
-                string key = "0x" + hash.ToString("X");
-                string base64Decoded = Encoding.UTF8.GetString(Convert.FromBase64String(texto));
-
-
-                StringBuilder d = new StringBuilder();
-                for (int i = 0; i < base64Decoded.Length; i++)
-                {
-                    d.Append((char)(base64Decoded[i] ^ key[i % key.Length]));
-                }
-
-
-
-                byte[] imageBytes = Convert.FromBase64String(d.ToString());
-
-                // Cria um stream a partir dos bytes da imagem
-                using (MemoryStream ms = new MemoryStream(imageBytes))
-                {
-                    // Carrega a imagem no PictureBox
-                    return System.Drawing.Image.FromStream(ms);
-                }
+                catch { return null; }
             }
         }
  

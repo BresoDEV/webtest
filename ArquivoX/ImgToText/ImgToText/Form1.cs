@@ -22,13 +22,36 @@ namespace ImgToText
 
         private void button1_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text = ImgToText_Class.Com_OpenDialog.ImgtoText(textBox1.Text);
-            pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, textBox1.Text);
+            if (textBox1.Text.Length > 0)
+            {
+                richTextBox1.Text = ImgToText_Class.Com_OpenDialog.ImgtoText(textBox1.Text);
+                pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, textBox1.Text);
+                
+            }
+            else
+            {
+                textBox1.BackColor = Color.FromArgb(250, 50, 50);
+            }
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, textBox1.Text);
+            if (richTextBox1.Text.Length > 0)
+            {
+                if (textBox1.Text.Length > 0)
+                {
+                    pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, textBox1.Text);
+                }
+                else
+                {
+                    textBox1.BackColor = Color.FromArgb(250, 50, 50);
+                }
+            }
+            else
+            {
+                richTextBox1.BackColor = Color.FromArgb(250, 50, 50);
+            }
         }
 
 
@@ -49,7 +72,9 @@ namespace ImgToText
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Processamento.converter_todas_imagens_da_pasta_para_txt(textBox2.Text);
+            
+            Processamento.converter_todas_imagens_da_pasta_para_txt(textBox2.Text); 
+            
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -74,19 +99,57 @@ namespace ImgToText
         private void timer1_Tick(object sender, EventArgs e)
         {
 
+            //Habilita o botao de salvar a imagem, caso exista alguma imagen no picturebox
+            if (pictureBox1.Image != null)
+            {
+                button6.Enabled = true;
+            }
+            else
+            {
+                button6.Enabled = false;
+            }
+            //------------------
+
+
+            //Habilita o botao de salvar o arquivo de texto, caso exista algum texto no richtextbox
+            if (richTextBox1.Text.Length > 0)
+            {
+                button3.Enabled = true;
+            }
+            else
+            {
+                button3.Enabled = false;
+            }
+            //------------------
+            
+            //Habilita os botoes de processar tudo, caso exista uma senha ja, no textbox2
+            if (textBox2.Text.Length > 0)
+            {
+                button4.Enabled = true;
+                button5.Enabled = true;
+            }
+            else
+            {
+                button4.Enabled = false;
+                button5.Enabled = false;
+            }
+            //------------------
+
+
+
 
 
             pictureBox1.Size = new Size(trackBar1.Value, trackBar2.Value);
 
             if (boleta)
             {
-                for(int i = 0; i < 100; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     ggggg++;
                     brute();
                 }
             }
-            
+
             this.Text = "Combinações: " + bruteforceCombinacoes.Count + " / " + Math.Pow(62, bruteforceNumCaracteres);
         }
 
@@ -101,7 +164,7 @@ namespace ImgToText
             boleta = true;
         }
 
-         
+
 
         public void brute()
         {
@@ -115,7 +178,7 @@ namespace ImgToText
                 try
                 {
 
-                    
+
 
                     progressBar1.Maximum = (int)Math.Pow(62, bruteforceNumCaracteres);
                     progressBar1.Value = bruteforceCombinacoes.Count;
@@ -132,6 +195,16 @@ namespace ImgToText
                 }
                 catch { }
             }
+        }
+
+        private void textBox1_MouseHover(object sender, EventArgs e)
+        {
+            textBox1.BackColor = Color.FromArgb(50, 50, 50);
+        }
+
+        private void richTextBox1_MouseHover(object sender, EventArgs e)
+        {
+            richTextBox1.BackColor = Color.FromArgb(50, 50, 50);
         }
     }
 }
