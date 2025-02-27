@@ -26,7 +26,7 @@ namespace ImgToText
             {
                 richTextBox1.Text = ImgToText_Class.Com_OpenDialog.ImgtoText(textBox1.Text);
                 pictureBox1.Image = ImgToText_Class.Sem_OpenDialog.Text_to_Img(richTextBox1.Text, textBox1.Text);
-                
+
             }
             else
             {
@@ -72,9 +72,9 @@ namespace ImgToText
 
         private void button4_Click(object sender, EventArgs e)
         {
-            
-            Processamento.converter_todas_imagens_da_pasta_para_txt(textBox2.Text); 
-            
+
+            Processamento.converter_todas_imagens_da_pasta_para_txt(textBox2.Text);
+
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -121,7 +121,7 @@ namespace ImgToText
                 button3.Enabled = false;
             }
             //------------------
-            
+
             //Habilita os botoes de processar tudo, caso exista uma senha ja, no textbox2
             if (textBox2.Text.Length > 0)
             {
