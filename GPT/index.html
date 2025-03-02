@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Simples - Tema Dark</title>
+    <style>
+        /* Estilos para o tema dark */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #121212;
+            color: white;
+        }
+
+        #chat {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #2a2a2a;
+            border-bottom: 1px solid #444;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: #1c1c1c;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #444;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .user-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .server-message {
+            background-color: #333;
+            color: white;
+        }
+
+        .error-message {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            input[type="text"] {
+                width: 60%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            input[type="text"] {
+                width: 50%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="chat"></div>
+
+    <div id="footer">
+        <input type="text" id="messageInput" placeholder="Digite sua mensagem..." value="Crie um planejamento de postagens completo para 7 dias, para uma barbearia, com titulo, mensagem e hastags">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message.trim() === '') return;
+
+            // Exibir a mensagem no chat
+            displayMessage(message, 'Você', 'user-message');
+
+            // Enviar a mensagem para o servidor
+            fetch(`https://text.pollinations.ai/${encodeURIComponent(message)}`)
+                .then(response => response.text())
+                .then(data => {
+                    // Exibir a resposta no chat com efeito de digitação
+for(var i =0;i<1000;i++){
+data = data.replace('---','<br>')
+			data = data.replace('###','<br>')
+			if(i%2==0){
+data = data.replace('**','</b>')}
+else{data = data.replace('**','<b>')}
+}
+                    displayTypingEffect(data, 'Servidor');
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar a mensagem:', error);
+                    displayMessage('Ocorreu um erro. Tente novamente mais tarde.', 'Erro', 'error-message');
+                });
+
+            // Limpar o campo de input
+            messageInput.value = '';
+        }
+
+        function displayMessage(message, sender, messageType) {
+            const chat = document.getElementById('chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', messageType);
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight; // Rolar para a última mensagem
+        }
+
+        function displayTypingEffect(message, sender) {
+            const chat = document.getElementById('chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'server-message');
+            messageDiv.innerHTML = `<strong>${sender}:</strong> <span id="typing"></span>`;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight; // Rolar para a última mensagem
+
+            // Simular o efeito de digitação
+            displayMessageWithHTML(message, 'Servidor'); 
+        }
+
+        // Exibe a resposta com HTML interpretado
+        function displayMessageWithHTML(message, sender) {
+            const chat = document.getElementById('chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'server-message');
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight; // Rolar para a última mensagem
+        }
+    </script>
+
+</body>
+</html>
