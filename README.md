@@ -25,5 +25,8 @@ The Forest CheatTable:
 https://bresodev.github.io/webtest/TheForest/
 
 ArquivoX:
+https://bresodev.github.io/webtest/GPT/
+
+GPT:
 https://bresodev.github.io/webtest/ArquivoX/
 
