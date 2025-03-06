@@ -1,5 +1,0 @@
-I:\arquivox\imagens\ImgToText Console\ImgToText Console\obj\Debug\net5.0\ImgToText Console.csproj.AssemblyReference.cache
-I:\arquivox\imagens\ImgToText Console\ImgToText Console\obj\Debug\net5.0\ImgToText Console.GeneratedMSBuildEditorConfig.editorconfig
-I:\arquivox\imagens\ImgToText Console\ImgToText Console\obj\Debug\net5.0\ImgToText Console.AssemblyInfoInputs.cache
-I:\arquivox\imagens\ImgToText Console\ImgToText Console\obj\Debug\net5.0\ImgToText Console.AssemblyInfo.cs
-I:\arquivox\imagens\ImgToText Console\ImgToText Console\obj\Debug\net5.0\ImgToText Console.csproj.CoreCompileInputs.cache
