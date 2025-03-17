@@ -30,3 +30,6 @@ https://bresodev.github.io/webtest/ArquivoX/
 GPT:
 https://bresodev.github.io/webtest/GPT/
 
+All In One IA:
+https://bresodev.github.io/webtest/AllInOneIA
+
