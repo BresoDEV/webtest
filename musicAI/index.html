@@ -199,11 +199,41 @@
 
         document.getElementById('Gerarimg').addEventListener('click', () => {
 
-            document.getElementById('Gerarimg').innerHTML = "Aguarde..."
 
+            //1px solid #444
             const context = document.getElementById('context').value;
             const style = document.getElementById('style').value;
             const bands = document.getElementById('bands').value;
+
+            var tdcerto = true;
+            if(context == ""){
+                document.getElementById('context').style.border = "1px solid red" 
+                tdcerto = false;
+            }
+            if(style == ""){
+                document.getElementById('style').style.border = "1px solid red"
+                tdcerto = false;
+            }
+            if(bands == ""){
+                document.getElementById('bands').style.border = "1px solid red"
+                tdcerto = false;
+            }
+
+            if(tdcerto == false){
+                return
+            }
+            else{
+                //1px solid #444
+                document.getElementById('bands').style.border = "1px solid #444"
+                document.getElementById('style').style.border = "1px solid #444"
+                document.getElementById('context').style.border = "1px solid #444" 
+            }
+
+
+
+            document.getElementById('Gerarimg').innerHTML = "Aguarde..."
+
+            
 
             var letraResultado = "";
             var prompt = "Crie uma letra de uma musica, preferencialmente que contenha rimas nas frases, no estilo " + style + ", inspirado na(s) banda(s): " + bands + ", que fale sobre os seguintes temas: " + context + ". Quero apenas a letra, sem outros textos adicionais, somente a letra. Preciso que a letra seja formatada para web, com tags HTML que separem uma linha da outra, assim como versos";
