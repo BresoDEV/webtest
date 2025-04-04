@@ -33,3 +33,6 @@ https://bresodev.github.io/webtest/GPT/
 All In One IA:
 https://bresodev.github.io/webtest/AllInOneIA
 
+Criador de letras de musicas e artes:
+https://bresodev.github.io/webtest/musicAI
+
