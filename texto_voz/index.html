@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<textarea name="" id="" cols="30" rows="10"></textarea>
+<body>
+
+</body>
+<script>
+
+document.body.addEventListener("click", ()=>{
+    generateAudioGet("This audio comes from a GET request.", "shimmer");
+})
+ 
+
+
+    async function generateAudioGet(text, voice = "alloy") {
+        const encodedText = encodeURIComponent(text);
+        const params = new URLSearchParams({
+            model: "openai-audio",
+            voice: voice,
+        });
+        const url = `https://text.pollinations.ai/${encodedText}?${params.toString()}`;
+
+        console.log("Generating audio via GET:", url);
+
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(
+                    `HTTP error! status: ${response.status}, message: ${errorText}`
+                );
+            }
+
+            if (response.headers.get("Content-Type")?.includes("audio/mpeg")) {
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Example: Play the audio
+                const audio = new Audio(audioUrl);
+                audio.play();
+                console.log("Audio generated and playing.");
+            } else {
+                const errorText = await response.text();
+                console.error(
+                    "Expected audio, received:",
+                    response.headers.get("Content-Type"),
+                    errorText
+                );
+                throw new Error("API did not return audio content.");
+            }
+        } catch (error) {
+            console.error("Error generating audio via GET:", error);
+        }
+    }
+
+
+</script>
+
+</html>

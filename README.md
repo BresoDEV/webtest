@@ -36,3 +36,6 @@ https://bresodev.github.io/webtest/AllInOneIA
 Criador de letras de musicas e artes:
 https://bresodev.github.io/webtest/musicAI
 
+Converte texto para voz:
+https://bresodev.github.io/webtest/texto_voz
+
