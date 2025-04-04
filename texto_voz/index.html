@@ -8,24 +8,31 @@
     <title>Document</title>
 </head>
 <style>
-    *{
-        background-color: #333;
+    * {
+        background-color: #111;
     }
-    textarea{
-        background-color: #666;
+
+    textarea {
+        background-color: #222;
         color: aliceblue;
+        border: 1px solid red;
     }
 </style>
 <textarea name="" id="" cols="30" rows="10" placeholder="Escreve alguma coisa aqui"></textarea>
+
 <body>
 
 </body>
 <script>
 
-document.body.addEventListener("click", ()=>{
-    generateAudioGet("Fale isso: Oi meu amor, eu te amo pra sempre, bom trabalho e estou com saudades", "onyx");
-})
- 
+    var boleta = true;
+    document.body.addEventListener("click", () => {
+        if (boleta) {
+            generateAudioGet("Fale isso: Oi meu amor, eu te amo pra sempre, bom trabalho e estou com saudades", "onyx");
+            boleta = false;
+        }
+    })
+
 
 
     async function generateAudioGet(text, voice = "alloy") {
