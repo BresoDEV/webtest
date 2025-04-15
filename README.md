@@ -39,3 +39,8 @@ https://bresodev.github.io/webtest/musicAI
 Converte texto para voz:
 https://bresodev.github.io/webtest/texto_voz
 
+Javascript String Obfuscator:
+https://bresodev.github.io/webtest/JSStringObfs
+
+
+
