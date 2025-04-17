@@ -43,7 +43,7 @@
     }
      
      textarea {
-       height:200px;
+       height:100px;
        resize:none;
     }
     
@@ -68,29 +68,40 @@
 
   <script>
   
-        const container = document.getElementById('form-container');
-
-      const novoInput = document.createElement('input');
-      novoInput.type = 'text';
-
-
-      const novoTextarea = document.createElement('textarea');
-      
-
-      container.appendChild(novoInput);
-      container.appendChild(novoTextarea);
+        
   
-  
-  
+ 
   
   
     function adicionarCampo() {
+	
+	const container = document.getElementById('form-container');
+		
+		const metodo1 = document.createElement('h2');
+		metodo1.innerHTML = '<center>Metodo 1</center>';
+	  
+		const novoInput = document.createElement('input');
+		novoInput.type = 'text';
+		const novoTextarea = document.createElement('textarea');
+	  
+	  
+	  const metodo2 = document.createElement('h2');
+      metodo2.innerHTML = '<center>Metodo 2</center>';
+      const novoMetodo = document.createElement('textarea');
+      
+
+      container.appendChild(metodo1);
+      container.appendChild(novoInput);
+      container.appendChild(novoTextarea);
+	  
+      container.appendChild(metodo2);
+      container.appendChild(novoMetodo);
 
       
       const num = Math.floor(Math.random()*1000)
       
       
-      // 🔹 Teste:
+      // ðŸ”¹ Teste:
 let frase = document.getElementById('frase').value;
 
 
@@ -107,7 +118,10 @@ novoInput.value = "const __"+num+" = '"+resultado+"'; /*"+frase+"*/\n\n";
    eval(novoInput.value + novoTextarea.value) 
     
     
-        
+         const input = document.getElementById('frase').value;
+      const charCodes = [...input].map(c => c.charCodeAt(0)).join(',');
+      const result = `String.fromCharCode(${charCodes})`;
+      novoMetodo.value = result;
     }
     
     
