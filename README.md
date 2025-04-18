@@ -42,5 +42,10 @@ https://bresodev.github.io/webtest/texto_voz
 Javascript String Obfuscator:
 https://bresodev.github.io/webtest/JSStringObfs
 
+Gerador de imagens em quantidade: 
+https://bresodev.github.io/webtest/geradorIMG
+
+
+
 
 
