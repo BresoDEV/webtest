@@ -45,6 +45,9 @@ https://bresodev.github.io/webtest/JSStringObfs
 Gerador de imagens em quantidade: 
 https://bresodev.github.io/webtest/geradorIMG
 
+agencIA: 
+https://bresodev.github.io/webtest/agencIA
+
 
 
 
