@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>JS String Ofuscador</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #f7f7f7; }
+    textarea { width: 100%; height: 100px; margin-bottom: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; }
+    .output { background: #e0e0e0; padding: 10px; border-radius: 5px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Ofuscador de Código JS (puro)</h2>
+  <label for="inputCode">Código JavaScript:</label>
+  <textarea id="inputCode"></textarea>
+  <button onclick="ofuscar()">Ofuscar</button>
+  <h3>Código Ofuscado:</h3>
+  <textarea class="output" id="outputCode"></textarea>
+
+  <script>
+  
+  
+  
+    function ofuscar() {
+      const input = document.getElementById('inputCode').value;
+      const charCodes = [...input].map(c => ((c.charCodeAt(0)/2)+"+"+(c.charCodeAt(0)/2))).join(',');
+      const result = `eval(String.fromCharCode(${charCodes}))`;
+      document.getElementById('outputCode').textContent = result;
+    }
+
+    
+    </script>
+</body>
+</html>
