@@ -49,6 +49,10 @@ agencIA:
 https://bresodev.github.io/webtest/agencIA
 
 
+Flipper Card IA: 
+https://bresodev.github.io/webtest/FlipperCard
+
+
 
 
 

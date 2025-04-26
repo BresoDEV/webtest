@@ -1,0 +1,238 @@
+<script>
+  if (!localStorage.getItem('flashcards_nome')) {
+    window.location.href = 'login.html'
+  }
+
+
+
+</script>
+<!DOCTYPE html>
+<html lang="pt-br">
+<script src="js/js.js"></script>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Área/Assunto</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-box {
+      background: #1a1a1a;
+      padding: 5%;
+      border-radius: 12px;
+      box-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff;
+      width: 70%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0d0d0d;
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 90%;
+      padding: 12px;
+      background-color: #0ff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .optVD {
+      padding: 3px;
+      background-color: rgb(185, 239, 173);
+      border: none;
+      border-radius: 3px; 
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .optVM {
+      padding: 3px;
+      background-color: rgb(248, 147, 147);
+      border: none;
+      border-radius: 3px; 
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00e6e6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="meuCanvas" class="canvass"></canvas>
+
+
+  <div class="form-box">
+    <center>
+      <h2>Vamos iniciar?</h2>
+      <p>Escolha uma área de estudo e um assunto relacionado a área escolhida:</p>
+      <input type="text" placeholder="Área (Ex: Matematica)" id="Area">
+      <input type="text" placeholder="Assunto da Area (Ex: Algebra Linear)" id="Assunto">
+      <button id="Iniciar">Iniciar</button>
+    </center>
+
+
+    <!-------------------------------------------->
+    <br>
+    <br>
+    <br>
+    <style>
+      table {
+        border: 1px solid #0ff;
+        width: 100%;
+        max-width: 100%;
+      }
+    </style>
+    <div id="table">
+      
+    </div>
+    <!-------------------------------------------->
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+</body>
+
+<script>
+
+montarTabela()
+
+  function montarTabela() {//funcionando
+    var s = '<center><table>'
+    const chaves = Object.keys(localStorage);
+    // Exibe as chaves no console ou pode manipular como desejar
+    chaves.forEach(nome => {
+      if(nome.includes('flashcards_assunto_')){
+        s+=  `
+        <tr>
+            <td>${nome.replace('flashcards_assunto_','')}</td>
+            <td>${localStorage.getItem(nome)}/100</td>
+            <td>${getEstrelas(localStorage.getItem(nome))}</td>
+            <td><button class="optVD" onclick="Continuar('${nome.replace('flashcards_assunto_','')}')">Continuar</button></td>
+            <td><button class="optVM" onclick="Apagar('${nome.replace('flashcards_assunto_','')}')">Apagar</button></td>
+    
+        </tr>`   
+      }
+    });
+    s+='</table></center>'
+    document.getElementById('table').innerHTML=s
+  }
+
+
+
+  function Apagar(assunto){
+
+    localStorage.removeItem('flashcards_assunto_'+assunto)
+    window.location.reload()
+  }
+
+
+
+  function Continuar(assunto){
+    document.getElementById('Area').value=' '
+    document.getElementById('Assunto').value=assunto
+    document.getElementById('Iniciar').click();
+  }
+
+
+
+
+  const Area = document.getElementById('Area')
+  const Assunto = document.getElementById('Assunto')
+  const Iniciar = document.getElementById('Iniciar')
+
+
+
+  Iniciar.addEventListener('click', () => {
+
+    if (Area.value === '' || Assunto.value === '') {
+      if (Area.value === '') {
+        Area.style.border = '1px solid red'
+
+      }
+      if (Assunto.value === '') {
+        Assunto.style.border = '1px solid red'
+
+      }
+      return
+    }
+
+    localStorage.setItem('flashcards_area', Area.value);
+    localStorage.setItem('flashcards_assunto', Assunto.value);
+
+
+    if (localStorage.getItem('flashcards_assunto_' + Assunto.value)) {
+      //ja existe esse assunto salvo
+      var level = localStorage.getItem('flashcards_assunto_' + Assunto.value)
+      localStorage.setItem('flashcards_level', level)
+      window.location.href = 'index.html'
+    } else {
+
+      localStorage.setItem('flashcards_assunto_' + Assunto.value, '0')
+      localStorage.setItem('flashcards_level', '0')
+      window.location.href = 'index.html'
+    }
+
+
+
+
+
+  })
+
+
+  Area.addEventListener('input', () => {
+    Area.style.border = '1px solid #0ff'
+    Assunto.style.border = '1px solid #0ff'
+  })
+
+  Assunto.addEventListener('input', () => {
+    Area.style.border = '1px solid #0ff'
+    Assunto.style.border = '1px solid #0ff'
+  })
+
+
+</script>
+<script src="js/particulas.js"></script>
+</html>

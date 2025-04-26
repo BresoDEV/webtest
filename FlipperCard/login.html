@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<script src="js/js.js"></script>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background: #1a1a1a;
+      padding: 5%;
+      border-radius: 12px;
+      box-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff;
+      width: 70%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0d0d0d;
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 90%;
+      padding: 12px;
+      background-color: #0ff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00e6e6;
+    }
+
+    p {
+      color: red;
+      font-weight: bolder;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="meuCanvas" class="canvass"></canvas>
+  
+  <div class="login-box">
+    <center>
+      <h2>Login</h2>
+      <p id="p"></p>
+      <input type="text" placeholder="Usuario" id="Usuario">
+      <input type="password" placeholder="Senha" id="Senha">
+      
+      <p style="color:white">Não tem conta? <a style="color:#0ff" href="cadastro.html">Cadastre-se aqui</a></p>
+
+      <button id="Entrar">Entrar</button>
+    </center>
+  </div>
+</body>
+<script>
+
+  const Usuario = document.getElementById('Usuario')
+  const Senha = document.getElementById('Senha')
+  const Entrar = document.getElementById('Entrar')
+  const p = document.getElementById('p')
+
+
+  //preencher campos
+  if (localStorage.getItem('flashcards_nome') !== null) {
+    Usuario.value = localStorage.getItem('flashcards_nome')
+    Senha.value = localStorage.getItem('flashcards_senha')
+  }
+  //-----------------------
+
+
+
+
+
+
+
+
+  Entrar.addEventListener('click', () => {
+
+    if (Usuario.value === '' || Senha.value === '') {
+      if (Usuario.value === '') {
+        Usuario.style.border = '1px solid red'
+
+      }
+      if (Senha.value === '') {
+        Senha.style.border = '1px solid red'
+
+      }
+      return
+    }
+
+
+    if (Senha.value === joaat(Usuario.value)) {
+      localStorage.setItem('flashcards_nome', Usuario.value);
+      localStorage.setItem('flashcards_senha', Senha.value);
+      window.location.href = 'index.html'
+    }
+    else {
+      p.textContent = 'Senha Incorreta'
+      Usuario.style.border = '1px solid red'
+      Senha.style.border = '1px solid red'
+    }
+
+
+  })
+
+  Usuario.addEventListener('input', () => {
+    Usuario.style.border = '1px solid #0ff'
+    Senha.style.border = '1px solid #0ff'
+    p.textContent = ''
+
+    console.clear()
+    console.log(joaat(Usuario.value))
+  })
+
+  Senha.addEventListener('input', () => {
+    p.textContent = ''
+    Usuario.style.border = '1px solid #0ff'
+    Senha.style.border = '1px solid #0ff'
+  })
+
+</script>
+<script src="js/particulas.js"></script>
+</html>
