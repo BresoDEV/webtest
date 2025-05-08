@@ -2,10 +2,7 @@ Repositorio usado apenas para testes de paginas web
 
 Img Creator:
 https://bresodev.github.io/webtest/img_creator/
-
-Img to Css:
-https://bresodev.github.io/webtest/img_to_css
-
+ 
 Conversor de Voz pra Texto:
 https://bresodev.github.io/webtest/voz
 
@@ -33,9 +30,6 @@ https://bresodev.github.io/webtest/GPT/
 All In One IA:
 https://bresodev.github.io/webtest/AllInOneIA
 
-Criador de letras de musicas e artes:
-https://bresodev.github.io/webtest/musicAI
-
 Converte texto para voz:
 https://bresodev.github.io/webtest/texto_voz
 
@@ -45,12 +39,8 @@ https://bresodev.github.io/webtest/JSStringObfs
 Gerador de imagens em quantidade: 
 https://bresodev.github.io/webtest/geradorIMG
 
-agencIA: 
-https://bresodev.github.io/webtest/agencIA
 
 
-Flipper Card IA: 
-https://bresodev.github.io/webtest/FlipperCard
 
 
 

@@ -1,1 +1,0 @@
-https://text.pollinations.ai/prompt/Preciso que crie uma pergunta qualquer sobre o tema COMPUTADOR e a resposta da pergunta, no formato "pergunta$$resposta$$". O grau de dificuldade da questao, deve ser 90/100. Preciso apenas disso, sem outros textos adicionais
