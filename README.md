@@ -39,6 +39,8 @@ https://bresodev.github.io/webtest/JSStringObfs
 Gerador de imagens em quantidade: 
 https://bresodev.github.io/webtest/geradorIMG
 
+ArquivoX V2:
+https://bresodev.github.io/webtest/ArquivoX/novoX.html
 
 
 
