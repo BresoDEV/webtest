@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estoque da Cozinha</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      cursor: pointer;
+    }
+
+    header,
+    nav {
+      background-color: #1e1e1e;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+
+    nav button {
+      background-color: #292929;
+      color: white;
+      border: none;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #292929;
+      color: white;
+      border: none;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .produto {
+      background-color: #1f1f1f;
+      font-size: 4vw;
+      border-radius: 5px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      background-color: #333;
+      color: white;
+    }
+
+    .modal-content button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    details {
+      margin-top: 5px;
+
+      font-weight: bolder;
+
+    }
+
+    li button {
+      color: white;
+      border: none;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 45%;
+    }
+
+    li {
+      list-style-type: none;
+    }
+
+    .green {
+      background-color: #00ff6ea5;
+    }
+
+    .red {
+      background-color: #ff0000a5;
+    }
+
+    .orange {
+      background-color: #ff5500a5;
+    }
+
+    .yellow {
+      background-color: #f2ff00a5;
+    }
+
+    .white {
+      background-color: #ffffff;
+      color: #292929;
+    }
+
+    .w90 {
+      width: 90%;
+    }
+
+
+    summary {
+      padding: 5px;
+    }
+
+
+    input {
+      color: white;
+      border: 1px solid aliceblue;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 90%;
+      background-color: transparent;
+      text-align: center;
+    }
+
+    .dev button:hover {
+      background-color: cornflowerblue;
+    }
+
+
+    table,tr,td{
+        padding: 0;
+        margin: 0;
+    }
+    table{
+        border:1px solid #ffffff;
+        width: 90vw;
+    }
+    
+    td{
+        border-left:1px solid #ffffff;
+        border-bottom:1px solid #ffffff;
+        padding: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header id="header">Estoque Atual</header>
+
+  
+
+  <main>
+<center>
+    <table id="conteudo"></table>
+</center>
+
+  </main>
+
+  
+  
+
+
+
+
+  <script>
+
+
+    let produtos = [];
+    
+
+    // Carrega do localStorage
+    function carregarProdutos() {
+      const armazenado = localStorage.getItem("produtos");
+      produtos = armazenado ? JSON.parse(armazenado) : [];
+    }
+
+    function salvarNoStorage() {
+      localStorage.setItem("produtos", JSON.stringify(produtos));
+    }
+
+    function mostrarLista() {
+      const container = document.getElementById('conteudo');
+      if (produtos.length === 0) {
+        container.innerHTML = "<p>Nenhum produto cadastrado.</p>";
+        return;
+      }
+      container.innerHTML = produtos.map((p, i) => `
+      
+      <tr>
+        <td>${p.nome}</td>
+        <td>${p.tipo === 'Kg' ? p.quantidade.toFixed(3) : p.quantidade} ${p.tipo}</td>
+      </tr>
+    `).join("");
+    }
+
+   
+    
+
+    // Inicializa
+    carregarProdutos();
+    mostrarLista();
+
+
+   
+
+
+
+    
+    console.log(produtos)
+    console.log(localStorage.getItem("produtos"))
+  </script>
+
+</body>
+
+</html>

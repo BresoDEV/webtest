@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estoque da Cozinha</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        header,
+        nav {
+            background-color: #1e1e1e;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 0;
+        }
+
+        nav button {
+            background-color: #292929;
+            color: white;
+            border: none;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #292929;
+            color: white;
+            border: none;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .produto {
+            background-color: #1f1f1f;
+            font-size: 4vw;
+            border-radius: 5px;
+        }
+
+
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        details {
+            margin-top: 5px;
+
+            font-weight: bolder;
+
+        }
+
+        li button {
+            color: white;
+            border: none;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 45%;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .green {
+            background-color: #00ff6ea5;
+        }
+
+        .red {
+            background-color: #ff0000a5;
+        }
+
+        .orange {
+            background-color: #ff5500a5;
+        }
+
+        .yellow {
+            background-color: #f2ff00a5;
+        }
+
+        .white {
+            background-color: #ffffff;
+            color: #292929;
+        }
+
+        .w90 {
+            width: 90%;
+        }
+
+        .w40 {
+            width: 40%;
+        }
+
+
+        summary {
+            padding: 5px;
+        }
+
+
+        input {
+            color: white;
+            border: 1px solid aliceblue;
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 90%;
+            background-color: transparent;
+            text-align: center;
+        }
+
+        .dev button:hover {
+            background-color: cornflowerblue;
+        }
+
+        td,
+        th {
+            border: 1px solid aliceblue;
+            padding: 5px;
+            text-align: center;
+        }
+
+        th {
+            background-color: rgba(100, 148, 237, 0.515);
+        }
+
+        table {
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header id="header">Calculo de Quantidade</header>
+
+    <nav>
+        <input type="number" id="NumerodePessoas" value="300" placeholder="Numero de Pessoas">
+    </nav>
+
+    <center>
+        <main id="conteudo">
+
+
+
+        </main>
+        <main>
+
+            <table id="resultado">
+                <tr>
+                    <th>Produto</th>
+                    <th>Quant. por Pessoa</th>
+                    <th>Total Necessario</th>
+                </tr>
+            </table>
+
+        </main>
+    </center>
+
+    <script>
+
+
+        let produtos = [];
+
+        // Carrega do localStorage
+        function carregarProdutos() {
+            const armazenado = localStorage.getItem("produtos");
+            produtos = armazenado ? JSON.parse(armazenado) : [];
+        }
+
+        function salvarNoStorage() {
+            localStorage.setItem("produtos", JSON.stringify(produtos));
+        }
+
+        function mostrarLista() {
+            const container = document.getElementById('conteudo');
+
+            container.innerHTML = produtos.map((p, i) => `
+      
+      <button class="w40" id="${p.nome}">${p.nome}</button>
+
+      
+    `).join("");
+        }
+
+
+        // Inicializa
+        carregarProdutos();
+        mostrarLista();
+
+
+        document.querySelectorAll('button').forEach(bt => {
+
+            bt.addEventListener('click', (d) => {
+                if (bt.style.backgroundColor == 'green') {
+                    bt.style.backgroundColor = '#292929'
+                } else {
+                    bt.style.backgroundColor = 'green'
+                }
+            })
+
+
+        });
+
+
+
+
+        setInterval(() => {
+
+            
+
+            var texto ='<tr><th>Produto</th><th>Quant. por Pessoa</th><th>Total Necessario</th></tr>'
+            produtos.forEach(e => {
+
+                var total = 0;
+                if (document.getElementById(e.nome)) 
+                {
+                    if (document.getElementById(e.nome).style.backgroundColor == 'green') 
+                    {
+
+                        if (localStorage.getItem(e.nome)) 
+                        {
+                            const valorPorPessoa = parseFloat(localStorage.getItem(e.nome));
+
+                            total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
+                           
+                            texto += '<tr>'
+                            texto += '<td>' + e.nome + '</td>'
+                            texto += '<td>' + valorPorPessoa  + ' ' + e.tipo + '</td>'
+                            texto += '<td>' + total + ' ' + e.tipo + '</td>'
+                            texto += '</tr>'
+                        }
+
+                        //texto += '<br>'+e.nome+': ' +total+' '+e.tipo
+                    }
+                }
+                total = 0;
+
+            });
+            document.getElementById('resultado').innerHTML = texto
+            texto = '';
+            //resultado
+
+        }, 1);
+
+
+        console.log(produtos)
+        console.log(localStorage.getItem("produtos"))
+    </script>
+
+</body>
+
+</html>
