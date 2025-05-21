@@ -198,8 +198,9 @@
 </head>
 
 <body>
-
-  <header id="header">Estoque Atual</header>
+  <center>
+    <button class="w90 red" onclick="window.location.href='index.html'">Voltar</button><br>
+  </center>
 
   
 
@@ -226,6 +227,8 @@
     function carregarProdutos() {
       const armazenado = localStorage.getItem("produtos");
       produtos = armazenado ? JSON.parse(armazenado) : [];
+
+      produtos.sort((a, b) => a.nome.localeCompare(b.nome));
     }
 
     function salvarNoStorage() {

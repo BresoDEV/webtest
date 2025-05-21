@@ -1,476 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estoque da Cozinha</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check My Menu</title>
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #f1f1f1;
-      cursor: pointer;
-    }
-
-    header,
-    nav {
+      font-family: sans-serif;
       background-color: #1e1e1e;
-      padding: 15px;
+    }
+
+    header {
+      background-color: #292929;
+      color: white;
       text-align: center;
-    }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 0;
-    }
-
-    nav button {
-      background-color: #292929;
-      color: white;
-      border: none;
-      margin: 5px;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button {
-      background-color: #292929;
-      color: white;
-      border: none;
-      margin: 5px;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
+      padding: 15px 0;
+      font-size: 1.5em;
+      font-weight: bold;
     }
 
     main {
-      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 15px;
+      margin-bottom: 60px;
     }
 
-    .produto {
-      background-color: #1f1f1f;
-      font-size: 4vw;
-      border-radius: 5px;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
+    .box {
+      height: 120px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-    }
-
-    .modal-content {
-      background-color: #222;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .modal-content input,
-    .modal-content select {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 5px;
-      border: none;
-      background-color: #333;
-      color: white;
-    }
-
-    .modal-content button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4caf50;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-      }
-
-      button {
-        width: 100%;
-      }
-    }
-
-    details {
-      margin-top: 5px;
-
-      font-weight: bolder;
-
-    }
-
-    li button {
-      color: white;
-      border: none;
-      margin: 5px;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 45%;
-    }
-
-    li {
-      list-style-type: none;
-    }
-
-    .green {
-      background-color: #00ff6ea5;
-    }
-
-    .red {
-      background-color: #ff0000a5;
-    }
-
-    .orange {
-      background-color: #ff5500a5;
-    }
-
-    .yellow {
-      background-color: #f2ff00a5;
-    }
-
-    .white {
-      background-color: #ffffff;
-      color: #292929;
-    }
-
-    .w90 {
-      width: 90%;
-    }
-
-
-    summary {
-      padding: 5px;
-    }
-
-
-    input {
-      color: white;
-      border: 1px solid aliceblue;
-      margin: 5px;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 90%;
-      background-color: transparent;
+      color: #333;
+      font-size: 14px;
       text-align: center;
     }
 
-    .dev button:hover {
-      background-color: cornflowerblue;
+    .red    {color: aliceblue; background-color: #292929;border: 1px solid aliceblue; }
+    .green  {color: aliceblue; background-color: #292929;border: 1px solid aliceblue; }
+    .pink   {color: aliceblue; background-color: #292929;border: 1px solid aliceblue; }
+    .blue   {color: aliceblue; background-color: #292929;border: 1px solid aliceblue; }
+    .indigo {color: aliceblue; background-color: #292929;border: 1px solid aliceblue; grid-column: span 2; }
+
+    .box i {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    div:hover{
+      background-color: rgb(30, 174, 97);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #1f2937;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    footer button {
+      background: none;
+      border: none;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    footer button i {
+      display: block;
+      font-size: 16px;
     }
   </style>
 </head>
-
 <body>
 
-  <header id="header">Sistema de Estoque - Cozinha</header>
+  <header>Cozinha da Vó Mona</header>
 
-  <nav>
-    <button onclick="abrirModal()" class="green" style="color:#121212">Adicionar Produto</button>
-  </nav>
+  <main>
 
-  <main id="conteudo"></main>
-
-  <!-- Modal -->
-  <div class="modal" id="modalCadastro">
-    <div class="modal-content">
-      <h3>Cadastrar Produto</h3>
-      <input type="text" id="nomeProduto" placeholder="Nome do produto" />
-      <input type="number" id="quantidadeProduto" placeholder="Quantidade" min="0" step="any" />
-      <select id="tipoProduto">
-        <option value="Unid.">Unidade</option>
-        <option value="Kg">Peso</option>
-        <option value="Lts">Litros</option>
-      </select>
-      <button onclick="salvarProduto()">Salvar</button>
-    </div>
-  </div>
-
-
-
-
-  <script>
-
-    if (!localStorage.getItem("exibirCores")) {
-      localStorage.setItem("exibirCores", 0)
-    }
-
-    let produtos = [];
-    let exibirCores = localStorage.getItem("exibirCores") == 1 ? true : false
-
-    // Carrega do localStorage
-    function carregarProdutos() {
-      const armazenado = localStorage.getItem("produtos");
-      produtos = armazenado ? JSON.parse(armazenado) : [];
-    }
-
-    function salvarNoStorage() {
-      localStorage.setItem("produtos", JSON.stringify(produtos));
-    }
-
-    function mostrarLista() {
-      const container = document.getElementById('conteudo');
-      if (produtos.length === 0) {
-        container.innerHTML = "<p>Nenhum produto cadastrado.</p>";
-        return;
-      }
-      container.innerHTML = produtos.map((p, i) => `
-      <div class="produto">
-        
-        
-
-        <details>
-            <summary
-            ${exibirCores == 1 ?
-          parseInt(p.quantidade) != 0 ?
-            parseInt(p.quantidade) >= 5 ?
-              (parseInt(p.quantidade) >= 15 ?
-                (parseInt(p.quantidade) >= 25 ?
-                  'class="green"'
-                  :
-                  'class="yellow"'
-                )
-                :
-                'class="orange"'
-              )
-              :
-              'class="red"'
-            :
-            'class="white"'
-          :
-          ''
-        }
-        
-            >
-            ${p.nome}
-            <i style="float:right">
-              ${p.tipo === 'Kg' ? p.quantidade.toFixed(3) : p.quantidade} ${p.tipo}<br/>
-            </i>
-        </summary>
-            <center>
-              <ol>
-              <li>
-                <input type="number" id="${i}" value="0">
-              </li>
-              <li>
-                <button onclick="editarRemover('${p.nome}','${i}')">Remover Quantidade</button>
-                <button onclick="editarAdicionar('${p.nome}','${i}')">Adicionar Quantidade</button>
-              </li>
-              <li>
-                <button class="red w90" onclick="removerProduto(${i})">Apagar Item</button>
-              </li>
-            </ol>
-            </center>
-        </details>
+    <a href="produtos.html">
+      <div class="box red">
+        <i class="fas fa-utensils"></i>
+        <span>Estoque</span>
       </div>
-    `).join("");
-    }
+    </a>
 
-    function abrirModal() {
-      document.getElementById('modalCadastro').style.display = 'flex';
-    }
+    <a href="Calculo de Quantidade.html">
+      <div class="box green">
+        <i class="fas fa-percent"></i>
+        <span>Calcular Quantidades</span>
+      </div>
+    </a>
+   
+    <a href="EstoqueAtual.html">
+      <div class="box blue">
+        <i class="fas fa-newspaper"></i>
+        <span>Relatorio do Estoque</span>
+      </div>
+    </a>
 
-    function fecharModal() {
-      document.getElementById('modalCadastro').style.display = 'none';
-    }
+    <a href="adm.html">
+      <div class="box blue">
+        <i class="fas fa-user"></i>
+        <span>Administrador</span>
+      </div>
+    </a>
 
-    function salvarProduto() {
-      const nome = document.getElementById('nomeProduto').value.trim();
-      const quantidade = parseFloat(document.getElementById('quantidadeProduto').value);
-      const tipo = document.getElementById('tipoProduto').value;
+  </main>
 
-      if (!nome || isNaN(quantidade) || quantidade <= 0) {
-        alert("Preencha todos os campos corretamente.");
-        return;
-      }
-
-      produtos.push({ nome, quantidade, tipo });
-      salvarNoStorage();
-      fecharModal();
-      mostrarLista();
-
-      document.getElementById('nomeProduto').value = "";
-      document.getElementById('quantidadeProduto').value = "";
-    }
-
-    function removerProduto(index) {
-      if (confirm("Tem certeza que deseja remover este produto?")) {
-        produtos.splice(index, 1);
-        salvarNoStorage();
-        mostrarLista();
-      }
-    }
-
-    function editarAdicionar(produto, index) {
-      produtos.forEach(e => {
-        if (e.nome == produto) {
-          if (e.tipo != 'Unid.') {
-            e.quantidade = parseFloat(e.quantidade) + parseFloat(document.getElementById(index).value)
-          } else {
-            e.quantidade = parseInt(e.quantidade) + parseInt(document.getElementById(index).value)
-          }
-
-        }
-        console.log(e.nome)
-      });
-
-      salvarNoStorage();
-      mostrarLista();
-    }
-
-    function editarRemover(produto, index) {
-      produtos.forEach(e => {
-        if (e.nome == produto) {
-          if (e.tipo != 'Unid.') {
-            e.quantidade = parseFloat(e.quantidade) - parseFloat(document.getElementById(index).value)
-          } else {
-            e.quantidade = parseInt(e.quantidade) - parseInt(document.getElementById(index).value)
-          }
-        }
-        console.log(e.nome)
-      });
-
-      salvarNoStorage();
-      mostrarLista();
-    }
-
-    // Fecha modal ao clicar fora dele
-    window.onclick = function (event) {
-      const modal = document.getElementById('modalCadastro');
-      if (event.target === modal) fecharModal();
-    }
-
-    // Inicializa
-    carregarProdutos();
-    mostrarLista();
-
-
-    function criarProduto(nome_, quant_, tipo) {
-      const nome = nome_.trim();
-      const quantidade = parseFloat(quant_);
-
-
-
-      produtos.push({ nome, quantidade, tipo });
-      salvarNoStorage();
-
-
-    }
-
-
-
-    //menu dev----------------------------
-
-    var ct_clicks = 0;
-
-    document.getElementById('header').addEventListener('click', (a) => {
-      ct_clicks++
-    })
-
-    setInterval(() => {
-      if (ct_clicks >= 5) {
-        document.body.innerHTML = ''
-        setTimeout(() => {
-          dev()
-        }, 1000);
-      }
-    }, 5000);
-
-
-    function dev() {
-
-      document.body.innerHTML = `
-      
-      <center>
-        <button class="w90 red" onclick="window.location.reload()">Voltar</button><br>
-      </center>
-      <br>
-      <br>
-      <br>
-      <center class="dev">
-        <button class="w90" onclick="ExibirCores()">Exibir Cores</button><br>
-        <button class="w90" onclick="CadastrarTodosAlimentos()">Cadastrar Todos Alimentos</button><br>
-        <button class="w90" onclick="ZerarTodasQuantidades()">Zerar Todas Quantidades</button><br>
-        <button class="w90" onclick="apagarTudo()">Apagar Todos Produtos</button><br>
-      </center>
-
-      `;
-
-      ct_clicks = 0;
-    }
-
-    function ZerarTodasQuantidades() {
-      produtos.forEach(e => {
-        e.quantidade = 0
-      });
-      salvarNoStorage();
-    }
-
-    function CadastrarTodosAlimentos() {
-      /*
-      "Unid."
-      "Kg"
-      "Lts"
-      */
-      criarProduto('Oleo', 0, 'Lts')
-      criarProduto('Arroz', 0, 'Kg')
-      criarProduto('Vinagre', 0, 'Unid.')
-      criarProduto('Lentilha', 0, 'Kg')
-      criarProduto('Macarrão', 0, 'Kg')
-      criarProduto('Sagu', 0, 'Kg')
-      criarProduto('Farinha de Mandioca', 0, 'Kg')
-      criarProduto('Fuba', 0, 'Kg')
-      criarProduto('Suco de Laranja', 0, 'Lts')
-      criarProduto('Suco de Abacaxi', 0, 'Lts')
-      criarProduto('Suco de Uva', 0, 'Lts')
-      criarProduto('Suco de Maçã', 0, 'Lts')
-      criarProduto('Suco de Maçã Verde', 0, 'Lts')
-      criarProduto('Leite', 0, 'Lts')
-      criarProduto('Feijão', 0, 'Kg')
-
-      salvarNoStorage();
-    }
-
-    function apagarTudo() {
-      localStorage.removeItem("produtos")
-      alert('Todos produtos deletados')
-    }
-    function ExibirCores() {
-      if (localStorage.getItem("exibirCores") == 0) {
-        localStorage.setItem("exibirCores", 1)
-        alert('Cores ativadas')
-      }else{
-        localStorage.setItem("exibirCores", 0)
-        alert('Cores desativadas')
-      }
-
-    }
-
-
-    console.log(produtos)
-    console.log(localStorage.getItem("produtos"))
-  </script>
+  <!--
+    <footer>
+    <button>
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </button>
+    <button>
+      <i class="fas fa-search"></i>
+      <span>Check</span>
+    </button>
+    <button>
+      <i class="fas fa-comments"></i>
+      <span>Chat</span>
+    </button>
+    <button>
+      <i class="fas fa-user"></i>
+      <span>Perfil</span>
+    </button>
+  </footer>
+  -->
 
 </body>
-
 </html>

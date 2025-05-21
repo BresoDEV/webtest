@@ -160,7 +160,10 @@
 </head>
 
 <body>
-
+    <center>
+        <button class="w90 red" onclick="window.location.href='index.html'">Voltar</button><br>
+      </center>
+      
     <header id="header">Calculo de Quantidade</header>
 
     <nav>
@@ -183,8 +186,22 @@
                 </tr>
             </table>
 
+            <table>
+                <tr>
+                    <td colspan="3">
+                        <button class="green w90" id="darBaixa">Dar baixa nos itens</button>
+                    </td>
+                </tr>
+            </table>
+
         </main>
     </center>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
     <script>
 
@@ -195,6 +212,8 @@
         function carregarProdutos() {
             const armazenado = localStorage.getItem("produtos");
             produtos = armazenado ? JSON.parse(armazenado) : [];
+
+            produtos.sort((a, b) => a.nome.localeCompare(b.nome));
         }
 
         function salvarNoStorage() {
@@ -206,10 +225,10 @@
 
             container.innerHTML = produtos.map((p, i) => `
       
-      <button class="w40" id="${p.nome}">${p.nome}</button>
+                <button class="w90" id="${p.nome}">${p.nome}</button>
 
       
-    `).join("");
+                `).join("");
         }
 
 
@@ -232,49 +251,138 @@
         });
 
 
-
+        var finalTotal = 0
 
         setInterval(() => {
 
-            
 
-            var texto ='<tr><th>Produto</th><th>Quant. por Pessoa</th><th>Total Necessario</th></tr>'
+
+            var texto = '<tr><th>Produto</th><th>Quant. por Pessoa</th><th>Total Necessario</th></tr>'
             produtos.forEach(e => {
 
                 var total = 0;
-                if (document.getElementById(e.nome)) 
-                {
-                    if (document.getElementById(e.nome).style.backgroundColor == 'green') 
-                    {
+                if (document.getElementById(e.nome)) {
+                    if (document.getElementById(e.nome).style.backgroundColor == 'green') {
 
-                        if (localStorage.getItem(e.nome)) 
-                        {
-                            const valorPorPessoa = parseFloat(localStorage.getItem(e.nome));
 
-                            total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
-                           
-                            texto += '<tr>'
-                            texto += '<td>' + e.nome + '</td>'
-                            texto += '<td>' + valorPorPessoa  + ' ' + e.tipo + '</td>'
+                        const valorPorPessoa = obterQuantidadeIndividual(e.nome);
+
+                        total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
+
+                        texto += '<tr>'
+                        texto += '<td>' + e.nome + '</td>'
+                        texto += '<td>' + valorPorPessoa + ' ' + e.tipo + '</td>'
+
+
+                        if (e.quantidade < total) {
+                            texto += '<td class="red">aaa' + total + ' ' + e.tipo + '</td>'
+                        }
+                        else {
                             texto += '<td>' + total + ' ' + e.tipo + '</td>'
-                            texto += '</tr>'
                         }
 
-                        //texto += '<br>'+e.nome+': ' +total+' '+e.tipo
+
+
+
+
+                        texto += '</tr>'
+
+
                     }
                 }
+                finalTotal += total;
                 total = 0;
 
             });
+
+
             document.getElementById('resultado').innerHTML = texto
+
+
             texto = '';
-            //resultado
+
 
         }, 1);
 
 
-        console.log(produtos)
-        console.log(localStorage.getItem("produtos"))
+
+
+        document.getElementById('darBaixa').addEventListener('click', (a) => {
+
+
+            const todosElementos = document.querySelectorAll('*');
+
+            for (let elemento of todosElementos) {
+                const estilo = window.getComputedStyle(elemento);
+                if (estilo.backgroundColor === 'rgba(255, 0, 0, 0.647)') {
+                    alert('Alguns itens estao sem estoque')
+                    return;
+                }
+            }
+
+            //-------------------------------
+
+            produtos.forEach(e => {
+
+                if (document.getElementById(e.nome)) {
+
+                    if (document.getElementById(e.nome).style.backgroundColor == 'green') {
+
+
+                        const valorPorPessoa = obterQuantidadeIndividual(e.nome);
+
+                        total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
+
+
+                        produtos.forEach(x => {
+                            if (x.nome == e.nome) {
+                                x.quantidade -= parseFloat(total)
+                            }
+                        });
+
+                    }
+
+                }
+
+
+
+
+
+
+                total = 0;
+            });
+            salvarNoStorage();
+            mostrarLista();
+        })
+
+        function obterQuantidadeIndividual(alimento) {
+            switch (alimento) {
+                case 'Oleo': return 10; break;
+                case 'Arroz': return 20; break;
+                case 'Vinagre': return 30; break;
+                case 'Lentilha': return 40; break;
+                case 'Macarrão': return 0; break;
+                case 'Sagu': return 0; break;
+                case 'Farinha de Mandioca': return 0; break;
+                case 'Fuba': return 0; break;
+                case 'Suco de Laranja': return 0; break;
+                case 'Suco de Abacaxi': return 0; break;
+                case 'Suco de Uva': return 0; break;
+                case 'Suco de Maçã': return 0; break;
+                case 'Suco de Maçã Verde': return 0; break;
+                case 'Leite': return 0; break;
+                case 'Feijão': return 0; break;
+
+
+                default: return 0; break;
+            }
+
+        }
+
+        //console.log(produtos)
+        //console.log(localStorage.getItem("produtos"))
+
+
     </script>
 
 </body>
