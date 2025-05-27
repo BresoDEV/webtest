@@ -6,7 +6,7 @@
 </head>
 <body>
   <h2>Obter HTML de outro site</h2>
-  <input type="text" id="urlInput" placeholder="Digite a URL (ex: https://example.com)" size="50">
+  <input type="text" id="urlInput" placeholder="Digite a URL (ex: https://example.com)" value="https://www.imdb.com/pt/title/tt14537248/" size="50">
   <button onclick="buscarHTML()">Buscar</button>
   <br><br>
   <textarea id="output" cols="80" rows="20" placeholder="HTML aparecerá aqui..."></textarea>
@@ -18,15 +18,18 @@
 
       // Usando um proxy gratuito para contornar CORS (apenas para testes)
       const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(url);
+	  
+	  
+	  fetch(proxyUrl)
+  .then(response => {
+    if (response.ok) 
+	{const data = await response.json();
+        output.value = data.contents;}
+    throw new Error('Network response was not ok.')
+  })
+  .then(data => console.log(data.contents));
 
-      try {
-        output.value = "Buscando...";
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        output.value = data.contents;
-      } catch (err) {
-        output.value = "Erro ao buscar: " + err;
-      }
+       
     }
   </script>
 </body>
