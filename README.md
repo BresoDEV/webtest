@@ -26,10 +26,7 @@ https://bresodev.github.io/webtest/ArquivoX/
 
 GPT:
 https://bresodev.github.io/webtest/GPT/
-
-All In One IA:
-https://bresodev.github.io/webtest/AllInOneIA
-
+ 
 Converte texto para voz:
 https://bresodev.github.io/webtest/texto_voz
 
