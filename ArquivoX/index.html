@@ -121,35 +121,25 @@
 
     <div class="container" id="container">
         <center>
-            <h1 id="ArquivoX">ArquivoX IMGs</h1>
+            <h1 id="ArquivoX">ArquivoX V2</h1>
 
             <div class="form-group">
                 <input type="text" autocomplete="off" id="senha" placeholder="Chave de Acesso">
             </div>
 
             <div class="form-group">
-                <input type="file" id="inputImagem" accept="image/*">
+                <input type="number" autocomplete="off" id="indexIMG" placeholder="Index da Imagem">
             </div>
 
             <div class="buttons">
                 <center>
-                    <button id="Revelation">Revelar Codigo</button>
-                    <button id="Salvarlocal">Salvar Codigo</button>
-                    <button id="RecarregarBanco">Recarregar Banco</button>
+                    <button id="Exibir">Carregar Imagem</button>
                 </center>
             </div>
 
-            <div class="form-group">
-                <textarea id="saidaTexto" rows="4" placeholder="Codigo da imagem...."></textarea>
-            </div>
 
-            <div class="buttons">
-                <center>
-                    <button id="copiarSelecionar">Selecionar tudo e copiar</button>
-                </center>
-            </div>
 
-            <img id="imgResultado" style="max-width: 80%;width: 80%; display: none;border:1px solid white">
+            <img id="imgResultado" style="max-width: 80%;width: 80%;border:1px solid white">
             <br>
             <br>
             <br>
@@ -163,272 +153,18 @@
 <script>
 
 
-    //carrega o storage
+    var senha = document.getElementById('senha')
+    var indexIMG = document.getElementById('indexIMG')
+    var Exibir = document.getElementById('Exibir')
+    var imgResultado = document.getElementById('imgResultado')
 
 
 
 
 
 
-    document.getElementById('RecarregarBanco').addEventListener('click', () => {
-
-        localStorage.clear()
-        window.location.reload()
-    })
-
-
-
-    document.getElementById('copiarSelecionar').addEventListener('click', () => {
-
-        let textarea = document.getElementById("saidaTexto");
-
-        // Seleciona o texto dentro da textarea
-        textarea.select();
-        textarea.setSelectionRange(0, 999999); // Para compatibilidade com dispositivos móveis
-
-        // Copia o texto para a área de transferência
-        navigator.clipboard.writeText(textarea.value)
-            .then(() => alert("Texto copiado!"))
-            .catch(err => console.error("Erro ao copiar:", err));
-    })
-
-
-    document.getElementById('Salvarlocal').addEventListener('click', () => {
-        salvarStorage(document.getElementById("saidaTexto").value)
-    })
-
-
-    document.getElementById('Revelation').addEventListener('click', () => {
-        revelar(document.getElementById("saidaTexto"), document.getElementById("senha"))
-    })
-
-
-
-
-    function revelar(textarrea, key) {
-        let base64 = textarrea.value.trim();
-
-        if (base64) {
-            let img = document.getElementById("imgResultado");
-            img.src = "data:image/png;base64," + decrip(base64, joaat(key.value)); // Reconstruindo a URL Base64
-            img.style.display = "block";
-
-
-
-        } else {
-            alert("O campo de texto está vazio!");
-        }
-    }
-
-    function encrip(text, key) {
-        let e = ''
-        for (let i = 0; i < text.length; i++) {
-            e += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length))
-        }
-        console.log('Tamanho: ' + e.length)
-        return lzwEncode(btoa(e))
-    }
-    function decrip(text, key) {
-        let e = atob(lzwDecode(text))
-        let d = ''
-        for (let i = 0; i < e.length; i++) {
-            d += String.fromCharCode(e.charCodeAt(i) ^ key.charCodeAt(i % key.length))
-        }
-        console.log('Tamanho: ' + d.length)
-        return d
-    }
-
-
-    function joaat(text) {
-        if (!text) {
-  	return 0;
-  }
-  var value = 0, temp;
-  var index = 0;
-  var quoted = false;
-  if (text.charCodeAt(index) === 34) {
-    quoted = true;
-    index = (index + 1) | 0;
-  }
-  text = text.toLowerCase();
-  for (; index < text.length; index = (index + 1) | 0) {
-    var v = text.charCodeAt(index);
-    if (quoted && (v === 34)) {
-      break;
-    }
-    if (v === 92) {
-      v = 47;
-    }
-    temp = v;
-    temp = (temp + value) >>> 0;
-    value = (temp << 10) >>> 0;
-    temp = (temp + value) >>> 0;
-    value = temp >>> 6;
-    value = (value ^ temp) >>> 0;
-  }
-  temp = (value << 3) >>> 0;
-  temp = (value + temp) >>> 0;
-  var temp2 = temp >>> 11;
-  temp = (temp2 ^ temp) >>> 0;
-  temp2 = (temp << 15) >>> 0;
-  value = (temp2 + temp) >>> 0;
-  if (value < 2) {
-    value = (value + 2) >>> 0;
-  }
-  return '0x' + value.toString(16).toUpperCase();
-    }
-
-    // Quando o usuário seleciona uma imagem
-    document.getElementById("inputImagem").addEventListener("change", function (event) {
-        let arquivo = event.target.files[0];
-        if (arquivo) {
-            let leitor = new FileReader();
-
-            leitor.onload = function (e) {
-                // Convertendo os dados da imagem para Base64
-                let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
-                document.getElementById("saidaTexto").value = encrip(base64, joaat(document.getElementById("senha").value));
-            };
-
-            // Lendo a imagem como uma URL Base64
-            leitor.readAsDataURL(arquivo);
-        }
-    });
-
-
-    function salvarStorage(img) {
-
-        var idct = 1
-        while (localStorage.getItem('imagem_' + idct)) {
-            idct++
-        }
-        localStorage.setItem('imagem_' + idct, img)
-        window.location.reload()
-    }
-
-
-
-    //if (!localStorage.getItem('imagem_1')) {
-
-    //    
-    //    for (var i = 1; i < 30; i++){
-
-    //        console.log('percorrendo index '+ i);
-
-    //       
-
-    //    }
-    //    document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
-    //    
-    //    
-
-    //}
-
-
-    //var fetchIndex = 1
-
-    // const center = document.createElement('center')
-
-
-    //fetch('LISTAS.JSON')
-    //    .then(response => response.json()) // Converte a resposta para JSON
-    //    .then(data => {
-    //        if (Array.isArray(data)) { // Verifica se é um array
-    //
-    //           
-    //
-    //            var idct = 1
-    //
-    //
-    //            data.forEach(item => {
-    //                const div = document.createElement('div')
-    //                div.className = 'line-buttons'
-    //                div.style.width = '90%'
-    //
-    //                const textarea = document.createElement('textarea')
-    //                textarea.style.display = 'none'
-    //                textarea.id = 'textarea_' + idct
-    //                textarea.value = data
-    //
-    //                const local = item
-    //
-    //                const input = document.createElement('input')
-    //                input.type = 'password'
-    //                input.style.margin = '3px'
-    //                input.placeholder = "nome marido da marquito minusculo"
-    //                input.id = 'input_' + idct
-    //                input.setAttribute("autocomplete", "off");
-    //
-    //
-    //                const button = document.createElement('button')
-    //                button.innerHTML = 'Revelar'
-    //                button.style.margin = '3px'
-    //                button.id = 'button_' + idct
-    //
-    //                const apagar = document.createElement('button')
-    //                apagar.innerHTML = 'Apagar'
-    //                apagar.style.margin = '3px'
-    //                apagar.style.backgroundColor = 'rgb(200,100,100)'
-    //                apagar.id = 'button_apagar_' + idct
-    //
-    //                div.append(textarea)
-    //                div.append(input)
-    //                div.append(button)
-    //                div.append(apagar)
-    //                center.append(div)
-    //
-    //                button.addEventListener('click', () => {
-    //                    revelar(textarea, input)
-    //                    document.getElementById("saidaTexto").value = local
-    //                    document.getElementById("senha").value = input.value
-    //                })
-    //
-    //                const index = idct
-    //
-    //                apagar.addEventListener('click', () => {
-    //                    localStorage.removeItem('imagem_' + index)
-    //                    window.location.reload()
-    //                })
-    //
-    //                idct++
-    //            });
-    //        } else {
-    //            console.error('O JSON não é um array.');
-    //        }
-    //    })
-    //    .catch(error => console.error('Erro ao buscar o JSON:', error));
-    //
-    //document.getElementById('container').append(center)
-
-
-    //Carrega as imagens locais e add no localStorage
-
-
-
-
-    //if (!localStorage.getItem('imagem_1')) {
-    //    for (let i = 1; i < 50; i++) {
-    //        fechh(i)
-    //    }
-    //
-    //}
-
-    let i = 1
-    setInterval(() => {
-        if (i < 300) {
-            //if (!localStorage.getItem('imagem_' + i.toString())) {
-            fechh(i)
-            i++
-            document.getElementById('ArquivoX').innerHTML = `Carregando, aguarde...<br>Fotos encontradas: <font style="color:lime">${i}</font> `
-            //}
-        }
-
-    }, 1000);
-
-
-    function fechh(index) {
-
-        fetch(`img (${index}).txt`)
+    Exibir.addEventListener('click', () => {
+        fetch(`img (${indexIMG.value}).txt`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Erro HTTP! Status: ${response.status}`);
@@ -437,125 +173,68 @@
             })
             .then(data => {
                 //console.log('Dados recebidos:', data);
-                carregarStorage(data)
+                let base64 = data.trim();
+
+                imgResultado.src = "data:image/png;base64," + decrip(base64, joaat(senha.value));
             })
             .catch(error => {
                 console.error('Erro na requisição:', error);
                 console.log(error)
                 i = 10000 //finaliza o hook
             });
+    })
 
+     
 
-    }
-    //------------------------------
-
-
-
-
-    var idct = 1
-
-    function carregarStorage(imgemtexto) {
-
-        if (imgemtexto !== '') {
-            const center = document.createElement('center')
-
-
-
-
-            const div = document.createElement('div')
-            div.className = 'line-buttons'
-            div.style.width = '90%'
-
-            const textarea = document.createElement('textarea')
-            textarea.style.display = 'none'
-            textarea.id = 'textarea_' + idct
-            textarea.value = imgemtexto
-
-
-            const input = document.createElement('input')
-            input.type = 'password'
-            input.style.margin = '3px'
-            input.placeholder = "Foto: " + idct + " - nome marido da marquito minusculo"
-            input.id = 'input_' + idct
-            input.setAttribute("autocomplete", "off");
-
-
-            const button = document.createElement('button')
-            button.innerHTML = 'Revelar'
-            button.style.margin = '3px'
-            button.id = 'button_' + idct
-
-
-            div.append(textarea)
-            div.append(input)
-            div.append(button)
-            center.append(div)
-
-
-
-            //exibe o preview da imagem no console
-            button.addEventListener('mouseover', () => {
-
-                if (input.value !== '') {
-                    let base64 = textarea.value.trim();
-
-                    var ooo = "data:image/png;base64," + decrip(base64, joaat(input.value));
-
-                    console.log(
-                        '%c ',
-                        `font-size: 0; padding: 50px; background: url(${ooo}) no-repeat center; background-size: contain;`
-                    );
-                }
-            })
-            button.addEventListener('click', () => {
-                revelar(textarea, input)
-                document.getElementById("saidaTexto").value = imgemtexto
-                document.getElementById("senha").value = input.value
-            })
-
-
-
-            document.getElementById('container').append(center)
-
-            idct++
+    function decrip(text, key) {
+        let e = atob(text)
+        let d = ''
+        for (let i = 0; i < e.length; i++) {
+            d += String.fromCharCode(e.charCodeAt(i) ^ key.charCodeAt(i % key.length))
         }
+        return d
     }
 
-    function lzwEncode(s) {
-        //let dict = {}, data = (s + "").split(""), out = [], currChar,
-        //    phrase = data[0], code = 256;
-        //for (let i = 1; i < data.length; i++) {
-        //    currChar = data[i];
-        //    if (dict[phrase + currChar] !== undefined) {
-        //        phrase += currChar;
-        //    } else {
-        //        out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-        //        dict[phrase + currChar] = code;
-        //        code++;
-        //        phrase = currChar;
-        //    }
-        //}
-        //out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-        //return out.map(c => String.fromCharCode(c)).join("");
-
-        return s;
+    function joaat(text) {
+        if (!text) {
+            return 0;
+        }
+        var value = 0, temp;
+        var index = 0;
+        var quoted = false;
+        if (text.charCodeAt(index) === 34) {
+            quoted = true;
+            index = (index + 1) | 0;
+        }
+        text = text.toLowerCase();
+        for (; index < text.length; index = (index + 1) | 0) {
+            var v = text.charCodeAt(index);
+            if (quoted && (v === 34)) {
+                break;
+            }
+            if (v === 92) {
+                v = 47;
+            }
+            temp = v;
+            temp = (temp + value) >>> 0;
+            value = (temp << 10) >>> 0;
+            temp = (temp + value) >>> 0;
+            value = temp >>> 6;
+            value = (value ^ temp) >>> 0;
+        }
+        temp = (value << 3) >>> 0;
+        temp = (value + temp) >>> 0;
+        var temp2 = temp >>> 11;
+        temp = (temp2 ^ temp) >>> 0;
+        temp2 = (temp << 15) >>> 0;
+        value = (temp2 + temp) >>> 0;
+        if (value < 2) {
+            value = (value + 2) >>> 0;
+        }
+        return '0x' + value.toString(16).toUpperCase();
     }
 
-    function lzwDecode(s) {
-        // let dict = {}, data = (s + "").split(""), currChar = data[0],
-        //     oldPhrase = currChar, out = [currChar], code = 256, phrase;
-        // for (let i = 1; i < data.length; i++) {
-        //     let currCode = data[i].charCodeAt(0);
-        //     phrase = currCode < 256 ? data[i] : dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
-        //     out.push(phrase);
-        //     currChar = phrase.charAt(0);
-        //     dict[code] = oldPhrase + currChar;
-        //     code++;
-        //     oldPhrase = phrase;
-        // }
-        // return out.join("");
-        return s;
-    }
+
 </script>
 
 </html>
