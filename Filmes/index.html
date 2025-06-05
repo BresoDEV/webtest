@@ -36,7 +36,8 @@
         <div class="col-md-4">
           <input type="text" id="nomeFilme" class="form-control" placeholder="Nome do Filme" />
         </div>
-        <div class="col-md-3">
+		<br>
+        <div class="col-md-4">
           <select id="categoria" class="form-select">
             <option value="comprados">Já Tenho</option>
             <option value="faltaComprar">Falta Comprar</option>
@@ -46,21 +47,21 @@
             <option value="legendado">Legendado</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
           <button class="btn btn-success w-100" onclick="adicionarFilme()">Adicionar</button>
         </div>
       </div>
     </div>
 
     <!-- Busca e Botões -->
-    <div class="mb-4 row g-2 align-items-center">
+    <div class="mb-4 row g-4 align-items-center">
       <div class="col-md-4">
         <input type="text" class="form-control" id="busca" placeholder="🔍 Buscar filme por nome..." oninput="renderizarTabelas()" />
-      </div>
-      <div class="col-md-3">
+      </div> 
+      <div class="col-md-4">
         <button class="btn btn-outline-light w-100" onclick="exportarFilmes()">📤 Exportar Lista</button>
-      </div>
-      <div class="col-md-3">
+      </div> 
+      <div class="col-md-4">
         <input type="file" id="importarArquivo" class="form-control" accept=".json" onchange="importarFilmes(event)" />
       </div>
     </div>
