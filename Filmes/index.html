@@ -52,9 +52,17 @@
       </div>
     </div>
 
-    <!-- Busca -->
-    <div class="mb-4">
-      <input type="text" class="form-control" id="busca" placeholder="🔍 Buscar filme por nome..." oninput="renderizarTabelas()" />
+    <!-- Busca e Botões -->
+    <div class="mb-4 row g-2 align-items-center">
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="busca" placeholder="🔍 Buscar filme por nome..." oninput="renderizarTabelas()" />
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-outline-light w-100" onclick="exportarFilmes()">📤 Exportar Lista</button>
+      </div>
+      <div class="col-md-3">
+        <input type="file" id="importarArquivo" class="form-control" accept=".json" onchange="importarFilmes(event)" />
+      </div>
     </div>
 
     <!-- Tabelas -->
@@ -155,15 +163,9 @@
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${filme.nome}</td>
-            <td>
-              <button class="btn btn-sm btn-outline-warning" onclick="editarFilme(${i})">✏️</button>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-outline-info" onclick="moverCategoria(${i})">📂</button>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-outline-danger" onclick="excluirFilme(${i})">🗑️</button>
-            </td>
+            <td><button class="btn btn-sm btn-outline-warning" onclick="editarFilme(${i})">✏️</button></td>
+            <td><button class="btn btn-sm btn-outline-info" onclick="moverCategoria(${i})">📂</button></td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="excluirFilme(${i})">🗑️</button></td>
           `;
           tbody.appendChild(row);
         });
@@ -171,6 +173,39 @@
         table.appendChild(tbody);
         container.appendChild(table);
       });
+    }
+
+    function exportarFilmes() {
+      const blob = new Blob([JSON.stringify(filmes, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "filmes_terror.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function importarFilmes(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (Array.isArray(data)) {
+            filmes = data;
+            salvarFilmes();
+            renderizarTabelas();
+            alert("Lista carregada com sucesso!");
+          } else {
+            alert("Arquivo inválido!");
+          }
+        } catch {
+          alert("Erro ao ler o arquivo!");
+        }
+      };
+      reader.readAsText(file);
     }
 
     renderizarTabelas();
