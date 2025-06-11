@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Converter Imagem para Base64 e Exibir</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #121212;
+      color: white;
+      padding: 2rem;
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 60%;
+    }
+    #resultado img {
+      margin-top: 1rem;
+      max-width: 100%;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Conversor de Imagem para Base64</h1>
+  <input type="text" id="imageUrl" placeholder="Cole aqui a URL da imagem" />
+  <button onclick="converterParaBase64()">Converter e Exibir</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    function converterParaBase64() {
+      const url = document.getElementById('imageUrl').value;
+      const resultado = document.getElementById('resultado');
+      resultado.innerHTML = ''; // limpa imagem anterior, se houver
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Não foi possível carregar a imagem.');
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result;
+            console.log('Base64 da imagem:\n', base64);
+
+            // Criar nova imagem e inserir no DOM
+            const img = document.createElement('img');
+            img.src = base64;
+            resultado.appendChild(img);
+          };
+          reader.readAsDataURL(blob);
+        })
+        .catch(error => {
+          console.error('Erro ao converter a imagem:', error);
+          resultado.innerHTML = '<p style="color: red;">Erro ao carregar ou converter a imagem.</p>';
+        });
+    }
+  </script>
+</body>
+</html>
