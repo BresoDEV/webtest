@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Responsiva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            resize: none;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: #3700b3;
+        }
+
+        .line-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .line-buttons input {
+            width: 70%;
+        }
+
+        .line-buttons button {
+            width: 15%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .line-buttons button:hover {
+            background-color: #3700b3;
+        }
+
+        @media (max-width: 600px) {
+
+            .line-buttons input,
+            .line-buttons button {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .buttons button {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <center>
+            <h1 id="ArquivoX">ArquivoX</h1>
+
+            <div class="form-group">
+                <input type="text" autocomplete="off" id="senha" placeholder="Chave de Acesso">
+            </div>
+
+            <div class="form-group">
+                <input type="file" id="inputImagem" accept="image/*">
+            </div>
+
+            <div class="buttons">
+                <center>
+                    <button id="Revelation">Revelar Codigo</button>
+                    <button id="Salvarlocal">Salvar Codigo</button>
+                </center>
+            </div>
+
+            <div class="form-group">
+                <textarea id="saidaTexto" rows="4" placeholder="Codigo da imagem...."></textarea>
+            </div>
+
+            <div class="buttons">
+                <center>
+                    <button id="copiarSelecionar">Selecionar tudo e copiar</button>
+                </center>
+            </div>
+
+            <img id="imgResultado" style="max-width: 80%;width: 80%; display: none;border:1px solid white">
+            <br>
+            <br>
+            <br>
+
+
+        </center>
+    </div>
+
+</body>
+
+<script>
+
+
+
+
+
+    document.getElementById('copiarSelecionar').addEventListener('click', () => {
+
+        let textarea = document.getElementById("saidaTexto");
+
+        // Seleciona o texto dentro da textarea
+        textarea.select();
+        textarea.setSelectionRange(0, 999999); // Para compatibilidade com dispositivos móveis
+
+        // Copia o texto para a área de transferência
+        navigator.clipboard.writeText(textarea.value)
+            .then(() => alert("Texto copiado!"))
+            .catch(err => console.error("Erro ao copiar:", err));
+    })
+
+
+    document.getElementById('Salvarlocal').addEventListener('click', () => {
+        salvarStorage(document.getElementById("saidaTexto").value)
+    })
+
+
+    document.getElementById('Revelation').addEventListener('click', () => {
+        revelar(document.getElementById("saidaTexto"), document.getElementById("senha"))
+    })
+
+
+
+
+    function revelar(textarrea, key) {
+        let base64 = textarrea.value.trim();
+
+        if (base64) {
+            let img = document.getElementById("imgResultado");
+            img.src = "data:image/png;base64," + decrip(base64, joaat(key.value)); // Reconstruindo a URL Base64
+            img.style.display = "block";
+
+
+
+        } else {
+            alert("O campo de texto está vazio!");
+        }
+    }
+
+    function encrip(text, key) {
+        let e = ''
+        for (let i = 0; i < text.length; i++) {
+            e += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length))
+        }
+        console.log('Tamanho: ' + e.length)
+        return lzwEncode(btoa(e))
+    }
+    function decrip(text, key) {
+        let e = atob(lzwDecode(text))
+        let d = ''
+        for (let i = 0; i < e.length; i++) {
+            d += String.fromCharCode(e.charCodeAt(i) ^ key.charCodeAt(i % key.length))
+        }
+        console.log('Tamanho: ' + d.length)
+        return d
+    }
+
+
+    function joaat(s) {
+        s = s.toLowerCase();
+        let h = 0;
+        for (let i = 0; i < s.length; i++) {
+            h += s.charCodeAt(i);
+            h += (h << 10);
+            h ^= (h >> 6);
+        }
+        h += (h << 3);
+        h ^= (h >> 11);
+        h += (h << 15);
+        h = h >>> 0;
+        return '0x' + h.toString(16).toUpperCase();
+    }
+
+    // Quando o usuário seleciona uma imagem
+    document.getElementById("inputImagem").addEventListener("change", function (event) {
+        let arquivo = event.target.files[0];
+        if (arquivo) {
+            let leitor = new FileReader();
+
+            leitor.onload = function (e) {
+                // Convertendo os dados da imagem para Base64
+                let base64 = e.target.result.split(',')[1]; // Remove o prefixo "data:image/png;base64,"
+                document.getElementById("saidaTexto").value = encrip(base64, joaat(document.getElementById("senha").value));
+            };
+
+            // Lendo a imagem como uma URL Base64
+            leitor.readAsDataURL(arquivo);
+        }
+    });
+
+
+    function salvarStorage(img) {
+
+        var idct = 1
+        while (localStorage.getItem('imagem_' + idct)) {
+            idct++
+        }
+        localStorage.setItem('imagem_' + idct, img)
+        window.location.reload()
+    }
+
+
+
+   //if (!localStorage.getItem('imagem_1')) {
+
+   //    
+   //    for (var i = 1; i < 30; i++){
+
+   //        console.log('percorrendo index '+ i);
+
+   //       
+
+   //    }
+   //    document.getElementById('ArquivoX').innerHTML = 'Arquivo carregado<br>Aguarde...'
+   //    
+   //    
+
+   //}
+
+
+ 
+//------------------------------
+
+
+
+
+
+ 
+
+    function lzwEncode(s) { 
+        return s;
+    }
+
+    function lzwDecode(s) {
+         
+        return s;
+    }
+</script>
+
+</html>
