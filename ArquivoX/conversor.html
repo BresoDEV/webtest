@@ -131,19 +131,14 @@
                 <input type="file" id="inputImagem" accept="image/*">
             </div>
 
-            <div class="buttons">
-                <center>
-                    <button id="Revelation">Revelar Codigo</button>
-
-                </center>
-            </div>
+             
 
 
             <hr>
             <br>
 
             <div class="form-group">
-                <input type="text" id="linkImagem" placeholder="Link da imagem na web" value="lt.jpg">
+                <input type="text" id="linkImagem" placeholder="Link da imagem na web" value="e.jpg">
             </div>
 
             <div class="buttons">
@@ -164,6 +159,7 @@
             <div class="buttons">
                 <center>
                     <button id="copiarSelecionar">Selecionar tudo e copiar</button>
+                    <button id="Revelation">Revelar Codigo</button>
                 </center>
             </div>
 
@@ -242,20 +238,45 @@
     }
 
 
-    function joaat(s) {
-        s = s.toLowerCase();
-        let h = 0;
-        for (let i = 0; i < s.length; i++) {
-            h += s.charCodeAt(i);
-            h += (h << 10);
-            h ^= (h >> 6);
+    function joaat(text) {
+        if (!text) {
+            return 0;
         }
-        h += (h << 3);
-        h ^= (h >> 11);
-        h += (h << 15);
-        h = h >>> 0;
-        return '0x' + h.toString(16).toUpperCase();
+        var value = 0, temp;
+        var index = 0;
+        var quoted = false;
+        if (text.charCodeAt(index) === 34) {
+            quoted = true;
+            index = (index + 1) | 0;
+        }
+        text = text.toLowerCase();
+        for (; index < text.length; index = (index + 1) | 0) {
+            var v = text.charCodeAt(index);
+            if (quoted && (v === 34)) {
+                break;
+            }
+            if (v === 92) {
+                v = 47;
+            }
+            temp = v;
+            temp = (temp + value) >>> 0;
+            value = (temp << 10) >>> 0;
+            temp = (temp + value) >>> 0;
+            value = temp >>> 6;
+            value = (value ^ temp) >>> 0;
+        }
+        temp = (value << 3) >>> 0;
+        temp = (value + temp) >>> 0;
+        var temp2 = temp >>> 11;
+        temp = (temp2 ^ temp) >>> 0;
+        temp2 = (temp << 15) >>> 0;
+        value = (temp2 + temp) >>> 0;
+        if (value < 2) {
+            value = (value + 2) >>> 0;
+        }
+        return '0x' + value.toString(16).toUpperCase();
     }
+
 
     // Quando o usuário seleciona uma imagem
     document.getElementById("inputImagem").addEventListener("change", function (event) {
@@ -276,34 +297,42 @@
 
 
 
-    function converterImagemParaBase64() {
-         const img = document.getElementById('imgResultado');
+    function converterParaBase64() {
+      const url = document.getElementById('linkImagem').value;
+      const resultado = document.getElementById('imgResultado');
+      resultado.innerHTML = ''; // limpa imagem anterior, se houver
 
-        // // Cria o canvas do tamanho da imagem
-        // const canvas = document.createElement('canvas');
-        // canvas.width = img.width;
-        // canvas.height = img.height;
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Não foi possível carregar a imagem.');
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result;
+            //console.log('Base64 da imagem:\n', base64.split(',')[1]);
+            
+            
+            //console.log(encrip(base64.split(',')[1], joaat(document.getElementById("senha").value)));
 
-        // const ctx = canvas.getContext('2d');
-        // ctx.drawImage(img, 0, 0);
-
-        // // Converte o conteúdo do canvas para Base64 (padrão PNG)
-        // const base64 = canvas.toDataURL('image/png');
+            document.getElementById("saidaTexto").value = encrip(base64.split(',')[1], joaat(document.getElementById("senha").value));
+            // document.getElementById("saidaTexto").value = converterImagemParaBase64()
 
 
-        fetch(img)
-            .then(res => res.blob())
-            .then(blob => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const base64 = reader.result;
-                    console.log(base64);
-                };
-                reader.readAsDataURL(blob);
-            });
-
-        console.log(base64); // Aqui está o Base64 da imagem
-        return base64;
+            // Criar nova imagem e inserir no DOM
+            const img = document.createElement('img');
+            img.src = base64;
+            resultado.appendChild(img);
+          };
+          reader.readAsDataURL(blob);
+        })
+        .catch(error => {
+          console.error('Erro ao converter a imagem:', error);
+          resultado.innerHTML = '<p style="color: red;">Erro ao carregar ou converter a imagem.</p>';
+        });
     }
 
 
@@ -316,14 +345,14 @@
             img.style.display = "block";
 
             setTimeout(() => {
-                converterImagemParaBase64()
+                converterParaBase64()
             }, 2000);
 
             // let base64 = converterImagemParaBase64().split(',')[1]; // Remove o prefixo "data:image/png;base64,"
             //document.getElementById("saidaTexto").value = encrip(base64, joaat(document.getElementById("senha").value));
             // document.getElementById("saidaTexto").value = converterImagemParaBase64()
 
-            //
+            //https://scontent-poa1-1.xx.fbcdn.net/v/t39.30808-6/476272607_2556039131393855_1316458309142530056_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iXOZ4vcW2OEQ7kNvwGGch-m&_nc_oc=AdlpBSLkT14G82D4DiHx3F42HbAcYkcOjwrenoqqR0G9_QDMg5fasEmgc5NxGyITLdL_uPr3Z0-Xjfw1Bp7E1o9K&_nc_zt=23&_nc_ht=scontent-poa1-1.xx&_nc_gid=c1BafHh-b0DPG7JGuwUO5g&oh=00_AfM2Xcg2wgiL9kR-f--6FGkyD4qm81n9RoTh-lrAd32vsQ&oe=684F9B74
         }
     });
 
