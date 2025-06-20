@@ -13,10 +13,6 @@
       color: #f1f1f1;
       cursor: pointer;
     }
-	*{
-	-webkit-tap-highlight-color: transparent;
-  text-decoration:none;
-  }
 
     header,
     nav {
@@ -210,6 +206,7 @@
         <option value="Kg">Peso</option>
         <option value="Lts">Litros</option>
       </select>
+      <input type="text" id="quantPorAluno" placeholder="Quantidade por Aluno" />
       <button onclick="salvarProduto()">Salvar</button>
       </center>
     </div>
@@ -309,13 +306,14 @@
       const nome = document.getElementById('nomeProduto').value.trim();
       const quantidade = parseFloat(document.getElementById('quantidadeProduto').value);
       const tipo = document.getElementById('tipoProduto').value;
+      const quantPorAluno = document.getElementById('quantPorAluno').value;
 
       if (!nome || isNaN(quantidade) || quantidade <= 0) {
         alert("Preencha todos os campos corretamente.");
         return;
       }
 
-      produtos.push({ nome, quantidade, tipo });
+      produtos.push({ nome, quantidade, tipo,quantPorAluno });
       salvarNoStorage();
       fecharModal();
       mostrarLista();
@@ -376,13 +374,13 @@
     mostrarLista();
 
 
-    function criarProduto(nome_, quant_, tipo) {
+    function criarProduto(nome_, quant_, tipo,quantPorAluno='0') {
       const nome = nome_.trim();
       const quantidade = parseFloat(quant_);
 
 
 
-      produtos.push({ nome, quantidade, tipo });
+      produtos.push({ nome, quantidade, tipo,quantPorAluno });
       salvarNoStorage();
 
 

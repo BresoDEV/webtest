@@ -12,14 +12,8 @@
       background-color: #121212;
       color: #f1f1f1;
       cursor: pointer;
-	  
     }
 
-*{
--webkit-tap-highlight-color: transparent;
-  text-decoration:none;
-  }
-  
     header,
     nav {
       background-color: #1e1e1e;
@@ -189,15 +183,25 @@
 
 <body>
 
-  <header id="header">Sistema de Estoque - Cozinha</header>
+  <center>
+    <button class="w90 red" onclick="window.location.href='index.html'">Voltar</button><br>
+  </center>
+  <br>
+  <br>
+  <br>
+  <center class="dev">
+    <button class="w90" onclick="ExibirCores()">Exibir Cores</button><br>
+    <button class="w90" onclick="CadastrarTodosAlimentos()">Cadastrar Todos Alimentos</button><br>
+    <button class="w90" onclick="ZerarTodasQuantidades()">Zerar Todas Quantidades</button><br>
+    <button class="w90" onclick="apagarTudo()">Apagar Todos Produtos</button><br>
+    <hr>
+    <button class="w90" onclick="localstorageDownload()">Obter codigo dos alimentos</button><br>
+    <button class="w90" onclick="executarStorage()">Executar codigo dos alimentos</button><br><br>
+    <textarea id="textarea" class="w90" style="height:200px;background-color: #555;color:white;"></textarea><br>
+  </center>
 
-  <nav>
-    <button onclick="abrirModal()" class="green" style="color:#121212">Adicionar Produto</button>
-  </nav>
 
-  <main id="conteudo"></main>
 
-  
 
 
 
@@ -215,7 +219,7 @@
     function carregarProdutos() {
       const armazenado = localStorage.getItem("produtos");
       produtos = armazenado ? JSON.parse(armazenado) : [];
-      
+
       produtos.sort((a, b) => a.nome.localeCompare(b.nome));
     }
 
@@ -223,196 +227,57 @@
       localStorage.setItem("produtos", JSON.stringify(produtos));
     }
 
-    function mostrarLista() {
-      const container = document.getElementById('conteudo');
-      if (produtos.length === 0) {
-        container.innerHTML = "<p>Nenhum produto cadastrado.</p>";
-        return;
-      }
-      container.innerHTML = produtos.map((p, i) => `
-      <div class="produto">
-        
-        
+     
+    
+     
+    
 
-        <details>
-            <summary
-            ${exibirCores == 1 ?
-          parseInt(p.quantidade) != 0 ?
-            parseInt(p.quantidade) >= 5 ?
-              (parseInt(p.quantidade) >= 15 ?
-                (parseInt(p.quantidade) >= 25 ?
-                  'class="green"'
-                  :
-                  'class="yellow"'
-                )
-                :
-                'class="orange"'
-              )
-              :
-              'class="red"'
-            :
-            'class="white"'
-          :
-          ''
-        }
-        
-            >
-            ${p.nome}
-            <i style="float:right">
-              ${p.tipo === 'Kg' ? p.quantidade.toFixed(3) : p.quantidade} ${p.tipo}<br/>
-            </i>
-        </summary>
-            <center>
-              <ol>
-              <li>
-                <input type="number" id="${i}" value="0">
-              </li>
-              <li>
-                <button onclick="editarRemover('${p.nome}','${i}')">Remover Quantidade</button>
-                <button onclick="editarAdicionar('${p.nome}','${i}')">Adicionar Quantidade</button>
-              </li>
-              <li>
-                <button class="red w90" onclick="removerProduto(${i})">Apagar Item</button>
-              </li>
-            </ol>
-            </center>
-        </details>
-      </div>
-    `).join("");
-    }
+     
 
-    function abrirModal() {
-      document.getElementById('modalCadastro').style.display = 'flex';
-    }
+     
 
-    function fecharModal() {
-      document.getElementById('modalCadastro').style.display = 'none';
-    }
+    
 
-    function salvarProduto() {
-      const nome = document.getElementById('nomeProduto').value.trim();
-      const quantidade = parseFloat(document.getElementById('quantidadeProduto').value);
-      const tipo = document.getElementById('tipoProduto').value;
-
-      if (!nome || isNaN(quantidade) || quantidade <= 0) {
-        alert("Preencha todos os campos corretamente.");
-        return;
-      }
-
-      produtos.push({ nome, quantidade, tipo });
-      salvarNoStorage();
-      fecharModal();
-      mostrarLista();
-
-      document.getElementById('nomeProduto').value = "";
-      document.getElementById('quantidadeProduto').value = "";
-    }
-
-    function removerProduto(index) {
-      if (confirm("Tem certeza que deseja remover este produto?")) {
-        produtos.splice(index, 1);
-        salvarNoStorage();
-        mostrarLista();
-      }
-    }
-
-    function editarAdicionar(produto, index) {
-      produtos.forEach(e => {
-        if (e.nome == produto) {
-          if (e.tipo != 'Unid.') {
-            e.quantidade = parseFloat(e.quantidade) + parseFloat(document.getElementById(index).value)
-          } else {
-            e.quantidade = parseInt(e.quantidade) + parseInt(document.getElementById(index).value)
-          }
-
-        }
-        console.log(e.nome)
-      });
-
-      salvarNoStorage();
-      mostrarLista();
-    }
-
-    function editarRemover(produto, index) {
-      produtos.forEach(e => {
-        if (e.nome == produto) {
-          if (e.tipo != 'Unid.') {
-            e.quantidade = parseFloat(e.quantidade) - parseFloat(document.getElementById(index).value)
-          } else {
-            e.quantidade = parseInt(e.quantidade) - parseInt(document.getElementById(index).value)
-          }
-        }
-        console.log(e.nome)
-      });
-
-      salvarNoStorage();
-      mostrarLista();
-    }
-
-    // Fecha modal ao clicar fora dele
-    window.onclick = function (event) {
-      const modal = document.getElementById('modalCadastro');
-      if (event.target === modal) fecharModal();
-    }
+    
 
     // Inicializa
     carregarProdutos();
-    mostrarLista();
+    
 
 
-    function criarProduto(nome_, quant_, tipo) {
+    function criarProduto(nome_, quant_, tipo,quantPorAluno='0') {
       const nome = nome_.trim();
       const quantidade = parseFloat(quant_);
-
-
-
-      produtos.push({ nome, quantidade, tipo });
+      produtos.push({ nome, quantidade, tipo,quantPorAluno });
       salvarNoStorage();
-
-
     }
 
 
 
-    //menu dev----------------------------
+     
+     
+    function executarStorage() {
 
-    var ct_clicks = 10;
-
-    document.getElementById('header').addEventListener('click', (a) => {
-      ct_clicks++
-    })
-
-    setInterval(() => {
-      if (ct_clicks >= 5) {
-        document.body.innerHTML = ''
-        setTimeout(() => {
-          dev()
-        }, 1000);
+      try {
+        eval(document.getElementById('textarea').value)
+        alert('Codigo executado com sucesso!')
+      } catch (error) {
+        alert('Erro ao executar o codigo')
       }
-    }, 1);
-
-
-    function dev() {
-
-      document.body.innerHTML = `
       
-      <center>
-        <button class="w90 red" onclick="window.location.href='index.html'">Voltar</button><br>
-      </center>
-      <br>
-      <br>
-      <br>
-      <center class="dev">
-        <button class="w90" onclick="ExibirCores()">Exibir Cores</button><br>
-        <button class="w90" onclick="CadastrarTodosAlimentos()">Cadastrar Todos Alimentos</button><br>
-        <button class="w90" onclick="ZerarTodasQuantidades()">Zerar Todas Quantidades</button><br>
-        <button class="w90" onclick="apagarTudo()">Apagar Todos Produtos</button><br>
-      </center>
+    }  
+    
+    function localstorageDownload() {
 
-      `;
-
-      ct_clicks = 0;
+      var s = "";
+      for (let i = 0; i < localStorage.length; i++) {
+        const chave = localStorage.key(i);
+        const valor = localStorage.getItem(chave);
+        s+=`localStorage.setItem('${chave}','${valor}');`;
+      }
+      document.getElementById('textarea').value=s;
     }
+
 
     function ZerarTodasQuantidades() {
       produtos.forEach(e => {
@@ -428,11 +293,18 @@
       "Kg"
       "Lts"
       */
-      criarProduto('Oleo', 0, 'Lts')
-      criarProduto('Arroz', 0, 'Kg')
+      criarProduto('Oleo', 0, 'Lts','0.002')
+      criarProduto('Sal', 0, 'Kg','0.001')
+      criarProduto('Açucar', 0, 'Kg','0.009')
+      criarProduto('Arroz', 0, 'Kg','0.050')
+      criarProduto('Macarrão', 0, 'Kg','0.050')
+      criarProduto('Farinha de Milho', 0, 'Kg','0.050')
+      criarProduto('Feijão', 0, 'Kg','0.030')
+      criarProduto('Lentilha', 0, 'Kg','0.030')
+      criarProduto('Carne Bovina', 0, 'Kg','0.050')
+
+      //ver esses que não tem quantidades
       criarProduto('Vinagre', 0, 'Unid.')
-      criarProduto('Lentilha', 0, 'Kg')
-      criarProduto('Macarrão', 0, 'Kg')
       criarProduto('Sagu', 0, 'Kg')
       criarProduto('Farinha de Mandioca', 0, 'Kg')
       criarProduto('Fuba', 0, 'Kg')
@@ -442,7 +314,7 @@
       criarProduto('Suco de Maçã', 0, 'Lts')
       criarProduto('Suco de Maçã Verde', 0, 'Lts')
       criarProduto('Leite', 0, 'Lts')
-      criarProduto('Feijão', 0, 'Kg')
+      
 
       salvarNoStorage();
       alert('Todos Alimentos Cadastrados')
@@ -452,11 +324,12 @@
       localStorage.removeItem("produtos")
       alert('Todos produtos deletados')
     }
+
     function ExibirCores() {
       if (localStorage.getItem("exibirCores") == 0) {
         localStorage.setItem("exibirCores", 1)
         alert('Cores ativadas')
-      }else{
+      } else {
         localStorage.setItem("exibirCores", 0)
         alert('Cores desativadas')
       }
@@ -466,6 +339,13 @@
 
     console.log(produtos)
     console.log(localStorage.getItem("produtos"))
+
+
+
+
+
+
+ 
   </script>
 
 </body>

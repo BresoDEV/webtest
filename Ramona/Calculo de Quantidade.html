@@ -13,10 +13,6 @@
             color: #f1f1f1;
             cursor: pointer;
         }
-		*{
-		-webkit-tap-highlight-color: transparent;
-  text-decoration:none;
-  }
 
         header,
         nav {
@@ -269,7 +265,7 @@
                     if (document.getElementById(e.nome).style.backgroundColor == 'green') {
 
 
-                        const valorPorPessoa = obterQuantidadeIndividual(e.nome);
+                        const valorPorPessoa = e.quantPorAluno;
 
                         total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
 
@@ -279,7 +275,7 @@
 
 
                         if (e.quantidade < total) {
-                            texto += '<td class="red">aaa' + total + ' ' + e.tipo + '</td>'
+                            texto += '<td class="red">' + total + ' ' + e.tipo + '</td>'
                         }
                         else {
                             texto += '<td>' + total + ' ' + e.tipo + '</td>'
@@ -314,7 +310,7 @@
         document.getElementById('darBaixa').addEventListener('click', (a) => {
 
 
-            const todosElementos = document.querySelectorAll('*');
+            const todosElementos = document.querySelectorAll('td');
 
             for (let elemento of todosElementos) {
                 const estilo = window.getComputedStyle(elemento);
@@ -333,7 +329,7 @@
                     if (document.getElementById(e.nome).style.backgroundColor == 'green') {
 
 
-                        const valorPorPessoa = obterQuantidadeIndividual(e.nome);
+                        const valorPorPessoa = e.quantPorAluno;
 
                         total = valorPorPessoa * parseInt(document.getElementById('NumerodePessoas').value)
 
@@ -359,33 +355,10 @@
             mostrarLista();
         })
 
-        function obterQuantidadeIndividual(alimento) {
-            switch (alimento) {
-                case 'Oleo': return 10; break;
-                case 'Arroz': return 20; break;
-                case 'Vinagre': return 30; break;
-                case 'Lentilha': return 40; break;
-                case 'Macarrão': return 0; break;
-                case 'Sagu': return 0; break;
-                case 'Farinha de Mandioca': return 0; break;
-                case 'Fuba': return 0; break;
-                case 'Suco de Laranja': return 0; break;
-                case 'Suco de Abacaxi': return 0; break;
-                case 'Suco de Uva': return 0; break;
-                case 'Suco de Maçã': return 0; break;
-                case 'Suco de Maçã Verde': return 0; break;
-                case 'Leite': return 0; break;
-                case 'Feijão': return 0; break;
+       
+        
 
-
-                default: return 0; break;
-            }
-
-        }
-
-        //console.log(produtos)
-        //console.log(localStorage.getItem("produtos"))
-
+         
 
     </script>
 
