@@ -113,7 +113,12 @@
 </head>
 
 <body>
-  <center id="center">
+
+
+  <div id="center">
+
+  </div>
+  <center >
     <img id="abrirDEV" src="181534.png" alt="" style="width: 10%;filter:invert();">
   </center>
   <br><br>
@@ -168,23 +173,28 @@
 
     document.getElementById('abrirDEV').addEventListener('click',()=>{
       ct++;
+      if(ct>=5){
+        document.getElementById('abrirDEV').filter = 'none'
+      }
     })
 
 
     setInterval(() => {
       if(ct >= 5){
 
-        document.body.innerHTML = `
-        <div class="modal">
-            <div class="modal-content">
-              <h3>Menu Especial</h3>
-               
-              <button onclick="gerarStorage()">Gerar Storage</button>
-              <button onclick="window.location.reload()">Fechar</button>
-          </div>
-        </div>
-        <br><br>
-        `;
+        var div = document.createElement('div')
+        div.className = 'modal';
+
+        var div2 = document.createElement('div')
+        div2.className = 'modal-content';
+
+        var h3 = document.createElement('h3')
+        h3.innerHTML = 'Menu Especial';
+
+       
+        div.append(div2)
+        div.append(h3)
+        document.getElementById('center').append(div)
       }
       ct = 0;
     }, 5000);
