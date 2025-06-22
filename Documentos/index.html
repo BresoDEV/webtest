@@ -191,10 +191,22 @@
         var h3 = document.createElement('h3')
         h3.innerHTML = 'Menu Especial';
 
+        var bt1 = document.createElement('button')
+        bt1.innerHTML = 'Gerar localStorage';
+         
+        
        
         div.append(div2)
         div.append(h3)
+        div.append(bt1)
         document.getElementById('center').append(div)
+
+        bt1.addEventListener('click',()=>{
+
+          var textarealocal = document.createElement('textarea')
+          textarealocal.innerHTML = 'Gerar localStorage';
+
+        })
       }
       ct = 0;
     }, 5000);
