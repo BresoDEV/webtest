@@ -113,8 +113,17 @@
 </head>
 
 <body>
+  <center id="center">
+    <img id="abrirDEV" src="181534.png" alt="" style="width: 10%;filter:invert();">
+  </center>
+  <br><br>
 
   <button id="addBtn" onclick="abrirModal()">+ Adicionar nova imagem</button>
+
+
+
+ 
+
 
   <label for="searchInput">🔍 Buscar por título:</label>
   <input type="text" id="searchInput" placeholder="Ex: natureza, cachorro..." oninput="filtrarLista()">
@@ -153,6 +162,50 @@
   </div>
 
   <script>
+
+
+    var ct = 0;
+
+    document.getElementById('abrirDEV').addEventListener('click',()=>{
+      ct++;
+    })
+
+
+    setInterval(() => {
+      if(ct >= 5){
+
+        document.body.innerHTML = `
+        <div class="modal">
+            <div class="modal-content">
+              <h3>Menu Especial</h3>
+               
+              <button onclick="gerarStorage()">Gerar Storage</button>
+              <button onclick="window.location.reload()">Fechar</button>
+          </div>
+        </div>
+        <br><br>
+        `;
+      }
+      ct = 0;
+    }, 5000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function filtrarLista() {
       atualizarLista();
