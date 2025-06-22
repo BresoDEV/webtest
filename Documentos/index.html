@@ -137,53 +137,54 @@
   </center>
   
 
-  <button id="addBtn" onclick="abrirModal()">+ Adicionar nova imagem</button>
+  <button id="addBtn" onclick="abrirModal()">+ Adicionar novo documento</button>
 
 
 
 
 
 
-  <label for="searchInput">🔍 Buscar por título:</label>
-  <input type="text" id="searchInput" placeholder="Ex: natureza, cachorro..." oninput="filtrarLista()">
+  <label for="searchInput">🔍 Buscar por nome:</label>
+  <input type="text" id="searchInput" placeholder="Ex: CPF, RG..." oninput="filtrarLista()">
 
 
-  <h3>📂 Itens salvos:</h3>
+  <h3>📂 Documentos salvos:</h3>
   <div id="savedItems"></div>
 
 
   <center>
-    <h3>🖼️ Imagem descriptografada:</h3>
+    <h3>🖼️ Documento descriptografado:</h3>
     <img id="outputImage" class="preview" alt="Imagem será exibida aqui">
   </center>
 
   <!-- MODAL -->
   <div class="modal" id="modalAdd">
     <div class="modal-content">
-      <h3>Adicionar nova imagem</h3>
-      <label>🔑 Chave:</label>
-      <input type="text" id="keyInput">
+      <h3>Adicionar novo documento</h3>
 
-      <label>🖼️ Imagem:</label>
+      <!--<label>🔑 Chave de Acesso:</label>-->
+      <input type="text" id="keyInput" placeholder="Chave de segurança">
+
+      <!--<label>🖼️ Foto:</label>-->
       <input type="file" id="imageInput" accept="image/*">
 
-      <label>📝 Título:</label>
-      <input type="text" id="titleInput" placeholder="Ex: Foto da natureza">
+      <!--<label>📝 Nome:</label>-->
+      <input type="text" id="titleInput" placeholder="Nome (Ex: CPF, RG, etc...)">
 
-      <button onclick="processarImagem()">PROCESSAR</button>
+      <button onclick="processarImagem()">Processar</button>
 
-      <label>📄 Resultado criptografado:</label>
+      <!--<label>📄 Resultado criptografado:</label>-->
       <textarea id="outputArea" rows="5"></textarea>
 
-      <button onclick="salvarLocal()">SALVAR</button>
-      <button onclick="fecharModal()">Fechar</button>
+      <button onclick="salvarLocal()">Salvar Documento</button>
+      <button onclick="fecharModal()">Cancelar</button>
     </div>
   </div>
 
   <script>
 
     //------------------------
-    console.log("V 10")
+    console.log("V 10.1")
     //Controle de commmits
 
     var ct = 0;
@@ -263,7 +264,7 @@
 
             const a = document.createElement("a");
             a.href = url;
-            a.download = "imagens.txt";
+            a.download = "documentos.txt";
             a.click();
             URL.revokeObjectURL(url);
           }
@@ -276,9 +277,9 @@
         bt3.addEventListener('click', () => {
           try {
             eval(textarealocal.value)
-            alert("imagens importadas com sucesso!")
+            alert("Documentos importados com sucesso!")
           } catch (error) {
-            alert('Erro ao importar as imagens')
+            alert('Erro ao importar os documentos')
           }
         })
       }
@@ -359,7 +360,7 @@
       const data = imagemCriptografada;
 
       if (!title || !data) {
-        alert("Preencha todos os campos e processe a imagem.");
+        alert("Preencha todos os campos e processe a imagem do documento.");
         return;
       }
 
@@ -372,7 +373,7 @@
       localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
       fecharModal();
       atualizarLista();
-      alert("Imagem salva com sucesso!");
+      alert("Documento salvo com sucesso!");
     }
 
     function atualizarLista() {
@@ -396,7 +397,7 @@
         deleteBtn.textContent = '❌';
 
         deleteBtn.onclick = () => {
-          if (confirm(`Deseja excluir "${item.title}"?`)) {
+          if (confirm(`Deseja excluir "${item.title}" da sua lista de documentos?`)) {
             items.splice(index, 1);
             localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
             atualizarLista();
@@ -409,10 +410,10 @@
 
         const inputSenha = document.createElement('input');
         inputSenha.type = 'text';
-        inputSenha.placeholder = 'Digite a senha';
+        inputSenha.placeholder = 'Digite a senha de acesso para liberar';
 
         const botaoRevelar = document.createElement('button');
-        botaoRevelar.textContent = 'REVELAR';
+        botaoRevelar.textContent = 'Revelar Documento';
         botaoRevelar.onclick = () => {
 
 
@@ -421,9 +422,10 @@
             const decrypted = xorEncryptDecrypt(unicodeText, inputSenha.value);
             document.getElementById('outputImage').src = decrypted;
             document.getElementById('outputImage').style.display = 'block'
+            inputSenha.value = '';
 
           } catch (e) {
-            alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+            alert("Erro ao revelar o documento. Senha de acesso inválida ou conteúdo corrompido.");
             document.getElementById('outputImage').style.display = 'none'
           }
 
@@ -441,7 +443,7 @@
     }
 
     document.getElementById('outputImage').addEventListener('error', () => {
-      alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+      alert("Erro ao revelar o documento. Senha de acesso inválida ou conteúdo corrompido.");
       document.getElementById('outputImage').style.display = 'none'
     });
 
