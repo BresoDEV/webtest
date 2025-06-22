@@ -182,14 +182,14 @@
   <script>
 
     //------------------------
-    console.log("V 5")
+    console.log("V 5.1")
     //Controle de commmits
 
     var ct = 0;
 
     document.getElementById('abrirDEV').addEventListener('click', () => {
       ct++;
-      if (ct >= 5) { 
+      if (ct >= 5) {
         document.getElementById('abrirDEV').style.filter = 'none'
       }
     })
@@ -236,7 +236,14 @@
           setTimeout(() => {
             textarealocal.select();
             textarealocal.setSelectionRange(0, textarealocal.value.length);
+
+            setTimeout(() => {
+              navigator.clipboard.writeText(textarea.value)
+                .then(() => alert("Texto copiado com sucesso!"))
+                .catch(err => console.error("Erro ao copiar:", err));
+            }, 2000);
           }, 1000);
+
         })
         bt2.addEventListener('click', () => {
           window.location.reload();
@@ -249,12 +256,12 @@
           }
         })
       }
-      ct = 0; 
+      ct = 0;
     }, 5000);
 
 
     function obterLocalStorage() {
-      var s = 'localStorage.setItem(\'imagensCriptografadas\',';
+      var s = 'localStorage.setItem(\'imagensCriptografadas\',\'';
       s += localStorage.getItem('imagensCriptografadas')
       s += '\');'
       return s;
