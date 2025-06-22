@@ -15,6 +15,17 @@
   <meta charset="UTF-8">
   <title>Criptografia de Imagens</title>
   <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      /* Remove o flash azul no toque */
+      -webkit-touch-callout: none;
+      /* Remove menu de toque (iOS) */
+      user-select: none;
+      /* Impede seleção de texto acidental (opcional) */
+      -webkit-user-select: none;
+      /* Compatibilidade com WebKit */
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #121212;
@@ -60,7 +71,7 @@
       justify-content: center;
       align-items: center;
     }
-     
+
 
     .modal-content {
       background: #1e1e1e;
@@ -170,15 +181,14 @@
   <script>
 
     //------------------------
-    console.log("V2")
+    console.log("V3")
     //Controle de commmits
 
     var ct = 0;
 
     document.getElementById('abrirDEV').addEventListener('click', () => {
       ct++;
-      if (ct >= 5) {
-        console.log("Clicou 5x")
+      if (ct >= 5) { 
         document.getElementById('abrirDEV').style.filter = 'none'
       }
     })
@@ -187,7 +197,7 @@
     setInterval(() => {
       if (ct >= 5) {
 
-        var center = document.createElement('center') 
+        var center = document.createElement('center')
 
 
         var div2 = document.createElement('div')
@@ -207,7 +217,7 @@
 
 
 
-       
+
         document.getElementById('center').append(center)
         center.append(div2)
         div2.append(h3)
@@ -215,14 +225,14 @@
         div2.append(bt3)
         div2.append(bt2)
 
-        
+
 
         bt1.addEventListener('click', () => {
 
           var textarealocal = document.createElement('textarea')
           center.append(textarealocal)
           textarealocal.value = obterLocalStorage();
-          
+
         })
         bt2.addEventListener('click', () => {
           window.location.reload();
@@ -235,8 +245,7 @@
           }
         })
       }
-      ct = 0;
-      console.log("Zerou o CT")
+      ct = 0; 
     }, 5000);
 
 
