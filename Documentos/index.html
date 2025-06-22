@@ -231,12 +231,13 @@
         const div = document.createElement('div');
         div.className = 'saved-item';
 
-        const title = document.createElement('strong');
-        title.textContent = item.title;
+        //const title = document.createElement('strong');
+        //title.textContent = item.title;
 
         const deleteBtn = document.createElement('span');
         deleteBtn.className = 'delete-btn';
         deleteBtn.textContent = '❌';
+
         deleteBtn.onclick = () => {
           if (confirm(`Deseja excluir "${item.title}"?`)) {
             items.splice(index, 1);
@@ -247,7 +248,7 @@
 
         const details = document.createElement('details');
         const summary = document.createElement('summary');
-        summary.textContent = '🔓 Revelar com senha';
+        summary.textContent = item.title;
 
         const inputSenha = document.createElement('input');
         inputSenha.type = 'text';
@@ -269,7 +270,7 @@
         details.appendChild(inputSenha);
         details.appendChild(botaoRevelar);
 
-        div.appendChild(title);
+        //div.appendChild(title);
         div.appendChild(deleteBtn);
         div.appendChild(details);
         container.appendChild(div);
