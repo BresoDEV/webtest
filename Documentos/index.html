@@ -169,7 +169,7 @@
   <script>
 
     //------------------------
-    console.log("V1")
+    console.log("V2")
     //Controle de commmits
 
     var ct = 0;
@@ -177,6 +177,7 @@
     document.getElementById('abrirDEV').addEventListener('click', () => {
       ct++;
       if (ct >= 5) {
+        console.log("Clicou 5x")
         document.getElementById('abrirDEV').filter = 'none'
       }
     })
@@ -220,6 +221,7 @@
         })
       }
       ct = 0;
+      console.log("Zerou o CT")
     }, 5000);
 
 
