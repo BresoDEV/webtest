@@ -182,7 +182,7 @@
   <script>
 
     //------------------------
-    console.log("V 5.2")
+    console.log("V 6")
     //Controle de commmits
 
     var ct = 0;
@@ -219,7 +219,8 @@
         var bt4 = document.createElement('button')
         bt4.innerHTML = 'Baixar Codigo .txt';
 
-
+        var textarealocal = document.createElement('textarea')
+        textarealocal.style.resize = 'none'
 
 
         document.getElementById('center').append(center)
@@ -229,23 +230,22 @@
         div2.append(bt3)
         div2.append(bt4)
         div2.append(bt2)
+        div2.append(textarealocal)
 
 
 
         bt1.addEventListener('click', () => {
 
-          var textarealocal = document.createElement('textarea')
-          center.append(textarealocal)
           textarealocal.value = obterLocalStorage();
           setTimeout(() => {
             textarealocal.select();
             textarealocal.setSelectionRange(0, textarealocal.value.length);
 
-            setTimeout(() => {
-              navigator.clipboard.writeText(textarealocal.value)
-                .then(() => alert("Texto copiado com sucesso!"))
-                .catch(err => console.error("Erro ao copiar:", err));
-            }, 2000);
+            //setTimeout(() => {
+            //  navigator.clipboard.writeText(textarealocal.value)
+            //    .then(() => alert("Texto copiado com sucesso!"))
+            //    .catch(err => console.error("Erro ao copiar:", err));
+            //}, 2000);
           }, 1000);
 
         })
@@ -255,26 +255,27 @@
         })
 
         bt4.addEventListener('click', () => {
-          if(textarealocal.value != ''){
+          if (textarealocal.value != '') {
             const texto = textarealocal.value;
-          const blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
-          const url = URL.createObjectURL(blob);
+            const blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
 
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "imagens.txt";
-          a.click(); 
-          URL.revokeObjectURL(url);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "imagens.txt";
+            a.click();
+            URL.revokeObjectURL(url);
           }
-          else{
+          else {
             alert('Codigo nao encontrado ou nao gerado')
           }
-          
+
         })
 
         bt3.addEventListener('click', () => {
           try {
             eval(textarealocal.value)
+            alert("imagens importadas com sucesso!")
           } catch (error) {
             alert('Erro ao importar as imagens')
           }
