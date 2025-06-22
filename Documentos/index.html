@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Criptografia de Imagens</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+
+    input, textarea, button, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #1e1e1e;
+      color: #ffffff;
+      border: 1px solid #333;
+      border-radius: 5px;
+    }
+
+    button {
+      background: #333;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    .saved-item {
+      background: #1a1a1a;
+      margin-top: 5px;
+      padding: 10px;
+      border: 1px solid #333;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    h2, h3 {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔐 Criptografar Imagem com Chave</h2>
+
+  <label>🔑 Chave:</label>
+  <input type="text" id="keyInput" placeholder="Digite a chave">
+
+  <label>🖼️ Selecione uma imagem:</label>
+  <input type="file" id="imageInput" accept="image/*">
+
+  <label>📝 Título para salvar:</label>
+  <input type="text" id="titleInput" placeholder="Ex: Foto da natureza">
+
+  <button onclick="processarImagem()">PROCESSAR</button>
+
+  <label>📄 Resultado (texto criptografado):</label>
+  <textarea id="outputArea" rows="10"></textarea>
+
+  <button onclick="salvarLocal()">SALVAR NO APARELHO</button>
+  <button onclick="revelarImagem()">REVELAR</button>
+
+  <img id="outputImage" alt="Imagem decodificada aparecerá aqui">
+
+  <h3>📂 Itens salvos no aparelho:</h3>
+  <div id="savedItems"></div>
+
+  <script>
+    function xorEncryptDecrypt(data, key) {
+      let result = '';
+      for (let i = 0; i < data.length; i++) {
+        result += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      return result;
+    }
+
+    function processarImagem() {
+      const file = document.getElementById('imageInput').files[0];
+      const key = document.getElementById('keyInput').value;
+
+      if (!file || !key) {
+        alert("Selecione uma imagem e digite a chave.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Data = e.target.result;
+        const encrypted = xorEncryptDecrypt(base64Data, key);
+        const unicodeText = Array.from(encrypted).map(c => c).join('');
+        document.getElementById('outputArea').value = btoa(unicodeText);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function revelarImagem() {
+      const encryptedText = document.getElementById('outputArea').value;
+      const key = document.getElementById('keyInput').value;
+
+      if (!encryptedText || !key) {
+        alert("Digite a chave e carregue um texto criptografado.");
+        return;
+      }
+
+      try {
+        const unicodeText = atob(encryptedText);
+        const decrypted = xorEncryptDecrypt(unicodeText, key);
+        document.getElementById('outputImage').src = decrypted;
+      } catch (e) {
+        alert("Erro ao decodificar. Chave incorreta ou conteúdo inválido.");
+      }
+    }
+
+    function salvarLocal() {
+      const title = document.getElementById('titleInput').value.trim();
+      const data = document.getElementById('outputArea').value;
+
+      if (!title || !data) {
+        alert("Digite um título e processe uma imagem antes de salvar.");
+        return;
+      }
+
+      const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+      items.push({ title, data });
+      localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
+
+      document.getElementById('titleInput').value = '';
+      atualizarLista();
+      alert("Salvo com sucesso!");
+    }
+
+    function atualizarLista() {
+      const container = document.getElementById('savedItems');
+      container.innerHTML = '';
+
+      const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+      items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'saved-item';
+        div.textContent = item.title;
+        div.onclick = () => {
+          document.getElementById('outputArea').value = item.data;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        container.appendChild(div);
+      });
+    }
+
+    // Atualiza a lista ao carregar a página
+    atualizarLista();
+  </script>
+
+</body>
+</html>
