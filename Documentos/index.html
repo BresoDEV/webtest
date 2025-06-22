@@ -257,13 +257,18 @@
         const botaoRevelar = document.createElement('button');
         botaoRevelar.textContent = 'REVELAR';
         botaoRevelar.onclick = () => {
+
+ 
           try {
             const unicodeText = atob(item.data);
             const decrypted = xorEncryptDecrypt(unicodeText, inputSenha.value);
             document.getElementById('outputImage').src = decrypted;
+
+             
           } catch (e) {
             alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
           }
+ 
         };
 
         details.appendChild(summary);
@@ -277,6 +282,9 @@
       });
     }
 
+    document.getElementById('outputImage').addEventListener('error', () => {
+      alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+  });
 
     atualizarLista();
   </script>
