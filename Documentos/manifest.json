@@ -1,6 +1,6 @@
 {
-    "name": "Criptografia de Imagens",
-    "short_name": "CriptoIMG",
+    "name": "Carteira WEB",
+    "short_name": "Carteira WEB",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#121212",
