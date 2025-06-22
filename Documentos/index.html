@@ -123,7 +123,7 @@
   <h3>📂 Itens salvos:</h3>
   <div id="savedItems"></div>
 
-  
+
   <center>
     <h3>🖼️ Imagem descriptografada:</h3>
     <img id="outputImage" class="preview" alt="Imagem será exibida aqui">
@@ -206,7 +206,11 @@
         return;
       }
 
-      const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+      let items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+
+      // Ordenar por título (case-insensitive)
+      items.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+
       items.push({ title, data });
       localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
       fecharModal();
