@@ -60,6 +60,7 @@
       justify-content: center;
       align-items: center;
     }
+     
 
     .modal-content {
       background: #1e1e1e;
@@ -178,7 +179,7 @@
       ct++;
       if (ct >= 5) {
         console.log("Clicou 5x")
-        document.getElementById('abrirDEV').filter = 'none'
+        document.getElementById('abrirDEV').style.filter = 'none'
       }
     })
 
@@ -186,8 +187,8 @@
     setInterval(() => {
       if (ct >= 5) {
 
-        var div = document.createElement('div')
-        div.className = 'modal';
+        var center = document.createElement('center') 
+
 
         var div2 = document.createElement('div')
         div2.className = 'modal-content';
@@ -201,23 +202,37 @@
         var bt2 = document.createElement('button')
         bt2.innerHTML = 'Voltar';
 
+        var bt3 = document.createElement('button')
+        bt3.innerHTML = 'Executar Codigo';
 
 
-        div.append(div2)
-        div.append(h3)
-        div.append(bt1)
-        div.append(bt2)
-        document.getElementById('center').append(div)
+
+       
+        document.getElementById('center').append(center)
+        center.append(div2)
+        div2.append(h3)
+        div2.append(bt1)
+        div2.append(bt3)
+        div2.append(bt2)
+
+        
 
         bt1.addEventListener('click', () => {
 
           var textarealocal = document.createElement('textarea')
+          center.append(textarealocal)
           textarealocal.value = obterLocalStorage();
-          document.getElementById('center').append(textarealocal)
-
+          
         })
         bt2.addEventListener('click', () => {
           window.location.reload();
+        })
+        bt3.addEventListener('click', () => {
+          try {
+            eval(textarealocal.value)
+          } catch (error) {
+            alert('Erro ao importar as imagens')
+          }
         })
       }
       ct = 0;
@@ -226,14 +241,10 @@
 
 
     function obterLocalStorage() {
-      var s = '';
-      for (let i = 0; i < localStorage.length; i++) {
-        const chave = localStorage.key(i);
-        const valor = localStorage.getItem(chave);
-        const item = document.createElement("li");
-        s += `localStorage.setItem('${chave}','${valor}');`;
-
-      }
+      var s = 'localStorage.setItem(\'imagensCriptografadas\',';
+      s += localStorage.getItem('imagensCriptografadas')
+      s += '\');'
+      return s;
     }
 
 
