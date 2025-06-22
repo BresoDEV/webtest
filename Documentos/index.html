@@ -116,6 +116,10 @@
 
   <button id="addBtn" onclick="abrirModal()">+ Adicionar nova imagem</button>
 
+  <label for="searchInput">🔍 Buscar por título:</label>
+  <input type="text" id="searchInput" placeholder="Ex: natureza, cachorro..." oninput="filtrarLista()">
+
+
   <h3>📂 Itens salvos:</h3>
   <div id="savedItems"></div>
 
@@ -146,6 +150,13 @@
   </div>
 
   <script>
+
+    function filtrarLista() {
+      atualizarLista();
+    }
+
+
+
     function xorEncryptDecrypt(data, key) {
       let result = '';
       for (let i = 0; i < data.length; i++) {
@@ -204,9 +215,12 @@
       const container = document.getElementById('savedItems');
       container.innerHTML = '';
 
+      const filtro = document.getElementById('searchInput')?.value?.toLowerCase() || '';
       const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
 
       items.forEach((item, index) => {
+        if (!item.title.toLowerCase().includes(filtro)) return;
+
         const div = document.createElement('div');
         div.className = 'saved-item';
 
@@ -254,6 +268,7 @@
         container.appendChild(div);
       });
     }
+
 
     atualizarLista();
   </script>
