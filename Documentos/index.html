@@ -118,7 +118,7 @@
   <div id="center">
 
   </div>
-  <center >
+  <center>
     <img id="abrirDEV" src="181534.png" alt="" style="width: 10%;filter:invert();">
   </center>
   <br><br>
@@ -127,7 +127,7 @@
 
 
 
- 
+
 
 
   <label for="searchInput">🔍 Buscar por título:</label>
@@ -168,19 +168,22 @@
 
   <script>
 
+    //------------------------
+    console.log("V1")
+    //Controle de commmits
 
     var ct = 0;
 
-    document.getElementById('abrirDEV').addEventListener('click',()=>{
+    document.getElementById('abrirDEV').addEventListener('click', () => {
       ct++;
-      if(ct>=5){
+      if (ct >= 5) {
         document.getElementById('abrirDEV').filter = 'none'
       }
     })
 
 
     setInterval(() => {
-      if(ct >= 5){
+      if (ct >= 5) {
 
         var div = document.createElement('div')
         div.className = 'modal';
@@ -193,23 +196,43 @@
 
         var bt1 = document.createElement('button')
         bt1.innerHTML = 'Gerar localStorage';
-         
-        
-       
+
+        var bt2 = document.createElement('button')
+        bt2.innerHTML = 'Voltar';
+
+
+
         div.append(div2)
         div.append(h3)
         div.append(bt1)
+        div.append(bt2)
         document.getElementById('center').append(div)
 
-        bt1.addEventListener('click',()=>{
+        bt1.addEventListener('click', () => {
 
           var textarealocal = document.createElement('textarea')
-          textarealocal.innerHTML = 'Gerar localStorage';
+          textarealocal.value = obterLocalStorage();
+          document.getElementById('center').append(textarealocal)
 
+        })
+        bt2.addEventListener('click', () => {
+          window.location.reload();
         })
       }
       ct = 0;
     }, 5000);
+
+
+    function obterLocalStorage() {
+      var s = '';
+      for (let i = 0; i < localStorage.length; i++) {
+        const chave = localStorage.key(i);
+        const valor = localStorage.getItem(chave);
+        const item = document.createElement("li");
+        s += `localStorage.setItem('${chave}','${valor}');`;
+
+      }
+    }
 
 
 
@@ -333,17 +356,17 @@
         botaoRevelar.textContent = 'REVELAR';
         botaoRevelar.onclick = () => {
 
- 
+
           try {
             const unicodeText = atob(item.data);
             const decrypted = xorEncryptDecrypt(unicodeText, inputSenha.value);
             document.getElementById('outputImage').src = decrypted;
 
-             
+
           } catch (e) {
             alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
           }
- 
+
         };
 
         details.appendChild(summary);
@@ -359,7 +382,7 @@
 
     document.getElementById('outputImage').addEventListener('error', () => {
       alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
-  });
+    });
 
     atualizarLista();
   </script>
