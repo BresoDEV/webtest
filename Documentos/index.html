@@ -105,6 +105,7 @@
       margin-top: 15px;
       border: 1px solid #444;
       border-radius: 5px;
+      display: none;
     }
 
     #addBtn {
@@ -181,7 +182,7 @@
   <script>
 
     //------------------------
-    console.log("V3")
+    console.log("V3.1")
     //Controle de commmits
 
     var ct = 0;
@@ -383,10 +384,11 @@
             const unicodeText = atob(item.data);
             const decrypted = xorEncryptDecrypt(unicodeText, inputSenha.value);
             document.getElementById('outputImage').src = decrypted;
-
+            document.getElementById('outputImage').style.display = 'block'
 
           } catch (e) {
             alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+            document.getElementById('outputImage').style.display = 'none'
           }
 
         };
@@ -404,6 +406,7 @@
 
     document.getElementById('outputImage').addEventListener('error', () => {
       alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+      document.getElementById('outputImage').style.display = 'none'
     });
 
     atualizarLista();
