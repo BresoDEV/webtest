@@ -143,20 +143,40 @@
     }
 
     function atualizarLista() {
-      const container = document.getElementById('savedItems');
-      container.innerHTML = '';
+  const container = document.getElementById('savedItems');
+  container.innerHTML = '';
 
-      const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
-      items.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'saved-item';
-        div.textContent = item.title;
-        div.onclick = () => {
-          document.getElementById('outputArea').value = item.data;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        container.appendChild(div);
-      });
+  const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+
+  items.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'saved-item';
+
+    const titleSpan = document.createElement('span');
+    titleSpan.textContent = "📝 " + item.title;
+    titleSpan.style.cursor = 'pointer';
+    titleSpan.onclick = () => {
+      document.getElementById('outputArea').value = item.data;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const deleteBtn = document.createElement('span');
+    deleteBtn.textContent = " ❌";
+    deleteBtn.style.float = 'right';
+    deleteBtn.style.color = '#ff4d4d';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.onclick = () => {
+      if (confirm(`Tem certeza que deseja excluir "${item.title}"?`)) {
+        items.splice(index, 1);
+        localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
+        atualizarLista();
+      }
+    };
+
+    div.appendChild(titleSpan);
+    div.appendChild(deleteBtn);
+    container.appendChild(div);
+  });
     }
 
     // Atualiza a lista ao carregar a página
