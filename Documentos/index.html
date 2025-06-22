@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="181534.png">
+  <meta name="theme-color" content="#121212">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('✅ Service Worker registrado!'))
+        .catch((err) => console.error('Erro ao registrar o SW:', err));
+    }
+  </script>
   <meta charset="UTF-8">
   <title>Criptografia de Imagens</title>
   <style>
@@ -9,16 +20,22 @@
       background-color: #121212;
       color: #f0f0f0;
       padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
 
-    input, textarea, button, select {
+    button,
+    input,
+    textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
+      font-size: 1rem;
       background: #1e1e1e;
       color: #ffffff;
       border: 1px solid #333;
       border-radius: 5px;
+      box-sizing: border-box;
     }
 
     button {
@@ -31,52 +48,102 @@
       background: #444;
     }
 
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+    }
+
     .saved-item {
       background: #1a1a1a;
-      margin-top: 5px;
-      padding: 10px;
+      margin-top: 8px;
+      padding: 12px;
       border: 1px solid #333;
-      cursor: pointer;
       border-radius: 4px;
     }
 
-    img {
-      max-width: 100%;
+    .delete-btn {
+      float: right;
+      color: #ff4d4d;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    details {
       margin-top: 10px;
+    }
+
+    img.preview {
+      max-width: 100%;
+      margin-top: 15px;
       border: 1px solid #444;
       border-radius: 5px;
     }
 
-    h2, h3 {
-      margin-top: 30px;
+    #addBtn {
+      background: #28a745;
+      border: none;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+
+      button,
+      input,
+      textarea {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <h2>🔐 Criptografar Imagem com Chave</h2>
+  <button id="addBtn" onclick="abrirModal()">+ Adicionar nova imagem</button>
 
-  <label>🔑 Chave:</label>
-  <input type="text" id="keyInput" placeholder="Digite a chave">
-
-  <label>🖼️ Selecione uma imagem:</label>
-  <input type="file" id="imageInput" accept="image/*">
-
-  <label>📝 Título para salvar:</label>
-  <input type="text" id="titleInput" placeholder="Ex: Foto da natureza">
-
-  <button onclick="processarImagem()">PROCESSAR</button>
-
-  <label>📄 Resultado (texto criptografado):</label>
-  <textarea id="outputArea" rows="10"></textarea>
-
-  <button onclick="salvarLocal()">SALVAR NO APARELHO</button>
-  <button onclick="revelarImagem()">REVELAR</button>
-
-  <img id="outputImage" alt="Imagem decodificada aparecerá aqui">
-
-  <h3>📂 Itens salvos no aparelho:</h3>
+  <h3>📂 Itens salvos:</h3>
   <div id="savedItems"></div>
+
+  <h3>🖼️ Imagem descriptografada:</h3>
+  <img id="outputImage" class="preview" alt="Imagem será exibida aqui">
+
+  <!-- MODAL -->
+  <div class="modal" id="modalAdd">
+    <div class="modal-content">
+      <h3>Adicionar nova imagem</h3>
+      <label>🔑 Chave:</label>
+      <input type="text" id="keyInput">
+
+      <label>🖼️ Imagem:</label>
+      <input type="file" id="imageInput" accept="image/*">
+
+      <label>📝 Título:</label>
+      <input type="text" id="titleInput" placeholder="Ex: Foto da natureza">
+
+      <button onclick="processarImagem()">PROCESSAR</button>
+
+      <label>📄 Resultado criptografado:</label>
+      <textarea id="outputArea" rows="5"></textarea>
+
+      <button onclick="salvarLocal()">SALVAR</button>
+      <button onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
 
   <script>
     function xorEncryptDecrypt(data, key) {
@@ -87,101 +154,110 @@
       return result;
     }
 
+    function abrirModal() {
+      document.getElementById('modalAdd').style.display = 'flex';
+    }
+
+    function fecharModal() {
+      document.getElementById('modalAdd').style.display = 'none';
+    }
+
+    let imagemCriptografada = '';
+
     function processarImagem() {
       const file = document.getElementById('imageInput').files[0];
       const key = document.getElementById('keyInput').value;
 
       if (!file || !key) {
-        alert("Selecione uma imagem e digite a chave.");
+        alert("Preencha todos os campos.");
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const base64Data = e.target.result;
         const encrypted = xorEncryptDecrypt(base64Data, key);
-        const unicodeText = Array.from(encrypted).map(c => c).join('');
-        document.getElementById('outputArea').value = btoa(unicodeText);
+        imagemCriptografada = btoa(encrypted);
+        document.getElementById('outputArea').value = imagemCriptografada;
       };
       reader.readAsDataURL(file);
     }
 
-    function revelarImagem() {
-      const encryptedText = document.getElementById('outputArea').value;
-      const key = document.getElementById('keyInput').value;
-
-      if (!encryptedText || !key) {
-        alert("Digite a chave e carregue um texto criptografado.");
-        return;
-      }
-
-      try {
-        const unicodeText = atob(encryptedText);
-        const decrypted = xorEncryptDecrypt(unicodeText, key);
-        document.getElementById('outputImage').src = decrypted;
-      } catch (e) {
-        alert("Erro ao decodificar. Chave incorreta ou conteúdo inválido.");
-      }
-    }
-
     function salvarLocal() {
       const title = document.getElementById('titleInput').value.trim();
-      const data = document.getElementById('outputArea').value;
+      const data = imagemCriptografada;
 
       if (!title || !data) {
-        alert("Digite um título e processe uma imagem antes de salvar.");
+        alert("Preencha todos os campos e processe a imagem.");
         return;
       }
 
       const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
       items.push({ title, data });
       localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
-
-      document.getElementById('titleInput').value = '';
+      fecharModal();
       atualizarLista();
-      alert("Salvo com sucesso!");
+      alert("Imagem salva com sucesso!");
     }
 
     function atualizarLista() {
-  const container = document.getElementById('savedItems');
-  container.innerHTML = '';
+      const container = document.getElementById('savedItems');
+      container.innerHTML = '';
 
-  const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
+      const items = JSON.parse(localStorage.getItem('imagensCriptografadas') || "[]");
 
-  items.forEach((item, index) => {
-    const div = document.createElement('div');
-    div.className = 'saved-item';
+      items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'saved-item';
 
-    const titleSpan = document.createElement('span');
-    titleSpan.textContent = "📝 " + item.title;
-    titleSpan.style.cursor = 'pointer';
-    titleSpan.onclick = () => {
-      document.getElementById('outputArea').value = item.data;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+        const title = document.createElement('strong');
+        title.textContent = item.title;
 
-    const deleteBtn = document.createElement('span');
-    deleteBtn.textContent = " ❌";
-    deleteBtn.style.float = 'right';
-    deleteBtn.style.color = '#ff4d4d';
-    deleteBtn.style.cursor = 'pointer';
-    deleteBtn.onclick = () => {
-      if (confirm(`Tem certeza que deseja excluir "${item.title}"?`)) {
-        items.splice(index, 1);
-        localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
-        atualizarLista();
-      }
-    };
+        const deleteBtn = document.createElement('span');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '❌';
+        deleteBtn.onclick = () => {
+          if (confirm(`Deseja excluir "${item.title}"?`)) {
+            items.splice(index, 1);
+            localStorage.setItem('imagensCriptografadas', JSON.stringify(items));
+            atualizarLista();
+          }
+        };
 
-    div.appendChild(titleSpan);
-    div.appendChild(deleteBtn);
-    container.appendChild(div);
-  });
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.textContent = '🔓 Revelar com senha';
+
+        const inputSenha = document.createElement('input');
+        inputSenha.type = 'text';
+        inputSenha.placeholder = 'Digite a senha';
+
+        const botaoRevelar = document.createElement('button');
+        botaoRevelar.textContent = 'REVELAR';
+        botaoRevelar.onclick = () => {
+          try {
+            const unicodeText = atob(item.data);
+            const decrypted = xorEncryptDecrypt(unicodeText, inputSenha.value);
+            document.getElementById('outputImage').src = decrypted;
+          } catch (e) {
+            alert("Erro ao revelar. Senha inválida ou conteúdo corrompido.");
+          }
+        };
+
+        details.appendChild(summary);
+        details.appendChild(inputSenha);
+        details.appendChild(botaoRevelar);
+
+        div.appendChild(title);
+        div.appendChild(deleteBtn);
+        div.appendChild(details);
+        container.appendChild(div);
+      });
     }
 
-    // Atualiza a lista ao carregar a página
     atualizarLista();
   </script>
 
 </body>
+
 </html>
