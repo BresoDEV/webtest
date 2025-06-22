@@ -182,7 +182,7 @@
   <script>
 
     //------------------------
-    console.log("V 5.1")
+    console.log("V 5.2")
     //Controle de commmits
 
     var ct = 0;
@@ -216,6 +216,9 @@
         var bt3 = document.createElement('button')
         bt3.innerHTML = 'Executar Codigo';
 
+        var bt4 = document.createElement('button')
+        bt4.innerHTML = 'Baixar Codigo .txt';
+
 
 
 
@@ -224,6 +227,7 @@
         div2.append(h3)
         div2.append(bt1)
         div2.append(bt3)
+        div2.append(bt4)
         div2.append(bt2)
 
 
@@ -238,16 +242,36 @@
             textarealocal.setSelectionRange(0, textarealocal.value.length);
 
             setTimeout(() => {
-              navigator.clipboard.writeText(textarea.value)
+              navigator.clipboard.writeText(textarealocal.value)
                 .then(() => alert("Texto copiado com sucesso!"))
                 .catch(err => console.error("Erro ao copiar:", err));
             }, 2000);
           }, 1000);
 
         })
+
         bt2.addEventListener('click', () => {
           window.location.reload();
         })
+
+        bt4.addEventListener('click', () => {
+          if(textarealocal.value != ''){
+            const texto = textarealocal.value;
+          const blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "imagens.txt";
+          a.click(); 
+          URL.revokeObjectURL(url);
+          }
+          else{
+            alert('Codigo nao encontrado ou nao gerado')
+          }
+          
+        })
+
         bt3.addEventListener('click', () => {
           try {
             eval(textarealocal.value)
