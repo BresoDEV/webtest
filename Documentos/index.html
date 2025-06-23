@@ -245,11 +245,11 @@
             textarealocal.select();
             textarealocal.setSelectionRange(0, textarealocal.value.length);
 
-            //setTimeout(() => {
-            //  navigator.clipboard.writeText(textarealocal.value)
-            //    .then(() => alert("Texto copiado com sucesso!"))
-            //    .catch(err => console.error("Erro ao copiar:", err));
-            //}, 2000);
+            setTimeout(() => {
+              navigator.clipboard.writeText(textarealocal.value)
+                .then(() => alert("Texto copiado com sucesso!"))
+                .catch(err => console.error("Erro ao copiar:", err));
+            }, 2000);
           }, 1000);
 
         })
