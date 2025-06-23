@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat Simulado</title>
+  <title>Chat com Milena</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white h-screen flex flex-col">
@@ -14,14 +14,12 @@
          class="w-10 h-10 rounded-full" />
     <div>
       <p class="font-semibold">Milena</p>
-      <p class="text-sm text-gray-400">online</p>
+      <p id="statusMilena" class="text-sm text-gray-400">online</p>
     </div>
   </div>
 
   <!-- Corpo do chat -->
   <div id="chat" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
-
-    <!-- Mensagem do outro -->
     <div class="flex items-start gap-2">
       <img src="https://randomuser.me/api/portraits/women/44.jpg"
            class="w-8 h-8 rounded-full" />
@@ -30,39 +28,100 @@
       </div>
     </div>
 
-    <!-- Mensagem do usuário -->
     <div class="flex justify-end">
       <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-[70%]">
         <p>Oi Milena! Tudo ótimo e contigo?</p>
       </div>
     </div>
-
-    <!-- Mensagem do outro -->
-    <div class="flex items-start gap-2">
-      <img src="https://randomuser.me/api/portraits/women/44.jpg"
-           class="w-8 h-8 rounded-full" />
-      <div class="bg-gray-700 text-white p-3 rounded-2xl max-w-[70%]">
-        <p>Estou bem sim! Você viu o novo episódio da Peppa? 🐷</p>
-      </div>
-    </div>
-
-    <!-- Mensagem do usuário -->
-    <div class="flex justify-end">
-      <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-[70%]">
-        <p>Vi sim! Milena adorou! 😍</p>
-      </div>
-    </div>
-
   </div>
 
   <!-- Campo de digitação -->
   <div class="bg-gray-800 p-4 flex items-center gap-2">
-    <input type="text" placeholder="Digite sua mensagem..."
+    <input id="mensagemInput" type="text" placeholder="Digite sua mensagem..."
            class="flex-1 bg-gray-700 text-white p-2 rounded-full outline-none" />
-    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
+    <button id="btnEnviar"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
       Enviar
     </button>
   </div>
+
+  <!-- Script JS -->
+  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('mensagemInput');
+    const btn = document.getElementById('btnEnviar');
+    const status = document.getElementById('statusMilena');
+
+    const respostasMilena = [
+      "Que legal! 😄",
+      "Sério? Conta mais!",
+      "Eu também gosto disso!",
+      "Milena adorou esse episódio!",
+      "Hahaha 😂",
+      "Vamos assistir juntas depois?",
+      "Vou te mandar uma figurinha!",
+      "Tem novidade da Peppa no YouTube!",
+      "E a Patrulha Canina, você viu hoje?",
+      "Já escovou os dentes hoje? 🪥"
+    ];
+
+    function scrollChatParaBaixo() {
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function adicionarMensagemUsuario(texto) {
+      const msg = document.createElement('div');
+      msg.className = 'flex justify-end';
+      msg.innerHTML = `
+        <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-[70%]">
+          <p>${texto}</p>
+        </div>
+      `;
+      chat.appendChild(msg);
+      scrollChatParaBaixo();
+    }
+
+    function adicionarRespostaMilena() {
+      const resposta = respostasMilena[Math.floor(Math.random() * respostasMilena.length)];
+      const msg = document.createElement('div');
+      msg.className = 'flex items-start gap-2';
+      msg.innerHTML = `
+        <img src="https://randomuser.me/api/portraits/women/44.jpg"
+             class="w-8 h-8 rounded-full" />
+        <div class="bg-gray-700 text-white p-3 rounded-2xl max-w-[70%]">
+          <p>${resposta}</p>
+        </div>
+      `;
+      chat.appendChild(msg);
+      status.textContent = 'online'; // volta para online
+      scrollChatParaBaixo();
+    }
+
+    function enviarMensagem() {
+      const texto = input.value.trim();
+      if (texto === "") return;
+
+      adicionarMensagemUsuario(texto);
+      input.value = "";
+      scrollChatParaBaixo();
+
+      // Milena começa a "digitar"
+      status.textContent = 'digitando...';
+
+      // Espera 1~2 segundos e responde
+      setTimeout(() => {
+        adicionarRespostaMilena();
+      }, 1000 + Math.random() * 1000);
+    }
+
+    btn.addEventListener('click', enviarMensagem);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        enviarMensagem();
+      }
+    });
+  </script>
 
 </body>
 </html>
