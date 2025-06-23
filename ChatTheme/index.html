@@ -1,159 +1,68 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chat</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: #121212;
-      font-family: Arial, sans-serif;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    /* Topo do chat */
-    .chat-header {
-      background-color: #1e1e1e;
-      padding: 10px 15px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #333;
-    }
-
-    .chat-header img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-
-    .chat-header .name {
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #00bcd4;
-    }
-
-    /* Área de mensagens */
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .message {
-      max-width: 70%;
-      padding: 10px 15px;
-      border-radius: 15px;
-      font-size: 0.95em;
-      word-wrap: break-word;
-    }
-
-    .message.user {
-      align-self: flex-end;
-      background-color: #00bcd4;
-      color: #000;
-      border-bottom-right-radius: 0;
-    }
-
-    .message.other {
-      align-self: flex-start;
-      background-color: #2a2a2a;
-      border-bottom-left-radius: 0;
-    }
-
-    /* Campo de envio */
-    .chat-input {
-      display: flex;
-      border-top: 1px solid #333;
-      background-color: #1a1a1a;
-      padding: 10px;
-    }
-
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 20px;
-      background-color: #2e2e2e;
-      color: #fff;
-      font-size: 1em;
-      outline: none;
-    }
-
-    .chat-input button {
-      margin-left: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 20px;
-      background-color: #00bcd4;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .chat-input button:hover {
-      background-color: #0097a7;
-    }
-
-    /* Responsividade */
-    @media (max-width: 600px) {
-      .message {
-        max-width: 90%;
-      }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Simulado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-white h-screen flex flex-col">
 
-  <!-- Cabeçalho do chat -->
-  <div class="chat-header">
-    <img src="https://images.vexels.com/content/145908/preview/male-avatar-maker-2a7919.png" alt="Avatar">
-    <div class="name">João da Silva</div>
+  <!-- Topo do chat -->
+  <div class="flex items-center gap-3 p-4 bg-gray-800 shadow">
+    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto do contato"
+         class="w-10 h-10 rounded-full" />
+    <div>
+      <p class="font-semibold">Milena</p>
+      <p class="text-sm text-gray-400">online</p>
+    </div>
   </div>
 
-  <!-- Mensagens -->
-  <div class="chat-messages" id="chat">
-    <div class="message other">Oi! Tudo bem?</div>
-    <div class="message user">Tudo sim! E você?</div>
-    <div class="message other">Também! Pronto pra conversar sobre o projeto?</div>
-    <div class="message user">Claro, só me dizer por onde começamos.</div>
+  <!-- Corpo do chat -->
+  <div id="chat" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
+
+    <!-- Mensagem do outro -->
+    <div class="flex items-start gap-2">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg"
+           class="w-8 h-8 rounded-full" />
+      <div class="bg-gray-700 text-white p-3 rounded-2xl max-w-[70%]">
+        <p>Oi, tudo bem? 🌟</p>
+      </div>
+    </div>
+
+    <!-- Mensagem do usuário -->
+    <div class="flex justify-end">
+      <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-[70%]">
+        <p>Oi Milena! Tudo ótimo e contigo?</p>
+      </div>
+    </div>
+
+    <!-- Mensagem do outro -->
+    <div class="flex items-start gap-2">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg"
+           class="w-8 h-8 rounded-full" />
+      <div class="bg-gray-700 text-white p-3 rounded-2xl max-w-[70%]">
+        <p>Estou bem sim! Você viu o novo episódio da Peppa? 🐷</p>
+      </div>
+    </div>
+
+    <!-- Mensagem do usuário -->
+    <div class="flex justify-end">
+      <div class="bg-blue-600 text-white p-3 rounded-2xl max-w-[70%]">
+        <p>Vi sim! Milena adorou! 😍</p>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Campo de entrada -->
-  <div class="chat-input">
-    <input type="text" placeholder="Digite sua mensagem..." id="mensagem">
-    <button onclick="enviarMensagem()">Enviar</button>
+  <!-- Campo de digitação -->
+  <div class="bg-gray-800 p-4 flex items-center gap-2">
+    <input type="text" placeholder="Digite sua mensagem..."
+           class="flex-1 bg-gray-700 text-white p-2 rounded-full outline-none" />
+    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
+      Enviar
+    </button>
   </div>
 
-  <script>
-    function enviarMensagem() {
-      const input = document.getElementById('mensagem');
-      const texto = input.value.trim();
-      if (texto !== '') {
-        const chat = document.getElementById('chat');
-        const novaMsg = document.createElement('div');
-        novaMsg.classList.add('message', 'user');
-        novaMsg.textContent = texto;
-        chat.appendChild(novaMsg);
-        chat.scrollTop = chat.scrollHeight;
-        input.value = '';
-      }
-    }
-
-    // Pressionar Enter envia
-    document.getElementById('mensagem').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        enviarMensagem();
-      }
-    });
-  </script>
 </body>
 </html>
