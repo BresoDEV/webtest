@@ -1,97 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Locadora Retrô - Filme do Dia</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Filme do Dia</title>
 
-  
+  <!-- Video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    button {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px red;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      width: 800px;
+    }
+
+    .close {
+      position: absolute;
+      top: -30px;
+      right: 0;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .video-js {
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="titulo">🎬 FILME DO DIA</h1>
-    <div id="filme-container">Carregando...</div>
-  </div>
+
+  <h1>Filme Aleatório do Dia</h1>
+  <button onclick="abrirModal()">Assistir Agora</button>
 
   <!-- Modal -->
-  <div id="modal" class="modal hidden">
+  <div id="modal" class="modal">
     <div class="modal-content">
-      <span class="fechar">&times;</span>
-
-
-      
-
-      
-       <video id="player" controls autoplay>
-        <source src="" type="video/mp4">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <video
+        id="meu-video"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        width="800"
+        height="450"
+        data-setup='{
+          "controls": true,
+          "controlBar": {
+            "pictureInPictureToggle": false
+          }
+        }'
+      >
+        <source id="video-source" src="" type="video/mp4" />
         Seu navegador não suporta vídeo.
       </video>
-
-      
     </div>
   </div>
 
+  <!-- Video.js -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
   <script>
+    // Lista de vídeos disponíveis (coloque seus arquivos reais aqui)
+    const listaDeFilmes = [
+      "videos/filme1.mp4",
+      "videos/filme2.mp4",
+      "videos/filme3.mp4"
+    ];
 
-    console.log('1')
-
-    function obterDataAtual() {
-      const hoje = new Date();
-      return hoje.toISOString().split('T')[0];
-    }
-
-    async function carregarFilmes() {
-      const resposta = await fetch("filmes.json");
-      return await resposta.json();
-    }
-
-    function obterFilmeDoDia(filmes) {
-      const dataHoje = obterDataAtual();
-      const salvo = JSON.parse(localStorage.getItem("filme_do_dia"));
-
-      if (salvo && salvo.data === dataHoje) {
-        return filmes.find(f => f.slug === salvo.slug);
+    // Gera o mesmo índice todo o dia com base na data
+    function getIndiceDoDia() {
+      const hoje = new Date().toISOString().slice(0, 10); // ex: "2025-06-28"
+      let hash = 0;
+      for (let i = 0; i < hoje.length; i++) {
+        hash = hoje.charCodeAt(i) + ((hash << 5) - hash);
       }
-
-      const aleatorio = filmes[Math.floor(Math.random() * filmes.length)];
-
-      localStorage.setItem("filme_do_dia", JSON.stringify({
-        data: dataHoje,
-        slug: aleatorio.slug
-      }));
-
-      return aleatorio;
+      return Math.abs(hash) % listaDeFilmes.length;
     }
 
-    function exibirFilme(filme) {
-      const container = document.getElementById("filme-container");
-      container.innerHTML = `
-        <div class="filme-card">
-          <img src="${filme.capa}" alt="${filme.titulo}" id="capa-filme">
-          <p class="titulo-filme">${filme.titulo}</p>
-        </div>
-      `;
+    const videoDoDia = listaDeFilmes[getIndiceDoDia()];
 
-      // Evento para abrir modal
-      document.getElementById("capa-filme").addEventListener("click", () => {
-        document.getElementById("player").src = filme.video;
-        document.getElementById("modal").classList.remove("hidden");
-      });
+    // Modal e player
+    const modal = document.getElementById("modal");
+    const videoEl = document.getElementById("meu-video");
+    const videoSource = document.getElementById("video-source");
+
+    function abrirModal() {
+      videoSource.src = videoDoDia;
+      videoEl.load(); // atualiza o vídeo
+      modal.style.display = "flex";
     }
 
-    // Fecha o modal
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelector(".fechar").onclick = () => {
-        document.getElementById("modal").classList.add("hidden");
-        document.getElementById("player").pause();
-      };
-    });
+    function fecharModal() {
+      modal.style.display = "none";
+      videoEl.pause();
+    }
 
-    // Execução principal
-    carregarFilmes().then(filmes => {
-      const filme = obterFilmeDoDia(filmes);
-      exibirFilme(filme);
-    });
+    // Bloqueia clique direito
+    videoEl.addEventListener("contextmenu", e => e.preventDefault());
   </script>
+
 </body>
 </html>
