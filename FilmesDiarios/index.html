@@ -8,12 +8,18 @@
 
   
   <style>
+    html{
+      background: url('assets/bg_.jpg');
+      background-size: cover;
+    }
     body {
-      background-color: #121212;
+      
+      
       color: white;
       font-family: sans-serif;
       text-align: center;
       padding: 20px;
+
     }
 
     .capa-container {
@@ -48,7 +54,7 @@
     .modal-content {
       position: relative;
       max-width: 90%;
-      width: 800px;
+      width: 70%;
     }
 
     .close {
@@ -60,14 +66,11 @@
       cursor: pointer;
     }
 
-    .video-js {
-      border-radius: 10px;
-      box-shadow: 0 0 20px red;
-    }
+    
 
     .meu-video {
   width: 100%;
-  max-width: 600px;
+  max-width: 90%;
   border: 5px solid red;
   border-radius: 20px;
   box-shadow: 0 0 15px #000;
@@ -92,7 +95,7 @@
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
       
-      <video controls id="meu-video" class="meu-video">
+      <video controls controlsList="nodownload" id="meu-video" class="meu-video">
         <source src="assets/filmes/A Casa da Colina - 1999.mkv" type="video/mp4">
         Seu navegador não suporta vídeo.
       </video>
