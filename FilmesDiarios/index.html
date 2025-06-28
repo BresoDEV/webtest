@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Filme do Dia</title>
 
-  <!-- Video.js CSS -->
+  <!-- Video.js -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 
   <style>
@@ -17,15 +17,21 @@
       padding: 20px;
     }
 
-    button {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 18px;
-      border-radius: 10px;
+    .capa-container {
+      margin: 30px auto;
+    }
+
+    .capa-filme {
+      max-width: 300px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px red;
       cursor: pointer;
-      box-shadow: 0 0 10px red;
+      transition: transform 0.2s;
+    }
+
+    .capa-filme:hover {
+      transform: scale(1.03);
     }
 
     /* Modal */
@@ -64,9 +70,13 @@
 <body>
 
   <h1>Filme Aleatório do Dia</h1>
-  <button onclick="abrirModal()">Assistir Agora</button>
+  <p>Clique na capa para assistir</p>
 
-  <!-- Modal -->
+  <div class="capa-container">
+    <img id="capa-filme" class="capa-filme" src="" alt="Capa do Filme" onclick="abrirModal()" />
+  </div>
+
+  <!-- Modal com Video.js -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
@@ -90,40 +100,44 @@
     </div>
   </div>
 
-  <!-- Video.js -->
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
   <script>
 
-    console.log('2')
+    console.log('3')
     
-    // Lista de vídeos disponíveis (coloque seus arquivos reais aqui)
-    const listaDeFilmes = [
-      "videos/filme1.mp4",
-      "videos/filme2.mp4",
-      "videos/filme3.mp4"
+    // Lista de vídeos e capas correspondentes
+    const filmes = [
+      { video: "assets/filmes/A Casa da Colina - 1999.mkv", capa: "assets/capas/A Casa da Colina - 1999.jpg" },
+      { video: "assets/filmes/A Casa de Cera.mkv", capa: "assets/capas/A Casa de Cera.jpg" },
+      { video: "assets/filmes/A Casa de Vidro 2 - 2006.mkv", capa: "assets/capas/A Casa de Vidro 2 - 2006.png" },
+      
     ];
 
-    // Gera o mesmo índice todo o dia com base na data
+    // Escolher filme com base na data
     function getIndiceDoDia() {
-      const hoje = new Date().toISOString().slice(0, 10); // ex: "2025-06-28"
+      const hoje = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
       let hash = 0;
       for (let i = 0; i < hoje.length; i++) {
         hash = hoje.charCodeAt(i) + ((hash << 5) - hash);
       }
-      return Math.abs(hash) % listaDeFilmes.length;
+      return Math.abs(hash) % filmes.length;
     }
 
-    const videoDoDia = listaDeFilmes[getIndiceDoDia()];
+    const indice = getIndiceDoDia();
+    const filmeDoDia = filmes[indice];
 
-    // Modal e player
+    // Aplicar a capa do dia
+    document.getElementById("capa-filme").src = filmeDoDia.capa;
+
+    // Abrir modal com o vídeo do dia
     const modal = document.getElementById("modal");
     const videoEl = document.getElementById("meu-video");
     const videoSource = document.getElementById("video-source");
 
     function abrirModal() {
-      videoSource.src = videoDoDia;
-      videoEl.load(); // atualiza o vídeo
+      videoSource.src = filmeDoDia.video;
+      videoEl.load(); // Atualiza o vídeo
       modal.style.display = "flex";
     }
 
