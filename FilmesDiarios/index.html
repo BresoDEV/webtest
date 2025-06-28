@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Filme do Dia</title>
 
-  <!-- Video.js -->
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 
+  
   <style>
     body {
       background-color: #121212;
@@ -65,6 +64,14 @@
       border-radius: 10px;
       box-shadow: 0 0 20px red;
     }
+
+    .meu-video {
+  width: 100%;
+  max-width: 600px;
+  border: 5px solid red;
+  border-radius: 20px;
+  box-shadow: 0 0 15px #000;
+}
   </style>
 </head>
 <body>
@@ -76,36 +83,30 @@
     <img id="capa-filme" class="capa-filme" src="" alt="Capa do Filme" onclick="abrirModal()" />
   </div>
 
+
+  
+  
+
   <!-- Modal com Video.js -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
-      <video
-        id="meu-video"
-        class="video-js vjs-default-skin"
-        controls
-        preload="auto"
-        width="800"
-        height="450"
-        data-setup='{
-          "controls": true,
-          "controlBar": {
-            "pictureInPictureToggle": false
-          }
-        }'
-      >
-        <source id="video-source" src="" type="video/mp4" />
+      
+      <video controls class="meu-video">
+        <source src="video.mp4" type="video/mp4">
         Seu navegador não suporta vídeo.
       </video>
+
     </div>
   </div>
 
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+  
 
   <script>
 
-    console.log('3')
-    
+    console.log('4')
+
     // Lista de vídeos e capas correspondentes
     const filmes = [
       { video: "assets/filmes/A Casa da Colina - 1999.mkv", capa: "assets/capas/A Casa da Colina - 1999.jpg" },
