@@ -92,7 +92,7 @@
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
       
-      <video controls class="meu-video">
+      <video controls id="meu-video" class="meu-video">
         <source src="assets/filmes/A Casa da Colina - 1999.mkv" type="video/mp4">
         Seu navegador não suporta vídeo.
       </video>
@@ -134,7 +134,7 @@
     // Abrir modal com o vídeo do dia
     const modal = document.getElementById("modal");
     const videoEl = document.getElementById("meu-video");
-    const videoSource = document.getElementById("video-source");
+    const videoSource = document.getElementById("meu-video");
 
     function abrirModal() {
       videoSource.src = filmeDoDia.video;
