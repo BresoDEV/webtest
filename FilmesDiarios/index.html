@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <title>Locadora Retrô - Filme do Dia</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- CSS do Video.js -->
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+
+<!-- JS do Video.js -->
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
 </head>
 <body>
   <div class="container">
@@ -15,10 +22,33 @@
   <div id="modal" class="modal hidden">
     <div class="modal-content">
       <span class="fechar">&times;</span>
-      <video id="player" controls autoplay>
+
+      <video
+  id="player"
+  class="video-js vjs-default-skin"
+  controls
+  preload="auto"
+  width="640"
+  height="360"
+  data-setup='{
+    "controls": true,
+    "controlBar": {
+      "pictureInPictureToggle": false,
+      "downloadButton": false
+    }
+  }'
+>
+  <source src="video.mp4" type="video/mp4" />
+  Seu navegador não suporta vídeo.
+</video>
+
+     <!--
+       <video id="player" controls autoplay>
         <source src="" type="video/mp4">
         Seu navegador não suporta vídeo.
       </video>
+      
+     -->
     </div>
   </div>
 
