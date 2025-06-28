@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Locadora Retrô - Filme do Dia</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="titulo">🎬 FILME DO DIA</h1>
+    <div id="filme-container">Carregando...</div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="fechar">&times;</span>
+      <video id="player" controls autoplay>
+        <source src="" type="video/mp4">
+        Seu navegador não suporta vídeo.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    function obterDataAtual() {
+      const hoje = new Date();
+      return hoje.toISOString().split('T')[0];
+    }
+
+    async function carregarFilmes() {
+      const resposta = await fetch("filmes.json");
+      return await resposta.json();
+    }
+
+    function obterFilmeDoDia(filmes) {
+      const dataHoje = obterDataAtual();
+      const salvo = JSON.parse(localStorage.getItem("filme_do_dia"));
+
+      if (salvo && salvo.data === dataHoje) {
+        return filmes.find(f => f.slug === salvo.slug);
+      }
+
+      const aleatorio = filmes[Math.floor(Math.random() * filmes.length)];
+
+      localStorage.setItem("filme_do_dia", JSON.stringify({
+        data: dataHoje,
+        slug: aleatorio.slug
+      }));
+
+      return aleatorio;
+    }
+
+    function exibirFilme(filme) {
+      const container = document.getElementById("filme-container");
+      container.innerHTML = `
+        <div class="filme-card">
+          <img src="${filme.capa}" alt="${filme.titulo}" id="capa-filme">
+          <p class="titulo-filme">${filme.titulo}</p>
+        </div>
+      `;
+
+      // Evento para abrir modal
+      document.getElementById("capa-filme").addEventListener("click", () => {
+        document.getElementById("player").src = filme.video;
+        document.getElementById("modal").classList.remove("hidden");
+      });
+    }
+
+    // Fecha o modal
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".fechar").onclick = () => {
+        document.getElementById("modal").classList.add("hidden");
+        document.getElementById("player").pause();
+      };
+    });
+
+    // Execução principal
+    carregarFilmes().then(filmes => {
+      const filme = obterFilmeDoDia(filmes);
+      exibirFilme(filme);
+    });
+  </script>
+</body>
+</html>
