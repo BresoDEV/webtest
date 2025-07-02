@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<link rel="stylesheet" href="roxo.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiros</title>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerador de Roteiros</h1>
+        </header>
+        <section>
+            <div id="div">
+                <input id="Filme" value="A hora do pesadelo" type="text" placeholder="Nome do Filme e ano de lançamento">
+                <button id="Gerar">Gerar Roteiro</button>
+                <br>
+                <br>
+            </div>
+        </section>
+    </div>
+</body>
+<script>
+
+    const Gerar = document.getElementById('Gerar')
+    const Filme = document.getElementById('Filme')
+    const div = document.getElementById('div')
+
+    Gerar.addEventListener('click', () => {
+        Gerar.textContent = 'Aguarde..'
+
+
+
+
+        sendMessage()
+
+
+
+        
+    })
+
+    const prompt_ = `A partir de agora, você será encarregado de criar roteiros para o canal do YouTube chamado Portaria para o Inferno, focado em filmes de terror com estilo retrô/VHS/trash. O roteiro deve seguir uma linguagem informal e natural, como se fosse falado diretamente para o público, de forma descontraída e envolvente. Evite frases muito formais ou robóticas.
+
+O roteiro precisa conter:
+
+1. Introdução com vinheta (simule o que é dito depois da vinheta com uma frase de impacto).
+2. Sinopse do filme (sem spoiler).
+3. Comentário/Análise pessoal (como se fosse o próprio criador do canal falando com emoção, destacando clima, som, personagens, direção etc).
+4. Curiosidades e fatos estranhos ou polêmicos sobre o filme.
+5. Nota final ate 10 e opinião geral.
+6. Encerramento chamando pra inscrição e comentários (com assinatura característica do canal Portaria para o inferno).
+ 
+Estilo visual: VHS, trash, sujo, efeitos de glitch, TV antiga, clima anos 80/90.
+
+Exemplo de linguagem:  
+“Se você nunca viu esse filme... cara, se prepara.”  
+“Pra mim, esse filme é um soco no estômago.”  
+“Agora se liga nisso aqui...”
+
+Ao final, preciso que você gere um prompt em portugues, para gerar uma arte de fundo do vídeo, que será um cenário que tenha relação com o filme. Esse cenário não deve conter personagens ou escritas, somente o ambiente relativo ao filme. O prompt deve ser relacionado ao filme e deve ser enviado em um bloco de códigos , pra facilitar a copia do conteúdo.
+
+
+Então, a partir de agora, vou lhe dar nome de filme famoso, e você deve gerar esse roteiro. Caso você não conhece o filme, não invente. Se não conhecer, me pergunte que eu descrevo, mas não invente informações que não existem'
+ O primeiro filme que preciso é: `
+
+    function sendMessage(elemento) {
+        const message = prompt_ + Filme.value;
+
+        if (message.trim() === '') return;
+
+
+
+        fetch(`https://text.pollinations.ai/${encodeURIComponent(message)}`)
+            .then(response => response.text())
+            .then(data => {
+                setTimeout(() => {
+                    let textarea = document.createElement('p')
+                    //textarea.rows = 25
+
+                    for (let i = 1; i < 500; i++) {
+                        if(i%2==0){
+                            data = data.replace('**','</b>')
+                        }else{
+                            data = data.replace('**','<b>')
+                        }
+                        
+                        data = data.replace('\n','<br>')
+                        data = data.replace('---','')
+
+                       
+                    }
+                    data = data.replace('```<br>','<textarea rows="5" style="width:100%;">')
+                    data = data.replace('<br>```','</textarea>')
+
+                    textarea.innerHTML = data
+                    div.append(textarea)
+
+                    //let bt = document.createElement('button')
+                    //bt.textContent = 'Salvar'
+                    //div.append(bt)
+
+
+                    Gerar.textContent = 'Gerar Roteiro'
+
+                }, 10000);
+            })
+            .catch(error => {
+                elemento.value = 'Erro ao enviar a mensagem:'
+            });
+
+        // Limpar o campo de input
+        //Filme.value = '';
+    }
+
+</script>
+
+</html>

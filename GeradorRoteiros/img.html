@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imagens Dinâmicas</title>
+  <style>
+  * {
+      -webkit-tap-highlight-color: transparent;
+      /* Remove o flash azul no toque */
+      -webkit-touch-callout: none;
+      /* Remove menu de toque (iOS) */
+      user-select: none;
+      /* Impede seleção de texto acidental (opcional) */
+      -webkit-user-select: none;
+      /* Compatibilidade com WebKit */
+    }
+
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    textarea, input[type="number"] {
+      width: 90%;
+      max-width: 400px;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .image-container img {
+      width: 75%;
+      max-width: 500px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Gerador de Imagens</h1>
+
+  <textarea id="prompt" placeholder="Descreva aqui a sua imagem o mais detalhado possivel"></textarea>
+  <button id="bt" onclick="gerarImagens()">Gerar Imagens</button>
+
+  <div class="image-container" id="imageContainer"></div>
+
+  <script>
+    function gerarImagens() {
+    document.getElementById("bt").textContent="Aguarde..."
+    
+      const container = document.getElementById('imageContainer');
+      const num = 3;
+      container.innerHTML = ''; // Limpa imagens anteriores
+
+      for (let i = 0; i < num; i++) {
+        const img = document.createElement('img');
+        
+        img.display = "none";
+        
+        const r = Math.floor(Math.random()*100000)
+        
+            const prompt = encodeURIComponent(document.getElementById('prompt').value)
+        
+        img.src = `https://image.pollinations.ai/prompt/${prompt}?seed=${r}&width=1920&height=1080&nologo=true`;
+        
+        container.appendChild(img);
+        
+       setTimeout(()=>{
+          // img.display = "";
+       },3000)
+        
+        
+        
+        
+      }
+      
+      
+      
+      const imagens = document.querySelectorAll("img");
+
+imagens.forEach(img => {
+  // Garante que a imagem seja exibida como block
+  img.style.display = "block";
+
+  // Adiciona o evento de clique para baixar a imagem
+  img.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.href = img.src;
+    link.download = img.src.split("/").pop(); // Usa o nome do arquivo da URL
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+});
+
+    }
+    
+    
+    
+    document.getElementById("bt").textContent="Gerar"
+    
+  </script>
+
+</body>
+</html>
