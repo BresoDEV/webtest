@@ -78,8 +78,8 @@
 </head>
 <body>
 
-  <h1>Filme Aleatório do Dia</h1>
-  <p>Clique na capa para assistir</p>
+  <h2>Filme do Dia</h2>
+  <h1 id="nomeFilme">Clique na capa para assistir</h1>
 
   <div class="capa-container">
     <img id="capa-filme" class="capa-filme" src="" alt="Capa do Filme" onclick="abrirModal()" />
@@ -113,27 +113,36 @@
 
   <script>
 
-    console.log('6')
+    
 
     // Lista de vídeos e capas correspondentes
     const filmes = [
-      { video: "https://archive.org/download/o-silencio-dos-inocentes/O Silencio dos Inocentes.mp4", capa: "assets/capas/O Silêncio dos Inocentes.jpg" },
-      { video: "https://archive.org/download/big-stan-arrebentando-na-prisao/Big Stan   Arrebentando Na Prisao.ia.mp4", capa: "assets/capas/Big Stan Arrebentando Na Prisao.jpg" }, 
+      {nome: "O Silencio dos Inocentes", video: "https://archive.org/download/o-silencio-dos-inocentes/O Silencio dos Inocentes.mp4", capa: "assets/capas/O Silêncio dos Inocentes.jpg" },
+      {nome: "Big Stan - Arrebentando Na Prisao", video: "https://archive.org/download/big-stan-arrebentando-na-prisao/Big Stan   Arrebentando Na Prisao.ia.mp4", capa: "assets/capas/Big Stan Arrebentando Na Prisao.jpg" }, 
       
     ];
 
     // Escolher filme com base na data
     function getIndiceDoDia() {
-      const hoje = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+       
+	   //const hoje = "2025-07-03"; // "YYYY-MM-DD"
+      const hoje = new Date().toISOString().slice(0, 10);
+      console.log('Hoje: '+hoje)
       let hash = 0;
       for (let i = 0; i < hoje.length; i++) {
         hash = hoje.charCodeAt(i) + ((hash << 5) - hash);
       }
-      return Math.abs(hash) % filmes.length;
+	  var iiiiii = Math.abs(hash) % filmes.length;
+	  console.log('Index sorteado: '+iiiiii)
+      return iiiiii;
     }
 
     const indice = getIndiceDoDia();
     const filmeDoDia = filmes[indice];
+	
+	console.log(filmeDoDia.nome)
+	
+	document.getElementById('nomeFilme').innerHTML = filmeDoDia.nome;
 
     // Aplicar a capa do dia
     document.getElementById("capa-filme").src = filmeDoDia.capa;
@@ -147,6 +156,7 @@
       videoSource.src = filmeDoDia.video;
       //videoEl.load(); // Atualiza o vídeo
       modal.style.display = "flex";
+	  
     }
 
     function fecharModal() {
