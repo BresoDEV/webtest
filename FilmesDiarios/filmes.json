@@ -1,21 +1,15 @@
 [
     {
-      "titulo": "A Casa da Colina - 1999",
+      "titulo": "O Silêncio dos Inocentes",
       "slug": "abacaxi",
-      "capa": "assets/capas/A Casa da Colina - 1999.jpg",
-      "video": "assets/filmes/A Casa da Colina - 1999.mkv"
+      "capa": "assets/capas/O Silêncio dos Inocentes.jpg",
+      "video": "https://archive.org/embed/o-silencio-dos-inocentes"
     },
     {
-      "titulo": "A Casa de Cera",
+      "titulo": "Big Stan - Arrebentando Na Prisao",
       "slug": "bicicleta",
-      "capa": "assets/capas/A Casa de Cera.jpg",
-      "video": "assets/filmes/A Casa de Cera.mkv"
-    },
-    {
-      "titulo": "A Casa de Vidro 2 - 2006",
-      "slug": "bicicleta",
-      "capa": "assets/capas/A Casa de Vidro 2 - 2006.png",
-      "video": "assets/filmes/A Casa de Vidro 2 - 2006.mkv"
-    }
+      "capa": "assets/capas/Big Stan Arrebentando Na Prisao.jpg",
+      "video": "https://archive.org/embed/big-stan-arrebentando-na-prisao"
+    } 
   ]
   
