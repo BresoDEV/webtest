@@ -133,13 +133,24 @@
 	  }, 
 	  {
 	  nome: "Cemiterio Maldito 1", 
-	  video: "https://archive.org/details/cemiterio-maldito-1_202507/Cemiterio Maldito 1.mp4",
+	  video: "https://archive.org/download/cemiterio-maldito-1_202507/Cemiterio Maldito 1.mp4",
 	  capa: "assets/capas/Cemiterio Maldito 1.jpg" 
 	  },  
 	  {
 	  nome: "Jogos Mortais 1", 
-	  video: "https://archive.org/details/jogos-mortais-1_202507/Jogos Mortais 1.mp4",
+	  video: "https://archive.org/download/jogos-mortais-1_202507/Jogos Mortais 1.mp4",
 	  capa: "assets/capas/Jogos Mortais 1.jpg" 
+	  }, 
+	  {
+	  nome: "O Massacre Da Serra Eletrica 1", 
+	  video: "https://archive.org/download/o-massacre-da-serra-eletrica-1/O Massacre Da Serra Elétrica 1.mp4",
+	  capa: "assets/capas/O Massacre Da Serra Elétrica 1.jpg" 
+	  }, 
+      
+	  {
+	  nome: "Centopeia Humana 2", 
+	  video: "https://archive.org/download/centopeia-humana-2/Centopeia Humana 2.ia.mp4",
+	  capa: "assets/capas/Centopeia Humana 2.jpg" 
 	  }, 
       
     ];
@@ -156,7 +167,8 @@
       }
 	  var iiiiii = Math.abs(hash) % filmes.length;
 	  console.log('Index sorteado: '+iiiiii)
-      return iiiiii;
+      //return iiiiii;
+      return 6;
     }
 
     const indice = getIndiceDoDia();
