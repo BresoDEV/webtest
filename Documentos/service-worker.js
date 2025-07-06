@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Carteira_WEB-v1';
+const CACHE_NAME = 'Carteira_WEB-v2';
 const urlsToCache = [
   'index.html',
   'manifest.json',
