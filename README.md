@@ -41,15 +41,9 @@ https://bresodev.github.io/webtest/Ramona
 
 Filmes de Terror:
 https://bresodev.github.io/webtest/Filmes
-
-Meus Documentos WEB:
-https://bresodev.github.io/webtest/Documentos
-
+ 
 ChatTheme
 https://bresodev.github.io/webtest/ChatTheme
-
-Filmes Diarios
-https://bresodev.github.io/webtest/FilmesDiarios
 
 Gerador de Roteiros - Portaria
 https://bresodev.github.io/webtest/GeradorRoteiros
