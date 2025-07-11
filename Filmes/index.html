@@ -65,6 +65,7 @@
         <div class="col-md-3">
           <select id="categoria" class="form-select">
             <option value="Apenas Midia Digital">Apenas Midia Digital</option>
+            <option value="ISO Pronto">ISO Pronto</option> 
             <option value="Midia Fisica Completa">Midia Fisica Completa</option>
             <option value="Midia Fisica Sem Encarte">Midia Fisica Sem Encarte</option>
             <option value="Procurar Dublado">Procurar Dublado</option>
@@ -104,6 +105,7 @@
         <h5 class="modal-title mb-3">Mover Filme para Outra Categoria</h5>
         <select id="novaCategoria" class="form-select mb-3">
           <option value="Apenas Midia Digital">Apenas Midia Digital</option>
+          <option value="ISO Pronto">ISO Pronto</option>
           <option value="Midia Fisica Completa">Midia Fisica Completa</option>
           <option value="Midia Fisica Sem Encarte">Midia Fisica Sem Encarte</option>
           <option value="Procurar Dublado">Procurar Dublado</option>
@@ -117,7 +119,7 @@
   </div>
 
   <script>
-    const categorias = ["Apenas Midia Digital", "Midia Fisica Completa", "Midia Fisica Sem Encarte", "Procurar Dublado"];
+    const categorias = ["Apenas Midia Digital","ISO Pronto", "Midia Fisica Completa", "Midia Fisica Sem Encarte", "Procurar Dublado"];
     let filmes = JSON.parse(localStorage.getItem("filmesTerror")) || [];
     let filmeIndexParaMover = null;
 
