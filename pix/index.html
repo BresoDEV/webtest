@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador Pix QR Code</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 90%;
+      max-width: 400px;
+      font-size: 16px;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+    .copiacola {
+      word-break: break-all;
+      background: #222;
+      padding: 10px;
+      margin: 10px auto;
+      border: 1px dashed #666;
+      width: 90%;
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerador de Pix QR Code</h1>
+
+  <input id="chave" placeholder="Chave Pix (CPF, e-mail...)" />
+  <input id="nome" placeholder="Nome do recebedor (sem acentos)" />
+  <input id="cidade" placeholder="Cidade (sem acentos)" />
+  <input id="valor" placeholder="Valor (ex: 10.00 ou deixe em branco)" />
+  <button onclick="gerar()">Gerar QR Code</button>
+
+  <div class="copiacola" id="resultado"></div>
+  <canvas id="qrcode"></canvas>
+
+  <script>
+    function tlv(id, value) {
+      const length = String(value.length).padStart(2, '0');
+      return id + length + value;
+    }
+
+    function gerar() {
+      const chave = document.getElementById('chave').value.trim();
+      const nome = document.getElementById('nome').value.trim().substring(0,25);
+      const cidade = document.getElementById('cidade').value.trim().substring(0,15);
+      const valor = document.getElementById('valor').value.trim();
+      const txid = '***';
+
+      // Merchant Account Information (ID 26)
+      const gui = tlv('00', 'BR.GOV.BCB.PIX');
+      const chavePix = tlv('01', chave);
+      const merchantAccountInfo = tlv('26', gui + chavePix);
+
+      const payload = [
+        tlv('00', '01'),                     // Payload format
+        tlv('01', valor ? '12' : '11'),      // Point of initiation method
+        merchantAccountInfo,
+        tlv('52', '0000'),                   // Merchant Category Code
+        tlv('53', '986'),                    // Currency (BRL)
+        valor ? tlv('54', valor) : '',       // Valor se houver
+        tlv('58', 'BR'),                     // País
+        tlv('59', nome.toUpperCase()),       // Nome
+        tlv('60', cidade.toUpperCase()),     // Cidade
+        tlv('62', tlv('05', txid))           // TxID
+      ].join('');
+
+      const payloadComCRC = payload + '6304';
+      const crc = crc16(payloadComCRC).toUpperCase();
+      const finalPayload = payloadComCRC + crc;
+
+      document.getElementById('resultado').innerText = finalPayload;
+
+      QRCode.toCanvas(document.getElementById('qrcode'), finalPayload, function (error) {
+        if (error) console.error(error);
+      });
+    }
+
+    function crc16(str) {
+      let crc = 0xFFFF;
+      for (let i = 0; i < str.length; i++) {
+        crc ^= str.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) {
+          if (crc & 0x8000) {
+            crc = (crc << 1) ^ 0x1021;
+          } else {
+            crc <<= 1;
+          }
+          crc &= 0xFFFF;
+        }
+      }
+      return crc.toString(16).padStart(4, '0');
+    }
+  </script>
+</body>
+</html>

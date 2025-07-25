@@ -51,6 +51,8 @@ https://bresodev.github.io/webtest/GeradorRoteiros
 Breso Web Layout
 https://bresodev.github.io/webtest/BresoWebLayout
 
+Gerador de PIX
+https://bresodev.github.io/webtest/pix
 
 
 
