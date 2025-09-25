@@ -54,6 +54,12 @@ https://bresodev.github.io/webtest/BresoWebLayout
 Gerador de PIX
 https://bresodev.github.io/webtest/pix
 
+Gerador de Fonte Azul do Telegram
+https://bresodev.github.io/webtest/FonteAzultelegram
+
+Despertador
+https://bresodev.github.io/webtest/Despertador
+
 
 
 

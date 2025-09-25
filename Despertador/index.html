@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer com Alarme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center px-4">
+
+  <div class="bg-gray-800 p-6 rounded-2xl shadow-lg w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold mb-4">⏰ Defina o Tempo</h1>
+
+    <div class="flex space-x-2 mb-4">
+      <input type="number" id="hours" class="w-1/3 p-2 rounded bg-gray-700 text-white" placeholder="Horas" min="0" value="0">
+      <input type="number" id="minutes" class="w-1/3 p-2 rounded bg-gray-700 text-white" placeholder="Minutos" min="0" value="5">
+      <input type="number" id="seconds" class="w-1/3 p-2 rounded bg-gray-700 text-white" placeholder="Segundos" min="0" value="0">
+    </div>
+
+    <button id="startBtn" class="bg-blue-600 hover:bg-blue-700 transition p-2 rounded w-full text-lg font-semibold">Iniciar Timer</button>
+
+    <div class="mt-6 text-4xl font-mono" id="countdown">00:00:00</div>
+  </div>
+
+  <!-- Alarme -->
+  <audio id="alarmSound">
+    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <script>
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock?.request('screen');
+        wakeLock?.addEventListener('release', () => console.log('Wake Lock liberado.'));
+        console.log('Wake Lock ativo!');
+      } catch (err) {
+        console.error('Wake Lock falhou:', err);
+      }
+    }
+
+    const startBtn = document.getElementById('startBtn');
+    const countdownEl = document.getElementById('countdown');
+    const alarmSound = document.getElementById('alarmSound');
+
+    let timerInterval;
+
+    startBtn.addEventListener('click', async () => {
+      const h = parseInt(document.getElementById('hours').value) || 0;
+      const m = parseInt(document.getElementById('minutes').value) || 0;
+      const s = parseInt(document.getElementById('seconds').value) || 0;
+
+      const totalSeconds = h * 3600 + m * 60 + s;
+
+      if (totalSeconds <= 0) {
+        return alert("Defina um tempo maior que zero.");
+      }
+
+      await requestWakeLock(); // Wake Lock
+
+      clearInterval(timerInterval);
+      updateCountdown(totalSeconds);
+
+      let current = totalSeconds;
+      timerInterval = setInterval(() => {
+        current--;
+        updateCountdown(current);
+
+        if (current <= 0) {
+          clearInterval(timerInterval);
+          countdownEl.textContent = "00:00:00";
+          alarmSound.play();
+        }
+      }, 1000);
+    });
+
+    function updateCountdown(totalSeconds) {
+      const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(totalSeconds % 60).padStart(2, '0');
+      countdownEl.textContent = `${hrs}:${mins}:${secs}`;
+    }
+  </script>
+
+</body>
+</html>

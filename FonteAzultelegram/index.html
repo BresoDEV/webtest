@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Conversor para Unicode</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: #eee;
+    text-align: center;
+    padding: 30px;
+  }
+  input, button, textarea {
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+  }
+  input, textarea {
+    width: 80%;
+  }
+  button {
+    background-color: #444;
+    color: #fff;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #666;
+  }
+  textarea {
+    height: 100px;
+    resize: none;
+  }
+  #msg {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #0f0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    text-shadow:
+      0 0 5px #0f0,
+      0 0 10px #0f0,
+      0 0 20px #0f0,
+      0 0 40px #0f0;
+    animation: neonPulse 1.5s infinite alternate;
+  }
+  @keyframes neonPulse {
+    from {
+      text-shadow:
+        0 0 5px #0f0,
+        0 0 10px #0f0,
+        0 0 20px #0f0,
+        0 0 40px #0f0;
+    }
+    to {
+      text-shadow:
+        0 0 10px #0f0,
+        0 0 20px #0f0,
+        0 0 30px #0f0,
+        0 0 60px #0f0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h2>Conversor para Unicode 🇦‌🇩‌</h2>
+
+<input type="text" id="texto" placeholder="Digite aqui...">
+<button onclick="converter()">Converter</button>
+
+<p id="resultado"></p>
+<textarea id="saida" readonly></textarea><br>
+<button onclick="copiar()">Copiar</button>
+<div id="msg">Texto copiado!</div>
+
+<script>
+function converter() {
+    const texto = document.getElementById("texto").value;
+    const zwj = "\u200C"; // caractere invisível entre as letras
+    let convertido = "";
+
+    for (let char of texto.toUpperCase()) {
+        if (char >= 'A' && char <= 'Z') {
+            const code = 0x1F1E6 + (char.charCodeAt(0) - 65);
+            convertido += String.fromCodePoint(code) + zwj;
+        } else {
+            convertido += char;
+        }
+    }
+
+    document.getElementById("resultado").textContent = convertido;
+    document.getElementById("saida").value = convertido;
+}
+
+function copiar() {
+    const saida = document.getElementById("saida");
+    if (!saida.value) return;
+
+    saida.select();
+    document.execCommand("copy");
+
+    const msg = document.getElementById("msg");
+    msg.style.opacity = "1";
+    setTimeout(() => { msg.style.opacity = "0"; }, 2000);
+}
+</script>
+
+</body>
+</html>
