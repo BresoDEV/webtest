@@ -63,7 +63,11 @@ https://bresodev.github.io/webtest/Despertador
 VideoJS
 https://bresodev.github.io/webtest/VideoJS
 
+Buscador de GIFS
+https://bresodev.github.io/webtest/BuscadorDeGif
 
+Tigrinho
+https://bresodev.github.io/webtest/Tigrinho
 
 
 

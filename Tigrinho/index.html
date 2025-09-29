@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo do Tigrinho Fictício</title>
+  <style>
+    body {
+      background: radial-gradient(#1a1a1a, #000);
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #saldo {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .slot-machine {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .reel {
+      width: 100px;
+      height: 100px;
+      background: #222;
+      border: 4px solid #ffcc00;
+      border-radius: 10px;
+      font-size: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px #ffcc00;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ffcc00;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #000;
+    }
+
+    button:hover {
+      background-color: #ffaa00;
+    }
+
+    #mensagem {
+      margin-top: 20px;
+      font-size: 22px;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐯 Jogo do Tigrinho Fictício</h1>
+  <div id="saldo">💰 Saldo: R$ <span id="saldoValor">1000</span></div>
+
+  <div class="slot-machine">
+    <div class="reel" id="reel1">❓</div>
+    <div class="reel" id="reel2">❓</div>
+    <div class="reel" id="reel3">❓</div>
+  </div>
+
+  <button onclick="jogar()">🎰 Jogar (R$ 10)</button>
+
+  <div id="mensagem"></div>
+
+  <script>
+    let saldo = 1000;
+    const aposta = 10;
+    let winChance = 0.2; // Altere aqui a chance de vitória (0.2 = 20%)
+
+    const simbolos = ["🍒", "🍋", "🍇", "💎", "⭐", "🔔", "🐯"];
+
+var intervalo = 50;
+
+    function girarReel(reel) {
+      let i = 0;
+      const interval = setInterval(() => {
+        reel.innerText = simbolos[Math.floor(Math.random() * simbolos.length)];
+        i++;
+
+        intervalo += 10
+
+        if (i > 100) {
+          clearInterval(interval)
+
+
+          //----------------------------------------
+          let resultado;
+        const ganhou = Math.random() < winChance;
+
+        if (ganhou) {
+          const simboloVencedor = simbolos[Math.floor(Math.random() * simbolos.length)];
+          reel1.innerText = simboloVencedor;
+          reel2.innerText = simboloVencedor;
+          reel3.innerText = simboloVencedor;
+
+          const premio = aposta * 5;
+          saldo += premio;
+          document.getElementById("mensagem").innerText = `🎉 Você ganhou R$ ${premio}!`;
+        } else {
+          // Resultados aleatórios diferentes
+          reel1.innerText = simbolos[Math.floor(Math.random() * simbolos.length)];
+          reel2.innerText = simbolos[Math.floor(Math.random() * simbolos.length)];
+          reel3.innerText = simbolos[Math.floor(Math.random() * simbolos.length)];
+
+          document.getElementById("mensagem").innerText = "💀 Você perdeu!";
+        }
+
+        document.getElementById("saldoValor").innerText = saldo;
+        ////////---------------------------------------
+        };
+
+      }, intervalo);
+    }
+
+    function jogar() {
+      if (saldo < aposta) {
+        document.getElementById("mensagem").innerText = "❌ Saldo insuficiente!";
+        return;
+      }
+
+      saldo -= aposta;
+      document.getElementById("saldoValor").innerText = saldo;
+
+      const reel1 = document.getElementById("reel1");
+      const reel2 = document.getElementById("reel2");
+      const reel3 = document.getElementById("reel3");
+
+      girarReel(reel1);
+      girarReel(reel2);
+      girarReel(reel3);
+
+      setTimeout(() => {
+        
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
