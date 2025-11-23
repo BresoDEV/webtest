@@ -50,7 +50,8 @@
         <div class="app">
             <header>
                 <h1>Portaria para o Inferno — Roteiros</h1>
-                <div style="margin-left:auto;" class="small">Armazenamento:
+                <div style="margin-left:auto;" class="small">
+                    Armazenamento:
                     <strong>localStorage</strong>
                 </div>
             </header>
@@ -78,7 +79,7 @@
                             </div>
                             <div class="center">
                                 <button id="saveRoteiro" class="btn-primary">Salvar</button>
-                                <button id="clearForm">Limpar</button>
+                                <button id="clearForm">Limparr</button>
                             </div>
                         </div>
                         <div style="margin-top:10px">
@@ -86,10 +87,12 @@
                             <div style="height:8px"></div>
                             <textarea id="roteiroContent" placeholder="Conteúdo do roteiro"></textarea>
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                                <div class="small">ID:
+                                <div class="small">
+                                    ID:
                                     <span id="roteiroId">(novo)</span>
                                 </div>
-                                <div class="small">Última edição:
+                                <div class="small">
+                                    Última edição:
                                     <span id="roteiroUpdated">-</span>
                                 </div>
                             </div>
@@ -154,10 +157,12 @@
                             <div style="height:8px"></div>
                             <textarea id="ideiaContent" placeholder="Premissa / desenvolvimento curto"></textarea>
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                                <div class="small">ID:
+                                <div class="small">
+                                    ID:
                                     <span id="ideiaId">(novo)</span>
                                 </div>
-                                <div class="small">Última edição:
+                                <div class="small">
+                                    Última edição:
                                     <span id="ideiaUpdated">-</span>
                                 </div>
                             </div>
@@ -311,7 +316,29 @@ function loadIdeiaToForm(id){const r = ideias.find(x=>x.id===id); if(!r) return;
 }
 
 // New
-newRoteiroBtn.addEventListener('click',()=>{current={type:'roteiro',id:null};document.getElementById('roteiroFormTitle').innerText='Criar Roteiro';roteiroTitle.value='';roteiroContent.value='';document.getElementById('roteiroId').innerText='(novo)';document.getElementById('roteiroUpdated').innerText='-';})
+newRoteiroBtn.addEventListener('click',()=>{
+  current={
+    type:'roteiro',id:null};
+    document.getElementById('roteiroFormTitle').innerText='Criar Roteiro';
+    roteiroTitle.value='';
+    roteiroContent.value='';
+    document.getElementById('roteiroId').innerText='(novo)';
+    document.getElementById('roteiroUpdated').innerText='-';
+  }
+)
+
+document.getElementById('clearForm').addEventListener('click',()=>{
+  current={
+    type:'roteiro',id:null};
+    document.getElementById('roteiroFormTitle').innerText='Criar Roteiro';
+    roteiroTitle.value='';
+    roteiroContent.value='';
+    document.getElementById('roteiroId').innerText='(novo)';
+    document.getElementById('roteiroUpdated').innerText='-';
+  }
+)
+
+
 newIdeiaBtn.addEventListener('click',()=>{current={type:'ideia',id:null};document.getElementById('ideiaFormTitle').innerText='Criar Ideia';ideiaTitle.value='';ideiaContent.value='';document.getElementById('ideiaId').innerText='(novo)';document.getElementById('ideiaUpdated').innerText='-';})
 
 // Save handlers
@@ -398,7 +425,8 @@ exportAllBtn.addEventListener('click',()=>{
 importFile.addEventListener('change',async (e)=>{
   const f = e.target.files && e.target.files[0]; if(!f) return;
   try{
-    const txt = await f.text(); const data = JSON.parse(txt);
+    const txt = await f.text(); 
+    const data = JSON.parse(txt);
     if(!confirm('Deseja substituir todos os dados existentes com o conteúdo do arquivo importado? (OK = substituir, Cancel = mesclar)')){
       // merge
       roteiros = (roteiros||[]).concat(data.roteiros||[]);
