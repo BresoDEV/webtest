@@ -1,73 +1,470 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<link rel="stylesheet" href="roxo.css">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Portaria para o Inferno — Roteiros</title>
+        <style>
+    :root{
+      --bg:#0b0c0f; --panel:#0f1114; --muted:#9aa0a6; --accent:#d9534f; --accent-2:#6f42c1;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#070708 0%, #0b0c0f 100%);color:#e6e6e6}
+    .app{max-width:1100px;margin:20px auto;padding:18px}
+    header{display:flex;align-items:center;gap:12px}
+    h1{margin:0;font-size:20px}
+    .tabs{display:flex;gap:8px;margin-top:16px}
+    .tab{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .tab.active{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-color:rgba(255,255,255,0.07)}
+    .panel{background:var(--panel);padding:14px;border-radius:12px;margin-top:12px;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roteiros</title>
-</head>
+    .two-cols{display:grid;grid-template-columns:360px 1fr;gap:12px}
+    .input, textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#070708;color:inherit}
+    textarea{min-height:140px;resize:vertical}
+    .list{max-height:520px;overflow:auto;padding-right:6px}
+    .item{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer}
+    .item small{color:var(--muted)}
+    .actions{display:flex;gap:8px;margin-top:8px}
+    button{background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;cursor:pointer}
+    .btn-primary{background:var(--accent);border-color:transparent;color:#fff}
+    .btn-danger{background:#8b2b2b;border-color:transparent}
+    .center{display:flex;gap:8px;align-items:center}
 
-<body>
-    <div class="container">
-        <header>
-            <h1>Gerador de Roteiros</h1>
-        </header>
-        <section>
-            <div id="div">
-                <input id="Filme" value="A hora do pesadelo" type="text" placeholder="Nome do Filme e ano de lançamento">
-                <button id="Gerar">Gerar Roteiro</button>
-                <br>
-                <br>
+    /* modal */
+    .modal-back{position:fixed;inset:0;background:rgba(2,2,2,0.6);display:none;align-items:center;justify-content:center}
+    .modal{background:var(--panel);padding:16px;border-radius:10px;max-width:820px;max-height:90vh;overflow:auto}
+    .meta{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* responsive */
+    @media(max-width:880px){.two-cols{grid-template-columns:1fr;}.app{padding:12px}.list{max-height:260px}}
+
+
+
+  #aiOutput{
+    height: 400px;
+  }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <header>
+                <h1>Portaria para o Inferno — Roteiros</h1>
+                <div style="margin-left:auto;" class="small">Armazenamento:
+                    <strong>localStorage</strong>
+                </div>
+            </header>
+            <div class="tabs" role="tablist">
+                <button class="tab active" data-tab="roteiros">Roteiros</button>
+                <button class="tab" data-tab="gerador">Gerador (AI)</button>
+                <button class="tab" data-tab="ideias">Ideias</button>
+                <button class="tab" data-tab="admin">Administrador</button>
             </div>
-        </section>
-    </div>
-</body>
-<script>
+            <!-- ROTEIROS -->
+            <section id="roteiros" class="panel" style="display:block">
+                <div class="two-cols">
+                    <div>
+                        <div style="display:flex;gap:8px;margin-bottom:8px">
+                            <input id="searchRoteiros" class="input" placeholder="Buscar por título...">
+                            <button id="newRoteiroBtn" class="btn-primary">Novo</button>
+                        </div>
+                        <div class="list" id="roteirosList"></div>
+                    </div>
+                    <div>
+                        <div class="meta">
+                            <div>
+                                <strong id="roteiroFormTitle">Editar / Criar Roteiro</strong>
+                                <div class="small">Preencha título e conteúdo e clique em salvar</div>
+                            </div>
+                            <div class="center">
+                                <button id="saveRoteiro" class="btn-primary">Salvar</button>
+                                <button id="clearForm">Limpar</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px">
+                            <input id="roteiroTitle" class="input" placeholder="Título do roteiro">
+                            <div style="height:8px"></div>
+                            <textarea id="roteiroContent" placeholder="Conteúdo do roteiro"></textarea>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                                <div class="small">ID:
+                                    <span id="roteiroId">(novo)</span>
+                                </div>
+                                <div class="small">Última edição:
+                                    <span id="roteiroUpdated">-</span>
+                                </div>
+                            </div>
+                            <div class="actions" style="margin-top:12px">
+                                <button id="previewRoteiro">Visualizar (modal)</button>
+                                <button id="deleteRoteiro" class="btn-danger">Apagar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- GERADOR AI -->
+            <section id="gerador" class="panel" style="display:none">
+                <h3>Gerador com Inteligência Artificial (elementos)</h3>
+                <p class="small">Aqui você insere o nome do filme e o ano. O botão abaixo está como placeholder — não faz chamadas externas. Você pode ligar sua própria integração mais tarde.</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <input
+                        id="aiNome"
+                        class="input"
+                        placeholder="Nome do filme"
+                        style="flex:1;min-width:200px"
+                    >
+                    <input
+                        id="aiAno"
+                        class="input"
+                        placeholder="Ano (ex: 1985)"
+                        style="width:140px"
+                    >
+                    <button id="aiGenerate" class="btn-primary">Gerar Roteiro (placeholder)</button>
+                </div>
+                <div style="margin-top:12px">
+                    <textarea id="aiOutput" placeholder="Resultado da IA aparecerá aqui — você pode copiar/editar depois"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <button id="aiInsertToForm">Inserir no formulário de Roteiro</button>
+                        <button id="aiClear">Limpar</button>
+                    </div>
+                </div>
+            </section>
+            <!-- IDEIAS -->
+            <section id="ideias" class="panel" style="display:none">
+                <div class="two-cols">
+                    <div>
+                        <div style="display:flex;gap:8px;margin-bottom:8px">
+                            <input id="searchIdeias" class="input" placeholder="Buscar ideias...">
+                            <button id="newIdeiaBtn" class="btn-primary">Nova</button>
+                        </div>
+                        <div class="list" id="ideiasList"></div>
+                    </div>
+                    <div>
+                        <div class="meta">
+                            <div>
+                                <strong id="ideiaFormTitle">Criar / Editar Ideia</strong>
+                                <div class="small">Título e premissa da ideia</div>
+                            </div>
+                            <div class="center">
+                                <button id="saveIdeia" class="btn-primary">Salvar</button>
+                                <button id="clearIdeia">Limpar</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px">
+                            <input id="ideiaTitle" class="input" placeholder="Título da ideia">
+                            <div style="height:8px"></div>
+                            <textarea id="ideiaContent" placeholder="Premissa / desenvolvimento curto"></textarea>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                                <div class="small">ID:
+                                    <span id="ideiaId">(novo)</span>
+                                </div>
+                                <div class="small">Última edição:
+                                    <span id="ideiaUpdated">-</span>
+                                </div>
+                            </div>
+                            <div class="actions" style="margin-top:12px">
+                                <button id="previewIdeia">Visualizar (modal)</button>
+                                <button id="deleteIdeia" class="btn-danger">Apagar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ADMIN -->
+            <section id="admin" class="panel" style="display:none">
+                <h3>Painel de Administração</h3>
+                <p class="small">Exportar/Importar todos os dados salvos (Roteiros e Ideias).</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button id="exportAll" class="btn-primary">Exportar todos (baixar .json)</button>
+                    <input id="importFile" type="file" accept="application/json">
+                    <button id="clearAll" class="btn-danger">Apagar tudo (localStorage)</button>
+                </div>
+            </section>
+        </div>
+        <!-- Modal -->
+        <div id="modalBack" class="modal-back">
+            <div class="modal" role="dialog" aria-modal="true">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                        <strong id="modalTitle">Título</strong>
+                        <div class="small" id="modalMeta">meta</div>
+                    </div>
+                    <div>
+                        <button id="closeModal">Fechar</button>
+                    </div>
+                </div>
+                <hr>
+                <div id="modalContent" style="white-space:pre-wrap;margin-top:12px"></div>
+                <hr>
+                <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+                    <button id="modalEdit">Editar</button>
+                    <button id="modalHistory">Ver histórico</button>
+                </div>
+                <div id="modalHistoryList" style="margin-top:12px;display:none"></div>
+            </div>
+        </div>
+        <script>
+// Helpers
+const uid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const now = ()=>new Date().toLocaleString();
 
-    const Gerar = document.getElementById('Gerar')
-    const Filme = document.getElementById('Filme')
-    const div = document.getElementById('div')
+// Storage keys
+const KEY_ROTEIROS = 'ppi_roteiros_v1';
+const KEY_IDEIAS = 'ppi_ideias_v1';
 
-    Gerar.addEventListener('click', () => {
-        Gerar.textContent = 'Aguarde..'
+// Load/Save
+function load(key){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}}
+function save(key,data){localStorage.setItem(key,JSON.stringify(data))}
 
+// State
+let roteiros = load(KEY_ROTEIROS);
+let ideias = load(KEY_IDEIAS);
+let current = {type:null,id:null};
 
+// UI elements
+const tabs = document.querySelectorAll('.tab');
+const sections = {roteiros:document.getElementById('roteiros'), gerador:document.getElementById('gerador'), ideias:document.getElementById('ideias'), admin:document.getElementById('admin')};
 
+tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  Object.values(sections).forEach(s=>s.style.display='none'); sections[t.dataset.tab].style.display='block';}))
 
-        sendMessage()
+// Roteiros UI refs
+const roteirosList = document.getElementById('roteirosList');
+const roteiroTitle = document.getElementById('roteiroTitle');
+const roteiroContent = document.getElementById('roteiroContent');
+const saveRoteiroBtn = document.getElementById('saveRoteiro');
+const deleteRoteiroBtn = document.getElementById('deleteRoteiro');
+const previewRoteiroBtn = document.getElementById('previewRoteiro');
+const newRoteiroBtn = document.getElementById('newRoteiroBtn');
+const searchRoteiros = document.getElementById('searchRoteiros');
 
+// Ideias UI refs
+const ideiasList = document.getElementById('ideiasList');
+const ideiaTitle = document.getElementById('ideiaTitle');
+const ideiaContent = document.getElementById('ideiaContent');
+const saveIdeiaBtn = document.getElementById('saveIdeia');
+const deleteIdeiaBtn = document.getElementById('deleteIdeia');
+const previewIdeiaBtn = document.getElementById('previewIdeia');
+const newIdeiaBtn = document.getElementById('newIdeiaBtn');
+const searchIdeias = document.getElementById('searchIdeias');
 
+// Modal
+const modalBack = document.getElementById('modalBack');
+const modalTitle = document.getElementById('modalTitle');
+const modalMeta = document.getElementById('modalMeta');
+const modalContent = document.getElementById('modalContent');
+const closeModal = document.getElementById('closeModal');
+const modalEdit = document.getElementById('modalEdit');
+const modalHistoryBtn = document.getElementById('modalHistory');
+const modalHistoryList = document.getElementById('modalHistoryList');
 
-        
+// Admin
+const exportAllBtn = document.getElementById('exportAll');
+const importFile = document.getElementById('importFile');
+const clearAllBtn = document.getElementById('clearAll');
+
+// AI generator elements
+const aiNome = document.getElementById('aiNome');
+const aiAno = document.getElementById('aiAno');
+const aiGenerate = document.getElementById('aiGenerate');
+const aiOutput = document.getElementById('aiOutput');
+const aiInsertToForm = document.getElementById('aiInsertToForm');
+const aiClear = document.getElementById('aiClear');
+
+// Utilities to render lists
+function renderRoteiros(filter=''){
+  roteirosList.innerHTML = '';
+  const f = filter.trim().toLowerCase();
+  const rows = roteiros.filter(r=>r.title.toLowerCase().includes(f)).sort((a,b)=>b.updatedAt - a.updatedAt);
+  if(rows.length===0){roteirosList.innerHTML = '<div class="small">Nenhum roteiro encontrado.</div>';return}
+  rows.forEach(r=>{
+    const div = document.createElement('div');div.className='item';
+    div.innerHTML = `<strong>${escapeHtml(r.title)}</strong><div class="small">Última: ${new Date(r.updatedAt).toLocaleString()}</div>`;
+    div.addEventListener('click',()=>loadRoteiroToForm(r.id));
+    roteirosList.appendChild(div);
+  })
+}
+function renderIdeias(filter=''){
+  ideiasList.innerHTML = '';
+  const f = filter.trim().toLowerCase();
+  const rows = ideias.filter(r=>r.title.toLowerCase().includes(f)).sort((a,b)=>b.updatedAt - a.updatedAt);
+  if(rows.length===0){ideiasList.innerHTML = '<div class="small">Nenhuma ideia encontrada.</div>';return}
+  rows.forEach(r=>{
+    const div = document.createElement('div');div.className='item';
+    div.innerHTML = `<strong>${escapeHtml(r.title)}</strong><div class="small">Última: ${new Date(r.updatedAt).toLocaleString()}</div>`;
+    div.addEventListener('click',()=>loadIdeiaToForm(r.id));
+    ideiasList.appendChild(div);
+  })
+}
+
+// Escape helper
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+// Load into form
+function loadRoteiroToForm(id){const r = roteiros.find(x=>x.id===id); if(!r) return; current={type:'roteiro',id:r.id};
+  document.getElementById('roteiroFormTitle').innerText='Editar Roteiro';
+  roteiroTitle.value = r.title; roteiroContent.value = r.content; document.getElementById('roteiroId').innerText = r.id; document.getElementById('roteiroUpdated').innerText = new Date(r.updatedAt).toLocaleString();
+}
+function loadIdeiaToForm(id){const r = ideias.find(x=>x.id===id); if(!r) return; current={type:'ideia',id:r.id};
+  document.getElementById('ideiaFormTitle').innerText='Editar Ideia';
+  ideiaTitle.value = r.title; ideiaContent.value = r.content; document.getElementById('ideiaId').innerText = r.id; document.getElementById('ideiaUpdated').innerText = new Date(r.updatedAt).toLocaleString();
+}
+
+// New
+newRoteiroBtn.addEventListener('click',()=>{current={type:'roteiro',id:null};document.getElementById('roteiroFormTitle').innerText='Criar Roteiro';roteiroTitle.value='';roteiroContent.value='';document.getElementById('roteiroId').innerText='(novo)';document.getElementById('roteiroUpdated').innerText='-';})
+newIdeiaBtn.addEventListener('click',()=>{current={type:'ideia',id:null};document.getElementById('ideiaFormTitle').innerText='Criar Ideia';ideiaTitle.value='';ideiaContent.value='';document.getElementById('ideiaId').innerText='(novo)';document.getElementById('ideiaUpdated').innerText='-';})
+
+// Save handlers
+saveRoteiroBtn.addEventListener('click',()=>{
+  const t = roteiroTitle.value.trim(); const c = roteiroContent.value.trim(); if(!t){alert('Título obrigatório');return}
+  if(current.id){ // update
+    const r = roteiros.find(x=>x.id===current.id);
+    if(!r) return; r.history = r.history || [];
+    r.history.push({title:r.title,content:r.content,when:r.updatedAt});
+    r.title = t; r.content = c; r.updatedAt = Date.now();
+  } else {
+    const r = {id:uid(),title:t,content:c,createdAt:Date.now(),updatedAt:Date.now(),history:[]}; roteiros.push(r); current.id = r.id;
+  }
+  save(KEY_ROTEIROS,roteiros); renderRoteiros(searchRoteiros.value); loadRoteiroToForm(current.id);
+})
+
+saveIdeiaBtn.addEventListener('click',()=>{
+  const t = ideiaTitle.value.trim(); const c = ideiaContent.value.trim(); if(!t){alert('Título obrigatório');return}
+  if(current.id){ // update
+    const r = ideias.find(x=>x.id===current.id);
+    if(!r) return; r.history = r.history || [];
+    r.history.push({title:r.title,content:r.content,when:r.updatedAt});
+    r.title = t; r.content = c; r.updatedAt = Date.now();
+  } else {
+    const r = {id:uid(),title:t,content:c,createdAt:Date.now(),updatedAt:Date.now(),history:[]}; ideias.push(r); current.id = r.id;
+  }
+  save(KEY_IDEIAS,ideias); renderIdeias(searchIdeias.value); loadIdeiaToForm(current.id);
+})
+
+// Delete
+deleteRoteiroBtn.addEventListener('click',()=>{
+  if(!current.id || current.type!=='roteiro'){alert('Selecione um roteiro primeiro');return}
+  if(!confirm('Apagar este roteiro? Esta ação não pode ser desfeita.')) return;
+  roteiros = roteiros.filter(r=>r.id!==current.id); save(KEY_ROTEIROS,roteiros); current={type:null,id:null}; renderRoteiros(); document.getElementById('roteiroFormTitle').innerText='Criar / Editar Roteiro'; roteiroTitle.value=''; roteiroContent.value='';document.getElementById('roteiroId').innerText='(novo)';document.getElementById('roteiroUpdated').innerText='-';
+})
+
+deleteIdeiaBtn.addEventListener('click',()=>{
+  if(!current.id || current.type!=='ideia'){alert('Selecione uma ideia primeiro');return}
+  if(!confirm('Apagar esta ideia? Esta ação não pode ser desfeita.')) return;
+  ideias = ideias.filter(r=>r.id!==current.id); save(KEY_IDEIAS,ideias); current={type:null,id:null}; renderIdeias(); document.getElementById('ideiaFormTitle').innerText='Criar / Editar Ideia'; ideiaTitle.value=''; ideiaContent.value='';document.getElementById('ideiaId').innerText='(novo)';document.getElementById('ideiaUpdated').innerText='-';
+})
+
+// Preview modal
+previewRoteiroBtn.addEventListener('click',()=>{
+  if(!current.id || current.type!=='roteiro'){alert('Selecione um roteiro para visualizar');return}
+  const r = roteiros.find(x=>x.id===current.id); openModal(r.title,`Última: ${new Date(r.updatedAt).toLocaleString()}`,r.content,r);
+})
+previewIdeiaBtn.addEventListener('click',()=>{
+  if(!current.id || current.type!=='ideia'){alert('Selecione uma ideia para visualizar');return}
+  const r = ideias.find(x=>x.id===current.id); openModal(r.title,`Última: ${new Date(r.updatedAt).toLocaleString()}`,r.content,r);
+})
+
+function openModal(title,meta,content,obj){modalTitle.innerText=title; modalMeta.innerText=meta; modalContent.innerText=content; modalBack.style.display='flex'; modalHistoryList.style.display='none'; modalHistoryList.innerHTML='';
+  modalEdit.onclick = ()=>{ // load item back to form
+    if(!obj) return; if(roteiros.find(x=>x.id===obj.id)){ loadRoteiroToForm(obj.id); tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab==='roteiros')); Object.values(sections).forEach(s=>s.style.display='none'); sections.roteiros.style.display='block'; }
+    if(ideias.find(x=>x.id===obj.id)){ loadIdeiaToForm(obj.id); tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab==='ideias')); Object.values(sections).forEach(s=>s.style.display='none'); sections.ideias.style.display='block'; }
+    modalBack.style.display='none';
+  }
+  modalHistoryBtn.onclick = ()=>{
+    modalHistoryList.style.display = modalHistoryList.style.display==='none'?'block':'none';
+    modalHistoryList.innerHTML = '';
+    const list = (obj.history||[]).slice().reverse();
+    if(list.length===0) modalHistoryList.innerHTML = '<div class="small">Sem histórico</div>';
+    list.forEach(h=>{
+      const d = document.createElement('div'); d.className='item'; d.innerHTML = `<div class="small">${new Date(h.when).toLocaleString()}</div><div style="white-space:pre-wrap;margin-top:6px">${escapeHtml(h.content||h.title)}</div>`; modalHistoryList.appendChild(d);
     })
+  }
+}
+closeModal.addEventListener('click',()=>modalBack.style.display='none');
+modalBack.addEventListener('click',(e)=>{ if(e.target===modalBack) modalBack.style.display='none' })
 
-    const prompt_ = `A partir de agora, você será encarregado de criar roteiros para o canal do YouTube chamado Portaria para o Inferno, focado em filmes de terror com estilo retrô/VHS/trash. O roteiro deve seguir uma linguagem informal e natural, como se fosse falado diretamente para o público, de forma descontraída e envolvente. Evite frases muito formais ou robóticas.
+// Search
+searchRoteiros.addEventListener('input',()=>renderRoteiros(searchRoteiros.value));
+searchIdeias.addEventListener('input',()=>renderIdeias(searchIdeias.value));
+
+// Admin: export/import
+exportAllBtn.addEventListener('click',()=>{
+  const payload = {roteiros,ideias,exportedAt:Date.now()};
+  const blob = new Blob([JSON.stringify(payload, null, 2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download = `portaria_para_o_inferno_export_${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+})
+
+importFile.addEventListener('change',async (e)=>{
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  try{
+    const txt = await f.text(); const data = JSON.parse(txt);
+    if(!confirm('Deseja substituir todos os dados existentes com o conteúdo do arquivo importado? (OK = substituir, Cancel = mesclar)')){
+      // merge
+      roteiros = (roteiros||[]).concat(data.roteiros||[]);
+      ideias = (ideias||[]).concat(data.ideias||[]);
+    } else {
+      roteiros = data.roteiros||[]; ideias = data.ideias||[];
+    }
+    save(KEY_ROTEIROS,roteiros); save(KEY_IDEIAS,ideias); renderRoteiros(); renderIdeias(); alert('Importação concluída');
+  }catch(err){alert('Erro ao importar: '+err.message)} finally{e.target.value=''}
+})
+
+clearAllBtn.addEventListener('click',()=>{
+  if(!confirm('Apagar TODOS os dados do localStorage?')) return;
+  localStorage.removeItem(KEY_ROTEIROS); localStorage.removeItem(KEY_IDEIAS); roteiros=[]; ideias=[]; renderRoteiros(); renderIdeias(); alert('Dados apagados');
+})
+
+
+
+
+
+// AI generator placeholders
+aiGenerate.addEventListener('click',()=>{
+  const nome = aiNome.value.trim(); const ano = aiAno.value.trim();
+  if(!nome){alert('Informe o nome do filme');return}
+
+  aiOutput.value = 'Aguarde..'
+  sendMessage();
+  // placeholder: gerar um esqueleto simples
+  //aiOutput.value = `Título sugerido: ${nome} (${ano||'ano'})\n\nIntrodução:\nUm breve resumo do filme e sua atmosfera...\n\nResumo da história:\n(Escreva aqui o resumo gerado)\n\nPontos para curiosidades/bastidores:\n- Curiosidade 1\n- Curiosidade 2\n\nDesfecho/Opinião:\n(Coloque sua opinião aqui)\n`;
+})
+
+
+const prompt_ = `A partir de agora, você será encarregado de criar roteiros para o canal do YouTube chamado Portaria para o Inferno, focado em filmes de terror com estilo retrô/VHS/trash. 
+O roteiro deve seguir uma linguagem informal e natural, como se fosse falado diretamente para o público, de forma descontraída e envolvente. Evite frases muito formais ou robóticas.
 
 O roteiro precisa conter:
 
 1. Introdução com vinheta (simule o que é dito depois da vinheta com uma frase de impacto).
-2. Sinopse do filme (sem spoiler).
+2. Sinopse do filme detalhada(sem spoiler).
 3. Comentário/Análise pessoal (como se fosse o próprio criador do canal falando com emoção, destacando clima, som, personagens, direção etc).
-4. Curiosidades e fatos estranhos ou polêmicos sobre o filme.
+4. Curiosidades e fatos estranhos ou polêmicos sobre o filme (no minimo 5 itens).
 5. Nota final ate 10 e opinião geral.
 6. Encerramento chamando pra inscrição e comentários (com assinatura característica do canal Portaria para o inferno).
  
-Estilo visual: VHS, trash, sujo, efeitos de glitch, TV antiga, clima anos 80/90.
 
 Exemplo de linguagem:  
 “Se você nunca viu esse filme... cara, se prepara.”  
 “Pra mim, esse filme é um soco no estômago.”  
 “Agora se liga nisso aqui...”
 
-Ao final, preciso que você gere um prompt em portugues, para gerar uma arte de fundo do vídeo, que será um cenário que tenha relação com o filme. Esse cenário não deve conter personagens ou escritas, somente o ambiente relativo ao filme. O prompt deve ser relacionado ao filme e deve ser enviado em um bloco de códigos , pra facilitar a copia do conteúdo.
 
-
-Então, a partir de agora, vou lhe dar nome de filme famoso, e você deve gerar esse roteiro. Caso você não conhece o filme, não invente. Se não conhecer, me pergunte que eu descrevo, mas não invente informações que não existem'
+Então, a partir de agora, vou lhe dar nome de filme famoso, e você deve gerar esse roteiro. 
+Caso você não conhece o filme, não invente, apenas diga que nao conheçe, mas não invente informações que não existem.
+Caso nao seja um filme o solicitado (como por exemplo: 10 filmes chatos), voce deve esquecer os comandos anteriores e fazer oque a pergunta solicita, que no caso, seria criar uma lista de 10 filmes chatos, com curiosidades em cada um, mas sempre abordando filmes do genero terror e seus subgeneros.
  O primeiro filme que preciso é: `
 
     function sendMessage(elemento) {
-        const message = prompt_ + Filme.value;
+
+      var message = ""
+        if(aiAno.value !== ""){
+          message = prompt_ + aiNome.value + ', de '+ aiAno.value;
+        }
+        else{
+          message = prompt_ + aiNome.value;
+        }
+        
 
         if (message.trim() === '') return;
 
@@ -77,44 +474,54 @@ Então, a partir de agora, vou lhe dar nome de filme famoso, e você deve gerar 
             .then(response => response.text())
             .then(data => {
                 setTimeout(() => {
-                    let textarea = document.createElement('p')
-                    //textarea.rows = 25
+                     
 
-                    for (let i = 1; i < 500; i++) {
-                        if(i%2==0){
-                            data = data.replace('**','</b>')
-                        }else{
-                            data = data.replace('**','<b>')
-                        }
-                        
-                        data = data.replace('\n','<br>')
-                        data = data.replace('---','')
+                   // for (let i = 1; i < 500; i++) {
+                   //     if(i%2==0){
+                   //         data = data.replace('**','</b>')
+                   //     }else{
+                   //         data = data.replace('**','<b>')
+                   //     }
+                   //     
+                   //     data = data.replace('\n','<br>')
+                   //     data = data.replace('---','')
+                   //    
+                   // }
+                   // data = data.replace('```<br>','<textarea rows="5" style="width:100%;">')
+                   // data = data.replace('<br>```','</textarea>')
+                    
+                   for (let i = 0; i < 500; i++) {
+                    data = data.replace('**','')
+                    data = data.replace('###','->')
+                   }
 
-                       
-                    }
-                    data = data.replace('```<br>','<textarea rows="5" style="width:100%;">')
-                    data = data.replace('<br>```','</textarea>')
-
-                    textarea.innerHTML = data
-                    div.append(textarea)
-
-                    //let bt = document.createElement('button')
-                    //bt.textContent = 'Salvar'
-                    //div.append(bt)
-
-
-                    Gerar.textContent = 'Gerar Roteiro'
+                    aiOutput.value = data
+                      
 
                 }, 10000);
             })
             .catch(error => {
-                elemento.value = 'Erro ao enviar a mensagem:'
+              aiOutput.value = 'Erro ao enviar a mensagem:'
             });
 
         // Limpar o campo de input
         //Filme.value = '';
     }
 
-</script>
 
+
+
+aiInsertToForm.addEventListener('click',()=>{
+  // copia o resultado para o formulário de Roteiro para facilitar edição
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab==='roteiros'));
+  Object.values(sections).forEach(s=>s.style.display='none'); sections.roteiros.style.display='block';
+  roteiroTitle.value = aiNome.value? (aiNome.value + (aiAno.value? ` (${aiAno.value})` : '')) : 'Roteiro gerado';
+  roteiroContent.value = aiOutput.value; current={type:'roteiro',id:null}; document.getElementById('roteiroFormTitle').innerText='Criar Roteiro'; document.getElementById('roteiroId').innerText='(novo)';
+})
+aiClear.addEventListener('click',()=>{aiNome.value='';aiAno.value='';aiOutput.value='';})
+
+// initial render
+renderRoteiros(); renderIdeias();
+        </script>
+    </body>
 </html>
