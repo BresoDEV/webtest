@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Simulador de Chamada WhatsApp</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Vídeo principal cobrindo a tela toda */
+    #mainVideo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: 1;
+        background: #000;
+    }
+
+    /* Janela da câmera */
+    #faceCam {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 40vw;
+        height: 25vh;
+        border-radius: 10px;
+        overflow: hidden;
+        
+        z-index: 3;
+        cursor: pointer;
+        background: #000;
+        object-fit: cover;
+       
+    }
+
+</style>
+</head>
+<body>
+
+<!-- Vídeo de fundo (chamada fake) -->
+<video id="mainVideo" preload="auto">
+    <source src="VID_20251120_230147.mp4" type="video/mp4">
+</video>
+
+<!-- Vídeo da webcam -->
+<video id="faceCam" autoplay playsinline></video>
+
+<script>
+    // Ativando a webcam
+    const faceCam = document.getElementById("faceCam");
+    const mainVideo = document.getElementById("mainVideo");
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(stream => {
+            faceCam.srcObject = stream;
+        })
+        .catch(err => {
+            alert("Erro ao acessar a câmera: " + err);
+        });
+
+    // Clicar na facecam inicia o vídeo fake
+    faceCam.addEventListener("click", () => {
+        mainVideo.play();
+    });
+</script>
+
+</body>
+</html>
