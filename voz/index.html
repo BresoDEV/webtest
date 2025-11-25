@@ -82,7 +82,7 @@ textarea {
 </style>
 <body>
     <div class="container">
-        <h1 id="h1">Voice to Text Converter</h1>
+        <h1 id="h1"></h1>
         <button class="start-btn">Gravar</button>
         <button class="stop-btn hidden">Parar</button>
         <textarea id="output" placeholder="Seu texto ficara aqui!" rows="10"></textarea>
@@ -127,8 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
         output.value += transcript + ' ';
         if(transcript == 'teste'){
             document.getElementById('h1').innerHTML='tem'
-        }else{
-            document.getElementById('h1').innerHTML='nao tem'
         }
     };
 
