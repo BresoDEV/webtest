@@ -82,17 +82,11 @@ textarea {
 </style>
 <body>
     <div class="container">
-        <h1>Voice to Text Converter</h1>
+        <h1 id="h1">Voice to Text Converter</h1>
         <button class="start-btn">Gravar</button>
         <button class="stop-btn hidden">Parar</button>
         <textarea id="output" placeholder="Seu texto ficara aqui!" rows="10"></textarea>
-        <div class="format-buttons">
-            <button onclick="formatText('bold')">Negrito</button>
-            <button onclick="formatText('uppercase')">Maiúsculo</button>
-            <button onclick="formatText('lowercase')">Minusculo</button>
-            <button onclick="formatText('underline')">Sublinhado</button>
-            <button onclick="formatText('italic')">Italico</button>
-        </div>
+       
     </div>
    
     <script>
@@ -131,6 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
     recognition.onresult = function(event) {
         const transcript = event.results[0][0].transcript;
         output.value += transcript + ' ';
+        if(transcript == 'teste'){
+            document.getElementById('h1').innerHTML='tem'
+        }else{
+            document.getElementById('h1').innerHTML='nao tem'
+        }
     };
 
     recognition.onspeechend = function() {
@@ -146,26 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-function formatText(action) {
-    const output = document.getElementById('output');
-    switch(action) {
-        case 'bold':
-            output.style.fontWeight = output.style.fontWeight === 'bold' ? 'normal' : 'bold';
-            break;
-        case 'uppercase':
-            output.value = output.value.toUpperCase();
-            break;
-        case 'lowercase':
-            output.value = output.value.toLowerCase();
-            break;
-        case 'underline':
-            output.style.textDecoration = output.style.textDecoration === 'underline' ? 'none' : 'underline';
-            break;
-        case 'italic':
-            output.style.fontStyle = output.style.fontStyle === 'italic' ? 'normal' : 'italic';
-            break;
-    }
-}
+
     </script>
 </body>
 </html>
