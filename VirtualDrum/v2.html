@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bateria Virtual - Configurador Completo</title>
+<style>
+    :root{
+        --bg: #0b0b0d;
+        --panel: #111114;
+        --accent: #f59e0b;
+        --muted: #9aa0a6;
+        --glass: rgba(255,255,255,0.03);
+    }
+    html,body{height:100%;margin:0;background:var(--bg);font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    #app{
+        width:100%;height:100%;position:relative;overflow:hidden;
+    }
+    canvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1;background:black;object-fit:cover;}
+    video#video{display:none;}
+
+    /* ALERT TEXT */
+    #overlayText{
+        position:fixed;z-index:30;top:20px;left:50%;transform:translateX(-50%);pointer-events:none;
+        color:#fff;font-weight:700;font-size:28px;text-shadow:0 4px 20px rgba(0,0,0,0.8)
+    }
+
+    /* SIDEBAR (recolhível) */
+    #sidebar {
+        position:fixed;right:0;top:0;height:100%;width:360px;max-width:95vw;background:linear-gradient(180deg,#0f1113, #0b0b0d);
+        box-shadow: -8px 0 30px rgba(0,0,0,.8);z-index:40;transform:translateX(0);transition:transform .26s ease;
+        display:flex;flex-direction:column;gap:10px;padding:16px;
+        border-left:1px solid rgba(255,255,255,0.03);
+    }
+    #sidebar.closed{transform:translateX(calc(100% - 48px));width:48px;padding:8px;}
+    #toggleSidebar{
+        position:absolute;left: -48px;top:16px;width:44px;height:44px;background:var(--panel);border-radius:10px;
+        display:flex;align-items:center;justify-content:center;color:var(--accent);cursor:pointer;border:1px solid rgba(255,255,255,0.04);
+    }
+    #header{display:flex;align-items:center;gap:8px;}
+    #header h2{color:#fff;margin:0;font-size:18px}
+    #controlsRow{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+    button, input[type="range"], select {font:inherit}
+
+    .btn {
+        background:linear-gradient(180deg,var(--accent),#d97706);color:#111;padding:8px 10px;border-radius:8px;border:0;cursor:pointer;
+        box-shadow:0 6px 18px rgba(0,0,0,0.35);font-weight:700;
+    }
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none}
+    .btn.small{padding:6px 8px;font-size:13px}
+
+    #zonesList{overflow:auto;padding:8px;gap:8px;display:flex;flex-direction:column;height:calc(100% - 220px)}
+
+    .zoneCard{
+        background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:#fff;display:flex;gap:8px;align-items:center;
+    }
+    .zoneSwatch{width:36px;height:36px;border-radius:6px;flex:0 0 36px;border:1px solid rgba(0,0,0,0.4)}
+    .zoneInfo{flex:1}
+    .zoneInfo b{display:block}
+    .zoneActions{display:flex;gap:6px}
+
+    /* MODALS (simple) */
+    .modalBack{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:90;display:flex;align-items:center;justify-content:center}
+    .modal{background:#0d0d0f;padding:18px;border-radius:12px;min-width:320px;max-width:92vw;color:#fff;border:1px solid rgba(255,255,255,0.04)}
+    .modal h3{margin:0 0 10px 0}
+    .row{display:flex;align-items:center;gap:8px;margin:8px 0}
+    label{font-size:13px;color:var(--muted);min-width:110px}
+    .rangeVal{min-width:50px;text-align:center;color:#fff;}
+
+    input[type="text"], select, input[type="number"]{
+        background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:#fff;outline:none;width:100%;
+    }
+    input[type="color"]{width:48px;height:36px;padding:0;border:0;background:transparent}
+
+    .smallMuted{font-size:12px;color:var(--muted);margin-top:6px}
+
+    footer{margin-top:auto;color:var(--muted);font-size:13px}
+
+    /* top-left controls */
+    #topLeft{
+        position:fixed;left:12px;top:12px;z-index:50;display:flex;gap:8px;align-items:center;
+    }
+    .kbd{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);color:#fff;font-weight:600;font-size:13px}
+
+    /* small previews */
+    .soundPreview{display:flex;gap:8px;align-items:center}
+    .soundPreview audio{display:block;width:160px}
+    .fileLabel{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="app">
+    <canvas id="canvas"></canvas>
+    <video id="video" autoplay playsinline></video>
+
+    <div id="overlayText"></div>
+
+    <div id="topLeft">
+        <div class="kbd">Impact Sens: <span id="impactVal">20</span></div>
+        <div class="kbd">Color Tol: <span id="tolVal">60</span></div>
+        <button id="openCalib" class="btn small">Calibrar Baqueta</button>
+        <button id="exportBtn" class="btn small ghost">Exportar</button>
+        <button id="importBtn" class="btn small ghost">Importar</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none"/>
+    </div>
+
+    <aside id="sidebar" class="">
+        <div id="toggleSidebar" title="Abrir / Fechar Painel">⚙️</div>
+        <div id="header">
+            <h2>Bateria Virtual</h2>
+        </div>
+
+        <div id="controlsRow">
+            <button id="addZone" class="btn">+ Adicionar Zona</button>
+            <button id="resetBtn" class="btn ghost small">Reset</button>
+        </div>
+
+        <div id="zonesList"></div>
+
+        <div style="padding-top:10px">
+            <div class="smallMuted">Dicas: Calibre a cor clicando no vídeo, ajuste tolerância e sensibilidade.</div>
+            <div style="height:10px"></div>
+            <footer>Configurações salvas em <code>localStorage</code></footer>
+        </div>
+    </aside>
+</div>
+
+<!-- MODALS -->
+<div id="modalContainer"></div>
+
+<script>
+/* -----------------------
+   UTIL & STORAGE
+   ----------------------- */
+const LS_KEY = "bateria_virtual_config_v1";
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const video = document.getElementById("video");
+const overlayText = document.getElementById("overlayText");
+const sidebar = document.getElementById("sidebar");
+const toggleSidebar = document.getElementById("toggleSidebar");
+const zonesList = document.getElementById("zonesList");
+const modalContainer = document.getElementById("modalContainer");
+const openCalibBtn = document.getElementById("openCalib");
+const impactValLabel = document.getElementById("impactVal");
+const tolValLabel = document.getElementById("tolVal");
+const exportBtn = document.getElementById("exportBtn");
+const importBtn = document.getElementById("importBtn");
+const importFile = document.getElementById("importFile");
+const addZoneBtn = document.getElementById("addZone");
+const resetBtn = document.getElementById("resetBtn");
+
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+/* default config */
+const defaultConfig = {
+    zones: [
+        { id: idNow(), name:"Caixa", x:100, y:120, w:160, h:140, color:"#22c55e", soundType:"preset", soundPreset:"snare", fileDataUrl:null },
+        { id: idNow()+1, name:"Surdo", x:320, y:340, w:220, h:200, color:"#fb923c", soundType:"preset", soundPreset:"kick", fileDataUrl:null },
+        { id: idNow()+2, name:"Prato", x:540, y:80, w:180, h:180, color:"#f97316", soundType:"preset", soundPreset:"cymbal", fileDataUrl:null },
+    ],
+    baqueta: { r:220, g:40, b:40, tol:60 }, // default red-ish
+    impactThreshold: 20
+};
+
+/* load / save */
+let config = loadConfig();
+saveConfig(); // ensure initial storage
+function loadConfig(){
+    try{
+        const raw = localStorage.getItem(LS_KEY);
+        if(!raw) {
+            localStorage.setItem(LS_KEY, JSON.stringify(defaultConfig));
+            return JSON.parse(JSON.stringify(defaultConfig));
+        }
+        return JSON.parse(raw);
+    }catch(e){
+        console.error("loadConfig error", e);
+        localStorage.setItem(LS_KEY, JSON.stringify(defaultConfig));
+        return JSON.parse(JSON.stringify(defaultConfig));
+    }
+}
+function saveConfig(){
+    localStorage.setItem(LS_KEY, JSON.stringify(config));
+    renderZonesList();
+    impactValLabel.textContent = config.impactThreshold;
+    tolValLabel.textContent = config.baqueta.tol;
+}
+
+/* Simple id generator */
+function idNow(){ return Math.floor(Date.now() + Math.random()*1000); }
+
+/* -----------------------
+   VIDEO SETUP
+   ----------------------- */
+async function startCamera(){
+    try{
+        const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:"environment", width:1280, height:720 }, audio:false });
+        video.srcObject = stream;
+        await video.play();
+        requestAnimationFrame(loop);
+    }catch(err){
+        alert("Erro ao acessar câmera: " + err.message);
+    }
+}
+startCamera();
+
+/* -----------------------
+   SOUND (WebAudio + file uploads)
+   ----------------------- */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playPreset(name, when=0){
+    const t = audioCtx.currentTime + when;
+    if(name === "snare"){
+        // noise + tone
+        const noiseBuff = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+        const data = noiseBuff.getChannelData(0);
+        for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1) * Math.exp(-i/data.length*6);
+        const nb = audioCtx.createBufferSource(); nb.buffer = noiseBuff;
+        const noiseFilter = audioCtx.createBiquadFilter(); noiseFilter.type = "highpass"; noiseFilter.frequency.value=1000;
+        nb.connect(noiseFilter);
+        const noiseGain = audioCtx.createGain(); noiseGain.gain.setValueAtTime(0.9,t); noiseGain.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+        noiseFilter.connect(noiseGain).connect(audioCtx.destination);
+        nb.start(t);
+
+        // tone
+        const o = audioCtx.createOscillator(); o.type="triangle"; o.frequency.setValueAtTime(180, t);
+        const g = audioCtx.createGain(); g.gain.setValueAtTime(0.8,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+        o.connect(g).connect(audioCtx.destination);
+        o.start(t); o.stop(t+0.25);
+    } else if(name === "kick"){
+        const o = audioCtx.createOscillator();
+        o.type = "sine";
+        const g = audioCtx.createGain();
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        g.gain.setValueAtTime(1, t);
+        o.frequency.setValueAtTime(150, t);
+        o.frequency.exponentialRampToValueAtTime(40, t+0.35);
+        g.gain.exponentialRampToValueAtTime(0.001, t+0.5);
+        o.start(t); o.stop(t+0.6);
+    } else if(name === "cymbal"){
+        const bufferSize = audioCtx.sampleRate * 0.5;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for(let i=0;i<data.length;i++) data[i] = (Math.random()*2-1) * Math.exp(-i/data.length*4);
+        const src = audioCtx.createBufferSource(); src.buffer = buffer;
+        const hpf = audioCtx.createBiquadFilter(); hpf.type="highpass"; hpf.frequency.value = 8000;
+        const g = audioCtx.createGain(); g.gain.setValueAtTime(0.9,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.5);
+        src.connect(hpf).connect(g).connect(audioCtx.destination);
+        src.start(t);
+    } else {
+        // default click
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type="square"; o.frequency.setValueAtTime(600, t);
+        g.gain.setValueAtTime(0.2,t); g.gain.exponentialRampToValueAtTime(0.001, t+0.1);
+        o.connect(g).connect(audioCtx.destination);
+        o.start(t); o.stop(t+0.12);
+    }
+}
+
+/* play sound: either preset or fileDataUrl stored in zone */
+function playZoneSound(zone){
+    if(zone.soundType === "preset"){
+        playPreset(zone.soundPreset || "snare");
+    } else if(zone.soundType === "file" && zone.fileDataUrl){
+        // create audio element
+        const a = new Audio(zone.fileDataUrl);
+        a.play();
+    } else {
+        playPreset("snare");
+    }
+}
+
+/* -----------------------
+   DETECTION / LOOP
+   ----------------------- */
+
+let prevPos = null;
+let prevTime = performance.now();
+const impactCooldown = {}; // zoneId => timestamp when next allowed
+
+function loop(){
+    if(video.readyState >= 2){
+        // draw video covering canvas
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const cw = canvas.width;
+        const ch = canvas.height;
+
+        // draw with cover behavior
+        const videoRatio = vw / vh;
+        const canvRatio = cw / ch;
+        let dw, dh, dx, dy;
+        if(videoRatio > canvRatio){
+            dh = ch;
+            dw = dh * videoRatio;
+            dx = -(dw - cw)/2;
+            dy = 0;
+        } else {
+            dw = cw;
+            dh = dw / videoRatio;
+            dx = 0; dy = -(dh - ch)/2;
+        }
+        ctx.drawImage(video, dx, dy, dw, dh);
+
+        // get image data for detection — for performance read a reduced area for entire canvas
+        const img = ctx.getImageData(0,0,cw,ch);
+        const data = img.data;
+
+        // find baqueta pixels based on calibrated color + tolerance
+        const baqueta = config.baqueta;
+        const tol = baqueta.tol;
+        let sumX=0,sumY=0,count=0;
+
+        // iterate sampling step to save CPU (skip pixels)
+        const step = 4; // increase to 6-8 for lower CPU
+        for(let y=0;y<ch;y+=step){
+            for(let x=0;x<cw;x+=step){
+                const idx = (y*cw + x)*4;
+                const r = data[idx], g = data[idx+1], b = data[idx+2];
+                const d = colorDist(r,g,b, baqueta.r, baqueta.g, baqueta.b);
+                if(d <= tol){
+                    sumX += x; sumY += y; count++;
+                }
+            }
+        }
+
+        let centroid = null;
+        if(count>0){
+            centroid = { x: sumX/count, y: sumY/count };
+            // draw small indicator
+            ctx.beginPath(); ctx.fillStyle="rgba(255,0,0,0.9)"; ctx.arc(centroid.x, centroid.y, 8, 0, Math.PI*2); ctx.fill();
+        }
+
+        // compute velocity (distance / time)
+        const now = performance.now();
+        let velocity = 0;
+        if(centroid && prevPos){
+            const dt = (now - prevTime)/1000;
+            const dxv = centroid.x - prevPos.x;
+            const dyv = centroid.y - prevPos.y;
+            velocity = Math.sqrt(dxv*dxv + dyv*dyv) / Math.max(dt, 0.016);
+        }
+        prevPos = centroid;
+        prevTime = now;
+
+        // draw zones and test impacts
+        let alertText = "";
+        for(const zone of config.zones){
+            // draw zone rect
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = zone.color || "#fff";
+            ctx.strokeRect(zone.x, zone.y, zone.w, zone.h);
+
+            // if centroid present and inside rect
+            if(centroid){
+                if(pointInRect(centroid.x, centroid.y, zone.x, zone.y, zone.w, zone.h)){
+                    // impact check: velocity above threshold and cooldown expired
+                    const thr = config.impactThreshold || 20;
+                    const cd = impactCooldown[zone.id] || 0;
+                    if(velocity > thr && now > cd){
+                        // register impact
+                        impactCooldown[zone.id] = now + 120; // 120ms cooldown
+                        playZoneSound(zone);
+                        alertText = zone.name;
+                    }
+                }
+            }
+        }
+
+        overlayText.textContent = alertText;
+    }
+
+    requestAnimationFrame(loop);
+}
+
+/* -----------------------
+   HELPERS
+   ----------------------- */
+function colorDist(r1,g1,b1,r2,g2,b2){
+    // Euclidean in RGB
+    const dr=r1-r2, dg=g1-g2, db=b1-b2;
+    return Math.sqrt(dr*dr + dg*dg + db*db);
+}
+function pointInRect(px,py,x,y,w,h){
+    return px >= x && px <= x+w && py >= y && py <= y+h;
+}
+
+/* -----------------------
+   UI: Zones List & Modals
+   ----------------------- */
+
+toggleSidebar.addEventListener("click", ()=> {
+    sidebar.classList.toggle("closed");
+});
+
+function renderZonesList(){
+    zonesList.innerHTML = "";
+    for(const zone of config.zones){
+        const card = document.createElement("div"); card.className="zoneCard";
+        const sw = document.createElement("div"); sw.className="zoneSwatch"; sw.style.background = zone.color || "#666";
+        const info = document.createElement("div"); info.className="zoneInfo";
+        info.innerHTML = `<b>${escapeHtml(zone.name)}</b><div class="smallMuted">x:${Math.round(zone.x)} y:${Math.round(zone.y)} w:${Math.round(zone.w)} h:${Math.round(zone.h)}</div>`;
+        const actions = document.createElement("div"); actions.className="zoneActions";
+
+        const btnEdit = document.createElement("button"); btnEdit.className="btn small ghost"; btnEdit.textContent="Editar";
+        btnEdit.onclick = ()=> openEditZoneModal(zone.id);
+
+        const btnDuplicate = document.createElement("button"); btnDuplicate.className="btn small ghost"; btnDuplicate.textContent="Duplicar";
+        btnDuplicate.onclick = ()=> { duplicateZone(zone.id); };
+
+        const btnDelete = document.createElement("button"); btnDelete.className="btn small"; btnDelete.textContent="X";
+        btnDelete.onclick = ()=> { if(confirm("Deletar zona " + zone.name + "?")){ deleteZone(zone.id); }};
+
+        actions.appendChild(btnEdit); actions.appendChild(btnDuplicate); actions.appendChild(btnDelete);
+
+        card.appendChild(sw); card.appendChild(info); card.appendChild(actions);
+        zonesList.appendChild(card);
+    }
+}
+renderZonesList();
+
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
+
+addZoneBtn.addEventListener("click", ()=>{
+    const newZone = { id: idNow(), name: "Nova Zona", x: 120, y: 120, w: 160, h: 160, color: randomColor(), soundType:"preset", soundPreset:"snare", fileDataUrl:null };
+    config.zones.push(newZone);
+    saveConfig();
+});
+
+function duplicateZone(id){
+    const z = config.zones.find(z=>z.id===id);
+    if(!z) return;
+    const copy = JSON.parse(JSON.stringify(z)); copy.id = idNow(); copy.x += 30; copy.y += 30; copy.name += " (copy)";
+    config.zones.push(copy); saveConfig();
+}
+function deleteZone(id){
+    config.zones = config.zones.filter(z=>z.id!==id); saveConfig();
+}
+
+/* Edit modal */
+function openEditZoneModal(zoneId){
+    const zone = config.zones.find(z=>z.id===zoneId);
+    if(!zone) return;
+    showModal(`
+        <h3>Editar Zona: ${escapeHtml(zone.name)}</h3>
+        <div class="row"><label>Nome</label><input id="m_name" type="text" value="${escapeHtml(zone.name)}" /></div>
+        <div class="row"><label>X</label><input id="m_x" type="range" min="0" max="${canvas.width}" value="${zone.x}" /></div>
+        <div class="row"><label>Y</label><input id="m_y" type="range" min="0" max="${canvas.height}" value="${zone.y}" /></div>
+        <div class="row"><label>Largura</label><input id="m_w" type="range" min="20" max="${canvas.width}" value="${zone.w}" /></div>
+        <div class="row"><label>Altura</label><input id="m_h" type="range" min="20" max="${canvas.height}" value="${zone.h}" /></div>
+        <div class="row"><label>Cor</label><input id="m_color" type="color" value="${zone.color || '#ffffff'}" /></div>
+        <div style="height:10px"></div>
+        <div class="row"><label>Som</label>
+            <select id="m_soundType">
+                <option value="preset" ${zone.soundType==="preset"?"selected":""}>Preset (sintetizado)</option>
+                <option value="file" ${zone.soundType==="file"?"selected":""}>Enviar arquivo</option>
+            </select>
+        </div>
+        <div id="m_presetRow" class="row">
+            <label>Preset</label>
+            <select id="m_preset">
+                <option value="snare" ${zone.soundPreset==='snare'?'selected':''}>Snare</option>
+                <option value="kick" ${zone.soundPreset==='kick'?'selected':''}>Kick</option>
+                <option value="cymbal" ${zone.soundPreset==='cymbal'?'selected':''}>Cymbal</option>
+                <option value="click" ${zone.soundPreset==='click'?'selected':''}>Click</option>
+            </select>
+        </div>
+        <div id="m_fileRow" class="row" style="display:${zone.soundType==='file'?'flex':'none'};align-items:center;">
+            <label>Arquivo</label>
+            <div style="flex:1">
+                <input id="m_file" type="file" accept="audio/*" />
+                <div class="fileLabel">${zone.fileDataUrl?'<small>Arquivo carregado</small>': '<small>Sem arquivo</small>'}</div>
+            </div>
+        </div>
+        <div style="height:12px"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button id="m_cancel" class="btn ghost small">Cancelar</button>
+            <button id="m_save" class="btn small">Salvar</button>
+        </div>
+    `);
+
+    // wire up fields
+    document.getElementById("m_name").addEventListener("input", e=> zone.name = e.target.value);
+    const sx = document.getElementById("m_x"), sy = document.getElementById("m_y"), sw = document.getElementById("m_w"), sh = document.getElementById("m_h");
+    sx.addEventListener("input", e=> { zone.x = parseInt(e.target.value); saveConfig(); });
+    sy.addEventListener("input", e=> { zone.y = parseInt(e.target.value); saveConfig(); });
+    sw.addEventListener("input", e=> { zone.w = parseInt(e.target.value); saveConfig(); });
+    sh.addEventListener("input", e=> { zone.h = parseInt(e.target.value); saveConfig(); });
+    const mc = document.getElementById("m_color"); mc.addEventListener("input", e=> { zone.color = e.target.value; saveConfig(); });
+
+    const m_soundType = document.getElementById("m_soundType");
+    const rowPreset = document.getElementById("m_presetRow"), rowFile = document.getElementById("m_fileRow");
+    m_soundType.addEventListener("change", e=>{
+        zone.soundType = e.target.value;
+        rowPreset.style.display = zone.soundType==='preset'?'flex':'none';
+        rowFile.style.display = zone.soundType==='file'?'flex':'none';
+        saveConfig();
+    });
+
+    const m_preset = document.getElementById("m_preset"); m_preset.addEventListener("change", e=> { zone.soundPreset = e.target.value; saveConfig(); });
+    const m_file = document.getElementById("m_file"); m_file.addEventListener("change", e=>{
+        const f = e.target.files[0];
+        if(!f) return;
+        const fr = new FileReader();
+        fr.onload = ()=> {
+            zone.fileDataUrl = fr.result;
+            zone.soundType = "file";
+            saveConfig();
+            // update UI
+            openAlert("Arquivo carregado para " + zone.name);
+        };
+        fr.readAsDataURL(f);
+    });
+
+    // save & cancel
+    document.getElementById("m_cancel").onclick = ()=> closeModal();
+    document.getElementById("m_save").onclick = ()=> { saveConfig(); closeModal(); };
+}
+
+/* Calibration modal: click to pick color on video */
+openCalibBtn.addEventListener("click", ()=> openCalibrationModal());
+
+function openCalibrationModal(){
+    showModal(`
+        <h3>Calibrar Baqueta</h3>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+            <div>
+                <canvas id="calibCanvas" width="320" height="240" style="border-radius:8px;display:block"></canvas>
+                <div class="smallMuted">Clique sobre a cor vermelha da baqueta para capturar</div>
+            </div>
+            <div style="min-width:140px">
+                <div style="display:flex;gap:8px;align-items:center">
+                    <label>RGB:</label>
+                    <div id="calibRgb">-</div>
+                </div>
+                <div class="row"><label>Tolerância</label><input id="calibTol" type="range" min="10" max="200" value="${config.baqueta.tol}" /></div>
+                <div style="height:12px"></div>
+                <div style="display:flex;gap:8px;justify-content:flex-end">
+                    <button id="calibCancel" class="btn ghost small">Fechar</button>
+                    <button id="calibClear" class="btn small ghost">Limpar</button>
+                </div>
+            </div>
+        </div>
+    `);
+
+    const c = document.getElementById("calibCanvas"); const cc = c.getContext("2d");
+    // draw small scaled video frame
+    function drawPreview(){
+        if(video.readyState>=2){
+            cc.drawImage(video, 0, 0, c.width, c.height);
+            // draw crosshair center
+            cc.strokeStyle = "rgba(255,255,255,0.6)"; cc.lineWidth=1; cc.strokeRect(0,0,c.width,c.height);
+        }
+        requestAnimationFrame(drawPreview);
+    }
+    drawPreview();
+
+    c.onclick = function(e){
+        const rect = c.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const img = cc.getImageData(x, y, 1, 1).data;
+        config.baqueta.r = img[0]; config.baqueta.g = img[1]; config.baqueta.b = img[2];
+        document.getElementById("calibRgb").textContent = `${img[0]} , ${img[1]} , ${img[2]}`;
+        saveConfig();
+    };
+
+    document.getElementById("calibTol").addEventListener("input", (e)=>{
+        config.baqueta.tol = Number(e.target.value); saveConfig();
+    });
+
+    document.getElementById("calibCancel").onclick = ()=> closeModal();
+    document.getElementById("calibClear").onclick = ()=> {
+        config.baqueta = { r:220,g:40,b:40, tol:60 };
+        saveConfig();
+        closeModal();
+    };
+}
+
+/* Export / Import */
+exportBtn.addEventListener("click", ()=>{
+    const dataStr = JSON.stringify(config, null, 2);
+    const blob = new Blob([dataStr], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = "bateria_config.json"; a.click();
+    URL.revokeObjectURL(url);
+});
+
+importBtn.addEventListener("click", ()=> importFile.click());
+importFile.addEventListener("change", (e)=>{
+    const f = e.target.files[0]; if(!f) return;
+    const fr = new FileReader();
+    fr.onload = ()=> {
+        try{
+            const parsed = JSON.parse(fr.result);
+            config = parsed;
+            saveConfig();
+            openAlert("Configuração importada");
+        }catch(err){ alert("Arquivo inválido: " + err.message); }
+    };
+    fr.readAsText(f);
+});
+
+/* Reset */
+resetBtn.addEventListener("click", ()=>{
+    if(confirm("Resetar todas as configurações para os padrões?")){
+        config = JSON.parse(JSON.stringify(defaultConfig));
+        saveConfig();
+        openAlert("Reset concluído");
+    }
+});
+
+/* small helpers: modal system */
+function showModal(html){
+    modalContainer.innerHTML = `<div class="modalBack"><div class="modal">${html}</div></div>`;
+}
+function closeModal(){ modalContainer.innerHTML = ""; }
+
+/* misc UI */
+function randomColor(){
+    const r=Math.floor(120+Math.random()*120), g=Math.floor(80+Math.random()*140), b=Math.floor(40+Math.random()*200);
+    return `rgb(${r},${g},${b})`;
+}
+
+/* overlay alert */
+function openAlert(msg){
+    overlayText.textContent = msg;
+    setTimeout(()=> { if(overlayText.textContent === msg) overlayText.textContent = ""; }, 900);
+}
+
+/* render initial UI */
+renderZonesList();
+
+/* allow dragging zones directly on canvas (optional simple) */
+let dragging = null, dragOffset = {x:0,y:0}, dragMode = null;
+canvas.addEventListener("pointerdown", (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    // check if clicked inside any zone (topmost first)
+    for(let i=config.zones.length-1;i>=0;i--){
+        const z = config.zones[i];
+        if(pointInRect(x,y,z.x,z.y,z.w,z.h)){
+            dragging = z;
+            dragOffset.x = x - z.x;
+            dragOffset.y = y - z.y;
+            dragMode = "move";
+            break;
+        }
+    }
+});
+window.addEventListener("pointermove",(e)=>{
+    if(!dragging) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    dragging.x = Math.max(0, Math.min(canvas.width - dragging.w, Math.round(x - dragOffset.x)));
+    dragging.y = Math.max(0, Math.min(canvas.height - dragging.h, Math.round(y - dragOffset.y)));
+    saveConfig();
+});
+window.addEventListener("pointerup",(e)=>{
+    dragging = null;
+    dragMode = null;
+});
+
+/* expose quick controls via keyboard */
+window.addEventListener("keydown",(e)=>{
+    if(e.key === "c"){ openCalibrationModal(); }
+    if(e.key === "a"){ addZoneBtn.click(); }
+});
+
+/* show current thresholds on UI and allow quick adjustment via wheel on topLeft */
+document.getElementById("topLeft").addEventListener("wheel",(ev)=>{
+    ev.preventDefault();
+    const delta = Math.sign(ev.deltaY);
+    if(ev.shiftKey){
+        // adjust color tol
+        config.baqueta.tol = Math.max(8, Math.min(200, config.baqueta.tol - delta*4));
+    } else {
+        config.impactThreshold = Math.max(2, Math.min(200, config.impactThreshold - delta));
+    }
+    saveConfig();
+});
+
+/* initial small visual: draw zones once */
+(function drawInitialOverlay(){
+    // draw once to hint positions
+    for(const z of config.zones){
+        // nothing else
+    }
+})();
+
+</script>
+</body>
+</html>
