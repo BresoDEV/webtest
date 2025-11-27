@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Detector de Múltiplas Áreas</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+    }
+
+    #alerta {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: yellow;
+        font-size: 32px;
+        font-weight: bold;
+        text-shadow: 0 0 10px black;
+        z-index: 10;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+</style>
+</head>
+<body>
+
+<p id="alerta"></p>
+<video id="video" autoplay playsinline style="display:none;"></video>
+<canvas id="canvas"></canvas>
+
+<script>
+// ELEMENTOS
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const alerta = document.getElementById("alerta");
+
+// AJUSTA CANVAS PARA TELA
+function ajustarCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+ajustarCanvas();
+window.onresize = ajustarCanvas;
+
+// ACESSO À CÂMERA
+navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }})
+.then(stream => {
+    video.srcObject = stream;
+    video.onloadedmetadata = () => {
+        video.play();
+        loop();
+    };
+})
+.catch(err => alert("Erro ao acessar câmera: " + err));
+
+// DEFINIÇÕES DAS ÁREAS DE DETECÇÃO
+// Cada bloco tem: x, y, width, height, cor, texto
+const areas = [
+    { x: 100,  y: 100,  w: 150, h: 150, cor: "lime",   texto: "Quadrado 1" },
+    { x: 300,  y: 100,  w: 150, h: 150, cor: "red",    texto: "Quadrado 2" },
+    { x: 500,  y: 100,  w: 150, h: 150, cor: "blue",   texto: "Quadrado 3" },
+    { x: 100,  y: 300,  w: 150, h: 150, cor: "yellow", texto: "Quadrado 4" },
+    { x: 300,  y: 300,  w: 150, h: 150, cor: "purple", texto: "Quadrado 5" },
+    { x: 500,  y: 300,  w: 150, h: 150, cor: "orange", texto: "Quadrado 6" },
+];
+
+// Loop principal
+function loop() {
+    // Desenha vídeo no canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    alerta.textContent = ""; // reseta texto a cada frame
+
+    // Percorre todas as áreas
+    for (const area of areas) {
+
+        // Desenha o quadrado da área
+        ctx.strokeStyle = area.cor;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(area.x, area.y, area.w, area.h);
+
+        // Captura pixels da área
+        const imgData = ctx.getImageData(area.x, area.y, area.w, area.h);
+        const pixels = imgData.data;
+
+        // Verifica pixel vermelho
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+
+            // Pixel vermelho intenso
+            if (r > 200 && g < 100 && b < 100) {
+                alerta.textContent = area.texto;
+                break;
+            }
+        }
+    }
+
+    // Próximo frame
+    requestAnimationFrame(loop);
+}
+
+</script>
+</body>
+</html>
