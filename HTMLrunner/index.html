@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  *{
+    font-size: 3vw;
+  }
+  table {
+    width: 80vw;
+    border: 1px solid rgb(255, 255, 255);
+    color: aliceblue;
+  }
+
+  td {
+    text-align: right;
+  }
+  button{
+    background-color: lightgreen;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    min-width: 20%;
+    margin-top: 3px;
+  }
+  .left{
+    text-align: left;
+  }
+  html{
+    background-color: #333;
+    color: aliceblue;
+  }
+  textarea,input{
+    background-color: #666;
+    resize: none;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    width: 80vw;
+    color: aliceblue;
+  }
+  .bg-red{
+    background-color: rgb(171, 84, 101);
+    color: aliceblue;
+  }
+</style>
+
+<body>
+  <center>
+    <hr>
+    <h1>HTML Saver/Run</h1>
+    <input type="text" id="nome" placeholder="Nome do Projeto"><br><br>
+    <textarea name="" id="textarea" cols="30" rows="10"><script>alert('alerta');</script></textarea>
+    <br>
+    <button id="Executar">Executar</button>
+    <button id="Salvar">Salvar</button>
+    <br>
+    <hr>
+    <div id="tables"></div>
+  </center>
+
+  
+</body>
+<script>
+
+  const div = document.getElementById('tables')
+  var s = '<table>'
+  var arraia_nome = []
+  var arraia_html = []
+  var arraia_index = []
+
+
+  //-----------------------------------
+  for (let i = 0; i < 100; i++) {
+    if (localStorage.getItem('deploy_' + i + '_nome')) {
+      arraia_nome.push(localStorage.getItem('deploy_' + i + '_nome'))
+      arraia_html.push(localStorage.getItem('deploy_' + i + '_html'))
+      arraia_index.push(i)
+    }
+  }
+
+  var ct = 0;
+  arraia_nome.forEach(element => {
+    s += '<tr>' +
+      '  <td class="left">' + arraia_nome[ct] + '</td>' +
+      //'  <td>' + ct + '</td>' +
+      '  <td><button id="Executar_' + ct + '">Executar</button>' +
+      '  <button id="Ver_' + ct + '">Ver</button>' +
+      '  <button id="Apagar_' + ct + '" class="bg-red">Apagar</button></td>' +
+      '</tr>'
+
+    ct++
+  });
+  s += '</table>'
+
+  div.innerHTML = s
+  ct = 0
+
+  arraia_nome.forEach(element => {
+
+    var kkk = ct
+    document.getElementById('Executar_' + kkk).addEventListener('click', () => {
+      document.open()
+      document.write(localStorage.getItem('deploy_' + kkk + '_html'))
+      document.close()
+    })
+    document.getElementById('Ver_' + kkk).addEventListener('click', () => {
+      document.body.innerText = localStorage.getItem('deploy_' + kkk + '_html')
+    })
+
+    document.getElementById('Apagar_' + kkk).addEventListener('click', () => {
+      localStorage.removeItem('deploy_' + kkk + '_nome')
+      localStorage.removeItem('deploy_' + kkk + '_html')
+      window.location.reload()
+    })
+
+    ct++
+  });
+
+
+  //-----------------------------
+
+
+  document.getElementById('Executar').addEventListener('click', () => {
+    document.open()
+    document.write(document.getElementById('textarea').value)
+    document.close()
+
+  })
+
+  document.getElementById('Salvar').addEventListener('click', () => {
+
+    if (document.getElementById('nome').value == '') {
+      var t = new Date()
+      document.getElementById('nome').value = 'Codigo '+t.getDay()+'/'+t.getMonth()+'/'+t.getFullYear()+' - '+t.getHours()  +':'+t.getMinutes()  +':' +t.getSeconds()                                              
+    }
+
+    for (let i = 0; i < 100; i++) {
+      if (!localStorage.getItem('deploy_' + i + '_nome')) {
+
+        localStorage.setItem('deploy_' + i + '_nome', document.getElementById('nome').value)//nome
+        localStorage.setItem('deploy_' + i + '_html', document.getElementById('textarea').value)//nome
+
+        break;
+      }
+    }
+    window.location.reload()
+
+  })
+
+ 
+</script>
+
+  </html>
