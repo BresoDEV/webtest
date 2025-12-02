@@ -127,8 +127,9 @@
 
 
   document.getElementById('Executar').addEventListener('click', () => {
+    var sss = document.getElementById('textarea').value
     document.open()
-    document.write(document.getElementById('textarea').value)
+    document.write(sss)
     document.close()
 
   })
