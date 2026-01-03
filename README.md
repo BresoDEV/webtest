@@ -21,9 +21,6 @@ https://bresodev.github.io/webtest/Audiometria
 The Forest CheatTable:
 https://bresodev.github.io/webtest/TheForest/
 
-ArquivoX:
-https://bresodev.github.io/webtest/ArquivoX/
-
 GPT:
 https://bresodev.github.io/webtest/GPT/
  
@@ -32,9 +29,6 @@ https://bresodev.github.io/webtest/texto_voz
 
 Gerador de imagens em quantidade: 
 https://bresodev.github.io/webtest/geradorIMG
-
-ArquivoX V2:
-https://bresodev.github.io/webtest/ArquivoX/novoX.html
 
 Sistema de Merenda:
 https://bresodev.github.io/webtest/Ramona
