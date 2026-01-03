@@ -69,6 +69,9 @@ https://bresodev.github.io/webtest/HTMLrunner
 Mural dos Sonhos
 https://bresodev.github.io/webtest/Sonhos
 
+Modelo de Dashboard
+https://bresodev.github.io/webtest/Dashboards
+
 
 
 
