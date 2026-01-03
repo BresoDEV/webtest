@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Mural de Sonhos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #4caf50;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background: #3a3a3a;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        li.concluido {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .actions button {
+            margin-left: 5px;
+            background: #555;
+        }
+
+        .actions .done {
+            background: #2196f3;
+        }
+
+        .actions .delete {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌟 Mural de Sonhos</h1>
+
+    <div class="input-area">
+        <input type="text" id="dreamInput" placeholder="Digite um sonho ou plano...">
+        <button onclick="addDream()">Adicionar</button>
+    </div>
+
+    <ul id="dreamList"></ul>
+</div>
+
+<script>
+    const dreamInput = document.getElementById("dreamInput");
+    const dreamList = document.getElementById("dreamList");
+
+    let dreams = JSON.parse(localStorage.getItem("dreams")) || [];
+
+    function saveDreams() {
+        localStorage.setItem("dreams", JSON.stringify(dreams));
+    }
+
+    function renderDreams() {
+        dreamList.innerHTML = "";
+
+        dreams.forEach((dream, index) => {
+            const li = document.createElement("li");
+            li.className = dream.done ? "concluido" : "";
+
+            li.innerHTML = `
+                <span>${dream.text}</span>
+                <div class="actions">
+                    <button class="done" onclick="toggleDone(${index})">
+                        ✓
+                    </button>
+                    <button class="delete" onclick="deleteDream(${index})">
+                        ✕
+                    </button>
+                </div>
+            `;
+
+            dreamList.appendChild(li);
+        });
+    }
+
+    function addDream() {
+        const text = dreamInput.value.trim();
+        if (text === "") return;
+
+        dreams.push({ text, done: false });
+        dreamInput.value = "";
+        saveDreams();
+        renderDreams();
+    }
+
+    function toggleDone(index) {
+        dreams[index].done = !dreams[index].done;
+        saveDreams();
+        renderDreams();
+    }
+
+    function deleteDream(index) {
+        dreams.splice(index, 1);
+        saveDreams();
+        renderDreams();
+    }
+
+    // Render inicial
+    renderDreams();
+</script>
+
+</body>
+</html>
