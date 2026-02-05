@@ -1,7 +1,4 @@
 Repositorio usado apenas para testes de paginas web
-
-Img Creator:
-https://bresodev.github.io/webtest/img_creator/
  
 Conversor de Voz pra Texto:
 https://bresodev.github.io/webtest/voz
@@ -20,27 +17,19 @@ https://bresodev.github.io/webtest/Audiometria
 
 The Forest CheatTable:
 https://bresodev.github.io/webtest/TheForest/
-
-GPT:
-https://bresodev.github.io/webtest/GPT/
+ 
  
 Converte texto para voz:
 https://bresodev.github.io/webtest/texto_voz
-
-Gerador de imagens em quantidade: 
-https://bresodev.github.io/webtest/geradorIMG
+ 
 
 Sistema de Merenda:
 https://bresodev.github.io/webtest/Ramona
-
-Filmes de Terror:
-https://bresodev.github.io/webtest/Filmes
+ 
  
 ChatTheme
 https://bresodev.github.io/webtest/ChatTheme
 
-Gerador de Roteiros - Portaria
-https://bresodev.github.io/webtest/GeradorRoteiros
  
 Breso Web Layout
 https://bresodev.github.io/webtest/BresoWebLayout
