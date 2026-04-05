@@ -141,8 +141,10 @@ recognition.onresult = async (event) => {
     btn.innerText = "Processando...";
 
     try {
+
+        const preprompt = 'A partir de agora, vamos simular uma conversa normal entre duas pessoas fictícias. Meu nome é Eduardo e o seu vai ser Pierre. Você trabalha como atendente em um mercado. Vou mandar as perguntas e você deve responder somente e unicamente a resposta, sem dizer que entendeu as instruções ou algo do tipo, apenas a resposta da pergunta. A resposta deve ser curta e direta, sem emojis ou algo assim. Sendo assim, a primeira pergunta é: '
         // 🔥 ALTERE AQUI
-        const url = `https://text.pollinations.ai/prompt/${encodeURIComponent(texto)}`;
+        const url = `https://text.pollinations.ai/prompt/${encodeURIComponent(preprompt) + encodeURIComponent(texto)}`;
 
         const response = await fetch(url);
         const data = await response.text();
