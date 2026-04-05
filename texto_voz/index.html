@@ -1,86 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<title>Text-to-Speech</title>
 </head>
-<style>
-    * {
-        background-color: #111;
-    }
+<body style="font-family: Arial; padding: 20px;">
 
-    textarea {
-        background-color: #222;
-        color: aliceblue;
-        border: 1px solid red;
-    }
-</style>
-<br>
-<center>
-    <textarea name="" id="" cols="30" rows="10" placeholder="Escreve alguma coisa aqui"></textarea>
-</center>
+<h2>🔊 Leitor de Texto</h2>
 
-<body>
+<input type="text" id="texto" placeholder="Digite algo..." value="As experiências acumuladas demonstram que o desafiador cenário globalizado talvez venha a ressaltar a relatividade do investimento em reciclagem técnica." style="width: 300px;"><br><br>
 
-</body>
+<label>Voz:</label><br>
+<select id="vozes"></select><br><br>
+
+<label>Velocidade:</label><br>
+<input type="range" id="velocidade" min="0.5" max="2" step="0.1" value="1">
+<span id="velLabel">1</span><br><br>
+
+<button onclick="falar()">Falar</button>
+<button onclick="parar()">Parar</button>
+
 <script>
 
-    var boleta = true;
-    document.body.addEventListener("click", () => {
-        if (boleta) {
-            generateAudioGet("Fale isso: Oi meu amor, eu te amo pra sempre, bom trabalho", "onyx");
-            boleta = false;
-        }
-    })
+    
+let vozes = [];
 
+// Atualiza valor da velocidade na tela
+const velInput = document.getElementById("velocidade");
+const velLabel = document.getElementById("velLabel");
 
+velInput.oninput = () => {
+  velLabel.textContent = velInput.value;
+};
 
-    async function generateAudioGet(text, voice = "alloy") {
-        const encodedText = encodeURIComponent(text);
-        const params = new URLSearchParams({
-            model: "openai-audio",
-            voice: voice,
-        });
-        const url = `https://text.pollinations.ai/${encodedText}?${params.toString()}`;
+// Carrega vozes disponíveis
+speechSynthesis.onvoiceschanged = () => {
+  vozes = speechSynthesis.getVoices();
 
-        console.log("Generating audio via GET:", url);
+  const select = document.getElementById("vozes");
+  select.innerHTML = "";
 
-        try {
-            const response = await fetch(url);
+  vozes.forEach((voz, i) => {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = `${voz.name} (${voz.lang})`;
+    select.appendChild(option);
+  });
+};
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(
-                    `HTTP error! status: ${response.status}, message: ${errorText}`
-                );
-            }
+// Função falar
+function falar() {
+  const texto = document.getElementById("texto").value;
+  const index = document.getElementById("vozes").value;
 
-            if (response.headers.get("Content-Type")?.includes("audio/mpeg")) {
-                const audioBlob = await response.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
+  if (!texto) {
+    alert("Digite algum texto!");
+    return;
+  }
 
-                // Example: Play the audio
-                const audio = new Audio(audioUrl);
-                audio.play();
-                console.log("Audio generated and playing.");
-            } else {
-                const errorText = await response.text();
-                console.error(
-                    "Expected audio, received:",
-                    response.headers.get("Content-Type"),
-                    errorText
-                );
-                throw new Error("API did not return audio content.");
-            }
-        } catch (error) {
-            console.error("Error generating audio via GET:", error);
-        }
-    }
+  const msg = new SpeechSynthesisUtterance(texto);
 
+  msg.voice = vozes[index];
+  msg.rate = parseFloat(velInput.value);
+  msg.pitch = 1;
+  msg.volume = 1;
 
+  speechSynthesis.cancel(); // evita sobreposição
+  speechSynthesis.speak(msg);
+}
+
+// Função parar
+function parar() {
+  speechSynthesis.cancel();
+}
+
+falar()
 </script>
 
+</body>
 </html>
