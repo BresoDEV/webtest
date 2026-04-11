@@ -1,80 +1,197 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Text-to-Speech</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistente de Voz</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 95%;
+    max-width: 700px;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    background: #00c853;
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00e676;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    background: #111;
+    color: #0f0;
+    resize: none;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.control-box {
+    flex: 1;
+    min-width: 120px;
+}
+
+select, input[type="range"] {
+    width: 100%;
+    margin-top: 5px;
+}
+
+label {
+    font-size: 14px;
+    color: #ccc;
+}
+</style>
 </head>
-<body style="font-family: Arial; padding: 20px;">
+<body>
 
-<h2>🔊 Leitor de Texto</h2>
+<div class="container">
+    <h2>🎤 Assistente de Voz</h2>
 
-<input type="text" id="texto" placeholder="Digite algo..." value="As experiências acumuladas demonstram que o desafiador cenário globalizado talvez venha a ressaltar a relatividade do investimento em reciclagem técnica." style="width: 300px;"><br><br>
+    <button id="btn">Começar</button>
 
-<label>Voz:</label><br>
-<select id="vozes"></select><br><br>
+    <div class="controls">
+        <div class="control-box">
+            <label>Tipo de voz</label>
+            <select id="voiceType">
+                <option value="female">Feminina</option>
+                <option value="male">Masculina</option>
+            </select>
+        </div>
 
-<label>Velocidade:</label><br>
-<input type="range" id="velocidade" min="0.5" max="2" step="0.1" value="1">
-<span id="velLabel">1</span><br><br>
+        <div class="control-box">
+            <label>Velocidade: <span id="speedValue">1</span></label>
+            <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1.5">
+        </div>
+    </div>
 
-<button onclick="falar()">Falar</button>
-<button onclick="parar()">Parar</button>
+    <textarea id="txt1" placeholder="Texto reconhecido..."></textarea>
+    <textarea id="txt2" placeholder="Resposta da API..."></textarea>
+</div>
 
 <script>
+const btn = document.getElementById("btn");
+const txt1 = document.getElementById("txt1");
+const txt2 = document.getElementById("txt2");
+const voiceType = document.getElementById("voiceType");
+const speed = document.getElementById("speed");
+const speedValue = document.getElementById("speedValue");
 
-    
-let vozes = [];
-
-// Atualiza valor da velocidade na tela
-const velInput = document.getElementById("velocidade");
-const velLabel = document.getElementById("velLabel");
-
-velInput.oninput = () => {
-  velLabel.textContent = velInput.value;
+speed.oninput = () => {
+    speedValue.innerText = speed.value;
 };
 
-// Carrega vozes disponíveis
+// Speech Recognition
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+
+recognition.lang = "pt-BR";
+recognition.interimResults = false;
+recognition.continuous = false;
+
+btn.onclick = () => {
+    txt1.value = "";
+    txt2.value = "";
+    recognition.start();
+    btn.innerText = "🎤 Ouvindo...";
+};
+
+recognition.onresult = async (event) => {
+    const texto = event.results[0][0].transcript;
+    txt1.value = texto;
+    btn.innerText = "Processando...";
+
+    try {
+
+        const preprompt = 'A partir de agora, vamos simular uma conversa normal entre duas pessoas fictícias. Meu nome é Eduardo e o seu vai ser Pierre. Você trabalha como atendente em um mercado. Vou mandar as perguntas e você deve responder somente e unicamente a resposta, sem dizer que entendeu as instruções ou algo do tipo, apenas a resposta da pergunta. A resposta deve ser curta e direta, sem emojis ou algo assim. Sendo assim, a primeira pergunta é: '
+        // 🔥 ALTERE AQUI
+        const url = `https://text.pollinations.ai/prompt/${encodeURIComponent(preprompt) + encodeURIComponent(texto)}`;
+
+        const response = await fetch(url);
+        const data = await response.text();
+
+        txt2.value = data;
+
+        falarTexto(data);
+
+        btn.innerText = "Começar novamente";
+
+    } catch (erro) {
+        txt2.value = "Erro: " + erro;
+        btn.innerText = "Erro";
+    }
+};
+
+function falarTexto(texto) {
+    const speech = new SpeechSynthesisUtterance(texto);
+
+    speech.lang = "pt-BR";
+    speech.rate = parseFloat(speed.value);
+
+    const voices = speechSynthesis.getVoices();
+
+    let vozEscolhida;
+
+    if (voiceType.value === "female") {
+        vozEscolhida = voices.find(v => v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("mulher"));
+    } else {
+        vozEscolhida = voices.find(v => v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("homem"));
+    }
+
+    // fallback (caso não encontre)
+    if (!vozEscolhida) {
+        vozEscolhida = voices.find(v => v.lang.includes("pt")) || voices[0];
+    }
+
+    if (vozEscolhida) speech.voice = vozEscolhida;
+
+    speechSynthesis.cancel(); // para evitar sobreposição
+    speechSynthesis.speak(speech);
+}
+
+// carregar vozes corretamente
 speechSynthesis.onvoiceschanged = () => {
-  vozes = speechSynthesis.getVoices();
-
-  const select = document.getElementById("vozes");
-  select.innerHTML = "";
-
-  vozes.forEach((voz, i) => {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = `${voz.name} (${voz.lang})`;
-    select.appendChild(option);
-  });
+    speechSynthesis.getVoices();
 };
-
-// Função falar
-function falar() {
-  const texto = document.getElementById("texto").value;
-  const index = document.getElementById("vozes").value;
-
-  if (!texto) {
-    alert("Digite algum texto!");
-    return;
-  }
-
-  const msg = new SpeechSynthesisUtterance(texto);
-
-  msg.voice = vozes[index];
-  msg.rate = parseFloat(velInput.value);
-  msg.pitch = 1;
-  msg.volume = 1;
-
-  speechSynthesis.cancel(); // evita sobreposição
-  speechSynthesis.speak(msg);
-}
-
-// Função parar
-function parar() {
-  speechSynthesis.cancel();
-}
-
-falar()
 </script>
 
 </body>
