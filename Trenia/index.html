@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trenia Digital</title>
+        <script src="particulas.js"></script>
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <style>
+body { margin:0; font-family:Arial; background:#0b0f1a; color:#fff; overflow-x:hidden; }
+ 
+
+/* NAVBAR */
+.nav {
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  padding:15px;
+  backdrop-filter: blur(10px);
+  background:rgba(0,0,0,0.3);
+  opacity:0;
+  transition:0.4s;
+}
+
+.nav.show { opacity:1; }
+
+.nav a { color:white; text-decoration:none; }
+
+/* HERO */
+.hero {
+  /*height:200vh;*/
+  height:150vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.logo {
+  width:80vw;
+  max-width:900px;
+  transition: transform 0.3s ease;
+  opacity: 0;
+}
+
+section {
+  padding:100px 20px;
+  text-align:center;
+  margin-top: -100px;
+}
+
+h2 {
+  font-size:2.5rem;
+  background: linear-gradient(90deg,#00c6ff,#7f00ff,#ff00cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+    
+}
+
+.cards { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; margin-top:40px; }
+
+.card {
+  background: rgba(255,255,255,0.05);
+  padding:25px;
+  border-radius:20px;
+  width:260px;
+  backdrop-filter: blur(12px);
+  transition:0.3s;
+}
+
+.card:hover { transform:translateY(-15px) scale(1.03); box-shadow:0 0 30px rgba(127,0,255,0.7); }
+
+.btn {
+  padding:14px 30px;
+  border-radius:12px;
+  background: linear-gradient(90deg,#00c6ff,#7f00ff);
+  text-decoration:none;
+  color:#fff;
+  display:inline-block;
+  margin-top:20px;
+}
+
+/* SEÇÕES PREMIUM */
+.stats { display:flex; justify-content:center; gap:40px; margin-top:40px; flex-wrap:wrap;
+
+ background: rgba(255, 255, 255, 0.005);
+     
+    border-radius: 20px;
+   
+    backdrop-filter: blur(2px);
+    transition: 0.3s;
+    padding: 1%;
+  
+  }
+.stat { font-size:2rem; }
+
+.testimonials {
+  max-width:800px;   opacity:0.8; 
+
+ background: rgba(255, 255, 255, 0.05);
+     
+    border-radius: 20px;
+   
+    backdrop-filter: blur(12px);
+    transition: 0.3s;
+    padding: 5%;
+  }
+
+/* FORM */
+form {
+  max-width:500px;
+  margin:40px auto;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+
+
+  background: rgba(255, 255, 255, 0.05);
+     
+    border-radius: 20px;
+   
+    backdrop-filter: blur(12px);
+    transition: 0.3s;
+    padding: 5%;
+}
+
+input, textarea {
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  color:white;
+}
+
+.whatsapp {
+  position:fixed;
+  bottom:20px;
+  right:0px; 
+  padding:15px;
+  border-radius:50%;
+  text-decoration:none; 
+   width: 15%;
+}
+.whatsapp img{
+ width: 100%;
+ opacity: 0.0;
+}
+.whatsapp img:hover{ 
+ opacity: 1;
+ transition: all 0.3s ease;
+}
+
+
+/******************************************************************/
+.neon-box {
+  
+
+ background: #111;
+  
+ 
+  box-shadow:
+    0 0 5px rgba(247, 0, 255, 0.395),
+    0 0 10px rgba(247, 0, 255, 0.395),
+    0 0 20px rgba(247, 0, 255, 0.395);
+
+  /* opcional: brilho interno */
+  inset: 0;
+  animation: neonPulse 5.0s infinite alternate;
+}
+@keyframes neonPulse {
+ from {
+    box-shadow:
+      0 0 5px rgba(247, 0, 255, 0.395),
+    0 0 10px rgba(247, 0, 255, 0.395),
+    0 0 20px rgba(247, 0, 255, 0.395);
+  }
+
+  to {
+    box-shadow:
+      0 0 5px rgba(0, 221, 255, 0.395),
+    0 0 10px rgba(0, 221, 255, 0.395),
+    0 0 20px rgba(0, 221, 255, 0.395);
+  }
+}
+/******************************************************************/
+        </style>
+    </head>
+    <body>
+        <div id="particulas"></div>
+        <div class="nav" id="nav">
+            <a href="#">Início</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#resultados">Resultados</a>
+            <a href="#contato">Contato</a>
+        </div>
+        <div class="hero">
+            <img src="logo.png" class="logo" id="logo">
+        </div>
+        <section id="servicos">
+            <h2>Serviços</h2>
+            <center>
+                <div class="cards">
+                    <div class="card neon-box">
+                        <h3>Marketing</h3>
+                        <p>Estratégias que vendem.</p>
+                    </div>
+                    <div class="card neon-box">
+                        <h3>Social Media</h3>
+                        <p>Presença forte.</p>
+                    </div>
+                    <div class="card neon-box">
+                        <h3>Web</h3>
+                        <p>Sites que convertem.</p>
+                    </div>
+                </div>
+            </center>
+        </section>
+        <section id="resultados">
+            <h2>Resultados</h2>
+            <center>
+                <div class="stats  neon-box" style="max-width:50%">
+                    <div class="stat">+300%</div>
+                    <div class="stat">+120 clientes</div>
+                    <div class="stat">+1M alcance</div>
+                </div>
+            </center>
+        </section>
+        <section>
+            <h2>Depoimentos</h2>
+            <center>
+                <div class="testimonials neon-box">
+                    "A Trenia mudou nosso negócio completamente."
+                    <br>
+                    <br>
+                    "Resultados absurdos em poucos meses."
+                </div>
+            </center>
+        </section>
+        <section id="contato">
+            <h2>Contato</h2>
+            <form action="send.php" method="POST">
+                <input
+                    type="text"
+                    name="nome"
+                    placeholder="Seu nome"
+                    required
+                >
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Seu email"
+                    required
+                >
+                <textarea name="mensagem" placeholder="Mensagem" required></textarea>
+                <button class="btn">Enviar</button>
+            </form>
+        </section>
+        <a class="whatsapp" href="https://wa.me/5599999999999" target="_blank">
+            <img id="whatsIMG" src="whats.png" alt="">
+        </a>
+        <script>
+
+//---------------------------
+var ct = 0;
+var ctwhatsIMG = 0;
+
+setInterval(() => {
+  if(ct <= 1){
+    ct += 0.001
+    document.getElementById('logo').style.opacity = ct.toFixed(2)  
+  } else{
+
+    if(ctwhatsIMG <= 1){
+      //whatsIMG
+      document.getElementById('whatsIMG').style.opacity = ctwhatsIMG.toFixed(2)  
+      ctwhatsIMG += 0.001
+    }
+
+
+  }
+}, 1);
+
+var scala2 = 100
+setInterval(() => {
+  if(scala2 >= 1.5 ){
+      scala2 -= 0.5
+      document.getElementById('logo').style.transform = `scale(${scala2})`;
+    }
+}, 10);
+
+
+
+
+
+ 
+
+// APPLE-LIKE SCROLL
+window.addEventListener("scroll", () => {
+  const logo = document.getElementById("logo");
+  const nav = document.getElementById("nav");
+
+  let progress = window.scrollY / 600;
+  let scale = Math.max(0.25, 1 - progress);
+
+  logo.style.transform = `scale(${scale}) translateY(${progress * 200}px)`;
+
+  if(progress > 0.8){ nav.classList.add("show"); }
+});
+
+// SCROLL REVEAL
+ScrollReveal().reveal('.card, .stat, .testimonials, form', {
+  distance: '60px',
+  duration: 1000,
+  origin: 'bottom',
+  interval: 200
+});
+
+
+
+/*
+
+<?php
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+  $nome = $_POST['nome'];
+  $email = $_POST['email'];
+  $mensagem = $_POST['mensagem'];
+
+  $to = "seuemail@exemplo.com";
+  $subject = "Novo contato - Trenia";
+  $body = "Nome: $nome\nEmail: $email\nMensagem:\n$mensagem";
+  $headers = "From: $email";
+
+  mail($to, $subject, $body, $headers);
+  echo "Mensagem enviada!";
+}
+?>
+*/
+        </script>
+    </body>
+</html>
