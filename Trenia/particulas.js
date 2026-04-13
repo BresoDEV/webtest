@@ -1,3 +1,8 @@
+function ehMobile() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+
 var w, h, loopId, id, canvas, ctx, particles;
 
 //cores aleatorias
@@ -17,17 +22,21 @@ var options = {
   variantRadius: 1.5, //variacao do tamanho da bolinha (pra menos e pra mais)
   defaultSpeed: 0.1, //velocidade de moviemento
   variantSpeed: 0.2, //variacao da velocidade de movimento
-  linkRadius: 80, //distancia que elas se ligam
+  linkRadius: 180, //distancia que elas se ligam
   linha: 0.1, //largura da linha que liga as bolinhas
 };
+
+if (ehMobile()) {
+  options.particleAmount = 80
+}  
 
 var rgb = options.lineColor.match(/\d+/g);
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  document.getElementById('particulas').innerHTML =
-    '<canvas id="canvas" style="z-index: -1; position: fixed;left: -10px; top: -10px"></canvas>' 
+  document.body.innerHTML =
+    '<canvas id="canvas" style="z-index: -1; position: fixed;left: -10px; top: -10px"></canvas>' +document.body.innerHTML
 
   while (!document.getElementById("canvas")) {}
   canvas = document.getElementById("canvas");

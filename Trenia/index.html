@@ -1,343 +1,1614 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Trenia Digital</title>
-        <script src="particulas.js"></script>
-        <script src="https://unpkg.com/scrollreveal"></script>
+        <title>TR3NIA Digital</title>
         <style>
-body { margin:0; font-family:Arial; background:#0b0f1a; color:#fff; overflow-x:hidden; }
- 
+    :root {
+      --bg: #04050d;
+      --bg-2: #080b15;
+      --card: rgba(24, 28, 40, 0.92);
+      --text: #ffffff;
+      --muted: #cdd2e0;
+      --line: rgba(113, 146, 255, 0.55);
+      --cyan: #58d6ff;
+      --cyan-2: #45aaff;
+      --blue: #5e8dff;
+      --purple: #8f56ff;
+      --pink: #f04eff;
+      --shadow: 0 0 20px rgba(88, 214, 255, 0.12), 0 0 40px rgba(240, 78, 255, 0.08);
+      --btn-shadow: 0 0 18px rgba(88, 214, 255, 0.35), 0 0 26px rgba(240, 78, 255, 0.18);
+      --radius: 18px;
+      --container: 1180px;
+    }
 
-/* NAVBAR */
-.nav {
-  position:fixed;
-  top:0;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:30px;
-  padding:15px;
-  backdrop-filter: blur(10px);
-  background:rgba(0,0,0,0.3);
-  opacity:0;
-  transition:0.4s;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.nav.show { opacity:1; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-.nav a { color:white; text-decoration:none; }
+    body {
+      font-family: "BRIDGE", "29 LT Azer", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(90, 110, 255, 0.12), transparent 22%),
+        radial-gradient(circle at 80% 18%, rgba(240, 78, 255, 0.12), transparent 20%),
+        radial-gradient(circle at 80% 74%, rgba(88, 214, 255, 0.08), transparent 18%),
+        linear-gradient(180deg, #03040a 0%, #02030a 52%, #050711 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-/* HERO */
-.hero {
-  /*height:200vh;*/
-  height:150vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 90px 90px;
+      mask-image: radial-gradient(circle at center, black 42%, transparent 95%);
+    }
 
-.logo {
-  width:80vw;
-  max-width:900px;
-  transition: transform 0.3s ease;
-  opacity: 0;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-section {
-  padding:100px 20px;
-  text-align:center;
-  margin-top: -100px;
-}
+    img {
+      max-width: 100%;
+      display: block;
+    }
 
-h2 {
-  font-size:2.5rem;
-  background: linear-gradient(90deg,#00c6ff,#7f00ff,#ff00cc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin: 0 auto;
+    }
 
-    
-}
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(3,4,10,0.88), rgba(3,4,10,0.58));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
 
-.cards { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; margin-top:40px; }
+    .header-inner {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
 
-.card {
-  background: rgba(255,255,255,0.05);
-  padding:25px;
-  border-radius:20px;
-  width:260px;
-  backdrop-filter: blur(12px);
-  transition:0.3s;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
 
-.card:hover { transform:translateY(-15px) scale(1.03); box-shadow:0 0 30px rgba(127,0,255,0.7); }
+    .logo-mark {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 0 8px rgba(88,214,255,0.35)) drop-shadow(0 0 12px rgba(240,78,255,0.18));
+    }
 
-.btn {
-  padding:14px 30px;
-  border-radius:12px;
-  background: linear-gradient(90deg,#00c6ff,#7f00ff);
-  text-decoration:none;
-  color:#fff;
-  display:inline-block;
-  margin-top:20px;
-}
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1;
+    }
 
-/* SEÇÕES PREMIUM */
-.stats { display:flex; justify-content:center; gap:40px; margin-top:40px; flex-wrap:wrap;
+    .brand-text strong {
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      background: linear-gradient(90deg, #6fe4ff 0%, #6fa7ff 38%, #d762ff 85%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
- background: rgba(255, 255, 255, 0.005);
-     
-    border-radius: 20px;
-   
-    backdrop-filter: blur(2px);
-    transition: 0.3s;
-    padding: 1%;
-  
-  }
-.stat { font-size:2rem; }
+    .brand-text span {
+      color: #83bff7;
+      font-size: 0.82rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      padding-left: 3px;
+    }
 
-.testimonials {
-  max-width:800px;   opacity:0.8; 
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      flex: 1;
+      justify-content: flex-end;
+    }
 
- background: rgba(255, 255, 255, 0.05);
-     
-    border-radius: 20px;
-   
-    backdrop-filter: blur(12px);
-    transition: 0.3s;
-    padding: 5%;
-  }
+    .nav-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(104, 183, 255, 0.32);
+      background: rgba(15, 18, 28, 0.9);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
 
-/* FORM */
-form {
-  max-width:500px;
-  margin:40px auto;
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+    .nav-toggle span,
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+      content: "";
+      display: block;
+      width: 19px;
+      height: 2px;
+      border-radius: 99px;
+      background: #ffffff;
+      position: relative;
+      transition: 0.25s ease;
+    }
 
+    .nav-toggle span::before { position: absolute; top: -6px; }
+    .nav-toggle span::after { position: absolute; top: 6px; }
 
-  background: rgba(255, 255, 255, 0.05);
-     
-    border-radius: 20px;
-   
-    backdrop-filter: blur(12px);
-    transition: 0.3s;
-    padding: 5%;
-}
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
 
-input, textarea {
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.1);
-  color:white;
-}
+    .nav a {
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.88);
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+    }
 
-.whatsapp {
-  position:fixed;
-  bottom:20px;
-  right:0px; 
-  padding:15px;
-  border-radius:50%;
-  text-decoration:none; 
-   width: 15%;
-}
-.whatsapp img{
- width: 100%;
- opacity: 0.0;
-}
-.whatsapp img:hover{ 
- opacity: 1;
- transition: all 0.3s ease;
-}
+    .nav a.active,
+    .nav a:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(88,214,255,0.55);
+    }
 
+    .btn {
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.96rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
 
-/******************************************************************/
-.neon-box {
-  
+    .btn:hover {
+      transform: translateY(-1px);
+    }
 
- background: #111;
-  
- 
-  box-shadow:
-    0 0 5px rgba(247, 0, 255, 0.395),
-    0 0 10px rgba(247, 0, 255, 0.395),
-    0 0 20px rgba(247, 0, 255, 0.395);
+    .btn-primary {
+      color: #fff;
+      padding: 16px 28px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #59d6ff 0%, #5b90ff 48%, #e14bff 100%);
+      box-shadow: var(--btn-shadow);
+    }
 
-  /* opcional: brilho interno */
-  inset: 0;
-  animation: neonPulse 5.0s infinite alternate;
-}
-@keyframes neonPulse {
- from {
-    box-shadow:
-      0 0 5px rgba(247, 0, 255, 0.395),
-    0 0 10px rgba(247, 0, 255, 0.395),
-    0 0 20px rgba(247, 0, 255, 0.395);
-  }
+    .btn-outline {
+      color: #fff;
+      padding: 16px 30px;
+      border-radius: 14px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
 
-  to {
-    box-shadow:
-      0 0 5px rgba(0, 221, 255, 0.395),
-    0 0 10px rgba(0, 221, 255, 0.395),
-    0 0 20px rgba(0, 221, 255, 0.395);
-  }
-}
-/******************************************************************/
+    .hero {
+      padding: 44px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      align-items: center;
+      gap: 38px;
+      min-height: 540px;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      padding-top: 16px;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(3rem, 5vw, 5.25rem);
+      line-height: 0.96;
+      font-weight: 800;
+      margin-bottom: 26px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      max-width: 540px;
+      font-size: clamp(1rem, 1.7vw, 1.38rem);
+      line-height: 1.45;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.6;
+      z-index: -2;
+    }
+
+    .glow-orb.a {
+      width: 220px;
+      height: 220px;
+      background: rgba(88, 214, 255, 0.22);
+      top: 10%;
+      right: 20%;
+    }
+
+    .glow-orb.b {
+      width: 240px;
+      height: 240px;
+      background: rgba(240, 78, 255, 0.18);
+      bottom: 8%;
+      left: 12%;
+    }
+
+    .dashboard-art {
+      position: relative;
+      width: min(100%, 560px);
+      aspect-ratio: 1.06 / 0.86;
+      border-radius: 32px;
+
+      
+    /*
+      background:
+        radial-gradient(circle at 65% 30%, rgba(122, 235, 255, 0.18), transparent 16%),
+        radial-gradient(circle at 52% 52%, rgba(232, 102, 255, 0.12), transparent 24%),
+        linear-gradient(145deg, rgba(12, 18, 34, 0.72), rgba(5, 9, 18, 0.18));
+        */
+    }
+
+    .stream {
+      position: absolute;
+      left: 7%;
+      right: 8%;
+      top: 30%;
+      height: 24%;
+      border-radius: 999px;
+      transform: rotate(16deg);
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(97, 186, 255, 0.88) 16%, rgba(143, 86, 255, 0.82) 52%, rgba(97, 245, 255, 0.92) 80%, transparent 100%);
+      filter: blur(1px) drop-shadow(0 0 18px rgba(97,186,255,0.6)) drop-shadow(0 0 26px rgba(240,78,255,0.3));
+      overflow: hidden;
+    }
+
+    .stream::before,
+    .stream::after {
+      content: "";
+      position: absolute;
+      inset: 18% -3%;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      opacity: 0.55;
+    }
+
+    .stream::after {
+      inset: 32% -1%;
+      opacity: 0.36;
+    }
+
+    .panel {
+      position: absolute;
+      background: linear-gradient(180deg, rgba(18, 24, 40, 0.88), rgba(8, 12, 22, 0.88));
+      border: 1px solid rgba(117, 171, 255, 0.22);
+      box-shadow: 0 0 18px rgba(88,214,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.02);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .panel.chart-1 {
+      width: 148px;
+      height: 140px;
+      right: 8%;
+      top: 15%;
+      transform: rotate(7deg);
+    }
+
+    .panel.chart-2 {
+      width: 172px;
+      height: 148px;
+      left: 10%;
+      bottom: 12%;
+      transform: rotate(-8deg);
+    }
+
+    .panel.chart-3 {
+      width: 130px;
+      height: 126px;
+      right: 16%;
+      bottom: 7%;
+      transform: rotate(3deg);
+    }
+
+    .panel .graph {
+      position: absolute;
+      inset: 16px;
+      border-radius: 12px;
+      background:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .panel .bars {
+      position: absolute;
+      inset: auto 16px 16px 16px;
+      height: 58px;
+      display: flex;
+      align-items: end;
+      gap: 8px;
+    }
+
+    .panel .bars span {
+      flex: 1;
+      border-radius: 10px 10px 4px 4px;
+      background: linear-gradient(180deg, #68dfff 0%, #7f84ff 45%, #f04eff 100%);
+      box-shadow: 0 0 12px rgba(104, 223, 255, 0.35);
+      animation: pulseBars 3.4s ease-in-out infinite;
+    }
+
+    .panel .bars span:nth-child(2) { animation-delay: 0.2s; }
+    .panel .bars span:nth-child(3) { animation-delay: 0.35s; }
+    .panel .bars span:nth-child(4) { animation-delay: 0.5s; }
+
+    .ring,
+    .ring::before,
+    .ring::after {
+      position: absolute;
+      border-radius: 50%;
+      border: 3px solid rgba(98, 224, 255, 0.75);
+      box-shadow: 0 0 14px rgba(98, 224, 255, 0.35), inset 0 0 12px rgba(240, 78, 255, 0.12);
+    }
+
+    .ring {
+      width: 112px;
+      height: 112px;
+      left: 16%;
+      top: 10%;
+      border-color: rgba(106, 218, 255, 0.9);
+    }
+
+    .ring::before,
+    .ring::after {
+      content: "";
+      inset: 12px;
+      border-color: rgba(240, 78, 255, 0.58);
+    }
+
+    .ring::after {
+      inset: 28px;
+      border-color: rgba(106, 218, 255, 0.8);
+    }
+
+    .dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #76e4ff, #f04eff);
+      box-shadow: 0 0 12px rgba(118, 228, 255, 0.8);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .dot.d1 { left: 30%; top: 8%; }
+    .dot.d2 { right: 8%; top: 10%; animation-delay: 0.8s; }
+    .dot.d3 { right: 3%; top: 32%; width: 10px; height: 10px; animation-delay: 1.4s; }
+    .dot.d4 { left: 6%; bottom: 20%; animation-delay: 1s; }
+    .dot.d5 { right: 20%; bottom: 25%; width: 12px; height: 12px; animation-delay: 0.4s; }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(2.2rem, 3vw, 3.3rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 34px;
+      background: linear-gradient(90deg, #69ddff 0%, #5fb2ff 55%, #88eaff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .services {
+      padding: 18px 0 58px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .service-card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(33, 39, 53, 0.9), rgba(17, 20, 30, 0.94));
+      border: 1px solid rgba(106, 160, 255, 0.52);
+      border-radius: 16px;
+      padding: 34px 28px 28px;
+      min-height: 255px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .service-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(88,214,255,0), rgba(88,214,255,1), rgba(240,78,255,1), rgba(240,78,255,0));
+      opacity: 0.9;
+    }
+
+    .service-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 20px;
+      color: transparent;
+      filter: drop-shadow(0 0 10px rgba(88,214,255,0.25));
+    }
+
+    .service-card h3 {
+      text-align: center;
+      font-size: 1.82rem;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .service-card p {
+      text-align: center;
+      color: rgba(255,255,255,0.82);
+      font-size: 1.12rem;
+      line-height: 1.5;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .contact-lead {
+      padding: 8px 0 56px;
+    }
+
+    .lead-box {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 24px;
+      padding: 28px;
+      border: 1px solid rgba(106, 160, 255, 0.34);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(20, 24, 38, 0.94), rgba(10, 13, 22, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .lead-copy {
+      align-self: center;
+    }
+
+    .lead-copy .section-title {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .lead-copy p {
+      color: rgba(255,255,255,0.82);
+      font-size: 1.08rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .lead-list {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .lead-list li {
+      position: relative;
+      padding-left: 24px;
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+    }
+
+    .lead-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #5ce0ff, #f04eff);
+      box-shadow: 0 0 10px rgba(88,214,255,0.5);
+    }
+
+    .lead-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      border: 1px solid rgba(106, 160, 255, 0.34);
+      border-radius: 14px;
+      background: rgba(7, 10, 18, 0.92);
+      color: #fff;
+      padding: 15px 16px;
+      outline: none;
+      font: inherit;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: rgba(88,214,255,0.85);
+      box-shadow: 0 0 0 3px rgba(88,214,255,0.12);
+    }
+
+    .field-group textarea {
+      resize: vertical;
+      min-height: 132px;
+    }
+
+    .form-note {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .results {
+      padding: 20px 0 70px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(3.2rem, 5vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #7b8eff 0%, #62dfff 40%, #b883ff 85%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stat span {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.5rem;
+      line-height: 1.3;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background:
+        radial-gradient(circle at left top, rgba(97, 186, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, rgba(16, 20, 32, 0.95), rgba(10, 12, 20, 0.98));
+      padding: 34px 0 28px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr auto;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-contact {
+      display: grid;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .footer-contact a,
+    .footer-contact span {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.86);
+      font-size: 1.12rem;
+    }
+
+    .socials {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .social {
+      width: 48px;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(98, 213, 255, 0.24), rgba(240, 78, 255, 0.14));
+      border: 1px solid rgba(116, 169, 255, 0.3);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .social:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px rgba(88,214,255,0.22), 0 0 20px rgba(240,78,255,0.18);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 18px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.95rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes pulseBars {
+      0%, 100% { transform: scaleY(0.88); opacity: 0.92; }
+      50% { transform: scaleY(1.05); opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @media (max-width: 1100px) {
+      .container {
+        width: min(calc(100% - 32px), var(--container));
+      }
+
+      .header-inner {
+        min-height: 84px;
+      }
+
+      .nav-wrap {
+        gap: 18px;
+      }
+
+      .nav {
+        gap: 22px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .hero-copy {
+        max-width: 100%;
+      }
+
+      .hero-visual {
+        min-height: 420px;
+      }
+
+      .services-grid,
+      .results-grid,
+      .footer-top,
+      .lead-box {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        justify-items: center;
+        text-align: center;
+      }
+
+      .footer-contact {
+        justify-content: center;
+      }
+
+      .socials {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      .nav-wrap {
+        flex: 0;
+      }
+
+      .nav-panel {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 16px;
+        width: min(320px, calc(100vw - 32px));
+        background: rgba(9, 12, 22, 0.97);
+        border: 1px solid rgba(106, 160, 255, 0.26);
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 20px 45px rgba(0,0,0,0.4), var(--shadow);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-12px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+
+      .nav-panel.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .nav a {
+        padding: 10px 8px;
+      }
+
+      .nav-panel .btn-primary {
+        width: 100%;
+      }
+
+      .header-cta.desktop {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .hero-copy h1 {
+        max-width: 9ch;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .nav-panel {
+        display: contents;
+      }
+
+      .header-cta.mobile {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand-text strong {
+        font-size: 1.55rem;
+      }
+
+      .brand-text span {
+        font-size: 0.7rem;
+        letter-spacing: 0.26em;
+      }
+
+      .logo-mark {
+        width: 40px;
+        height: 40px;
+      }
+
+      .hero {
+        padding: 18px 0 48px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.45rem, 12vw, 3.6rem);
+        margin-bottom: 18px;
+      }
+
+      .hero-copy p,
+      .service-card p,
+      .stat span,
+      .footer-contact a,
+      .footer-contact span,
+      .lead-copy p {
+        font-size: 1rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .hero-visual {
+        min-height: 310px;
+      }
+
+      .dashboard-art {
+        width: 100%;
+      }
+
+      .panel.chart-1 {
+        width: 112px;
+        height: 102px;
+      }
+
+      .panel.chart-2 {
+        width: 128px;
+        height: 112px;
+      }
+
+      .panel.chart-3 {
+        width: 94px;
+        height: 92px;
+      }
+
+      .service-card {
+        min-height: auto;
+        padding: 28px 20px 24px;
+      }
+
+      .service-icon {
+        width: 72px;
+        height: 72px;
+      }
+
+      .service-card h3 {
+        font-size: 1.45rem;
+      }
+
+      .section-title {
+        margin-bottom: 24px;
+      }
+
+      .results-grid {
+        gap: 26px;
+      }
+
+      .lead-box {
+        padding: 20px;
+      }
+
+      .lead-form {
+        grid-template-columns: 1fr;
+      }
+
+      .stat strong {
+        font-size: 2.8rem;
+      }
+    }
+
+    .logoNome{
+        max-width: 200px;
+    }
+
+    .logotipo{
+        scale: 0.7;
+        transform: rotate(20deg);
+        margin-left: 10%;
+    }
         </style>
     </head>
     <body>
-        <div id="particulas"></div>
-        <div class="nav" id="nav">
-            <a href="#">Início</a>
-            <a href="#servicos">Serviços</a>
-            <a href="#resultados">Resultados</a>
-            <a href="#contato">Contato</a>
-        </div>
-        <div class="hero">
-            <img src="logo.png" class="logo" id="logo">
-        </div>
-        <section id="servicos">
-            <h2>Serviços</h2>
-            <center>
-                <div class="cards">
-                    <div class="card neon-box">
-                        <h3>Marketing</h3>
-                        <p>Estratégias que vendem.</p>
+        <script src="particulas.js"></script>
+        <header class="site-header">
+            <div class="container header-inner">
+                <a href="#inicio" class="brand" aria-label="TR3NIA Digital">
+                    <img src="logo3.png" class="logoNome" alt="">
+                </a>
+                <div class="nav-wrap">
+                    <button
+                        class="nav-toggle"
+                        id="navToggle"
+                        aria-label="Abrir menu"
+                        aria-expanded="false"
+                        aria-controls="navPanel"
+                    >
+                        <span></span>
+                    </button>
+                    <div class="nav-panel" id="navPanel">
+                        <nav class="nav">
+                            <a href="#inicio" class="active">Início</a>
+                            <a href="#servicos">Serviços</a>
+                            <a href="#portfolio">Portfólio</a>
+                            <a href="#sobre">Sobre</a>
+                            <a href="#contato">Contato</a>
+                        </nav>
+                        <a href="#contato" class="btn btn-primary header-cta mobile">FALE CONOSCO</a>
                     </div>
-                    <div class="card neon-box">
-                        <h3>Social Media</h3>
-                        <p>Presença forte.</p>
+                    <a href="#contato" class="btn btn-primary header-cta desktop">FALE CONOSCO</a>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="hero" id="inicio">
+                <div class="container hero-grid">
+                    <div class="hero-copy">
+                        <h1>
+                            Impulsionamos
+                            <br>
+                            Marcas na Era
+                            <br>
+                            Digital
+                        </h1>
+                        <p>Estratégias de marketing inovadoras com tecnologia de ponta para maximizar seu ROI.</p>
+                        <div class="hero-actions">
+                            <a href="#portfolio" class="btn btn-primary">VER PROJETOS</a>
+                            <a href="#lead-form" class="btn btn-outline">AGENDAR CONSULTA</a>
+                        </div>
                     </div>
-                    <div class="card neon-box">
-                        <h3>Web</h3>
-                        <p>Sites que convertem.</p>
+                    <div class="hero-visual" aria-hidden="true">
+                        <div class="glow-orb a"></div>
+                        <div class="glow-orb b"></div>
+                        <div class="dashboard-art">
+                            <div class="ring"></div>
+                            <div class="panel chart-1">
+                                <div class="graph"></div>
+                                <div class="bars">
+                                    <span style="height: 32px"></span>
+                                    <span style="height: 56px"></span>
+                                    <span style="height: 42px"></span>
+                                    <span style="height: 64px"></span>
+                                </div>
+                            </div>
+                            <div class="panel chart-2">
+                                <div class="graph"></div>
+                                <div class="bars">
+                                    <span style="height: 44px"></span>
+                                    <span style="height: 30px"></span>
+                                    <span style="height: 60px"></span>
+                                    <span style="height: 76px"></span>
+                                </div>
+                            </div>
+                            <div class="panel chart-3">
+                                <div class="graph"></div>
+                                <div class="bars">
+                                    <span style="height: 24px"></span>
+                                    <span style="height: 38px"></span>
+                                    <span style="height: 56px"></span>
+                                </div>
+                            </div>
+                            <span class="dot d1"></span>
+                            <span class="dot d2"></span>
+                            <span class="dot d3"></span>
+                            <span class="dot d4"></span>
+                            <span class="dot d5"></span>
+                            <div>
+                                <img
+                                    id="logotipo"
+                                    class="logotipo"
+                                    src="logo2.png"
+                                    alt=""
+                                >
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </center>
-        </section>
-        <section id="resultados">
-            <h2>Resultados</h2>
-            <center>
-                <div class="stats  neon-box" style="max-width:50%">
-                    <div class="stat">+300%</div>
-                    <div class="stat">+120 clientes</div>
-                    <div class="stat">+1M alcance</div>
+            </section>
+            <section class="services" id="servicos">
+                <div class="container">
+                    <h2 class="section-title">NOSSOS SERVIÇOS</h2>
+                    <div class="services-grid">
+                        <article class="service-card">
+                            <svg
+                                class="service-icon"
+                                viewBox="0 0 64 64"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <defs>
+                                    <linearGradient
+                                        id="g1"
+                                        x1="0"
+                                        y1="0"
+                                        x2="64"
+                                        y2="64"
+                                    >
+                                        <stop stop-color="#5CE0FF"/>
+                                        <stop offset="0.55" stop-color="#6D8BFF"/>
+                                        <stop offset="1" stop-color="#F04EFF"/>
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M8 50h48"
+                                    stroke="url(#g1)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <rect
+                                    x="12"
+                                    y="32"
+                                    width="8"
+                                    height="18"
+                                    rx="2"
+                                    fill="url(#g1)"
+                                />
+                                <rect
+                                    x="26"
+                                    y="24"
+                                    width="8"
+                                    height="26"
+                                    rx="2"
+                                    fill="url(#g1)"
+                                />
+                                <rect
+                                    x="40"
+                                    y="16"
+                                    width="8"
+                                    height="34"
+                                    rx="2"
+                                    fill="url(#g1)"
+                                />
+                                <path
+                                    d="M12 24l10-8 10 4 18-14"
+                                    stroke="url(#g1)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path
+                                    d="M46 10h10v10"
+                                    stroke="url(#g1)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            <h3>Marketing Digital &amp; SEO</h3>
+                            <p>Posicionamento estratégico nos principais buscadores.</p>
+                        </article>
+                        <article class="service-card">
+                            <svg
+                                class="service-icon"
+                                viewBox="0 0 64 64"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <defs>
+                                    <linearGradient
+                                        id="g2"
+                                        x1="0"
+                                        y1="0"
+                                        x2="64"
+                                        y2="64"
+                                    >
+                                        <stop stop-color="#5CE0FF"/>
+                                        <stop offset="0.55" stop-color="#6D8BFF"/>
+                                        <stop offset="1" stop-color="#F04EFF"/>
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M16 38l-5 10m37-10 5 10M11 16l12 6m30-6-12 6"
+                                    stroke="url(#g2)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <path d="M17 16h30a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H17a3 3 0 0 1-3-3V19a3 3 0 0 1 3-3Z" stroke="url(#g2)" stroke-width="3"/>
+                                <path
+                                    d="M22 25c8 0 12 3 20 3"
+                                    stroke="url(#g2)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <path
+                                    d="M23 33h9M36 33h5"
+                                    stroke="url(#g2)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <path
+                                    d="M28 12h8"
+                                    stroke="url(#g2)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                            <h3>Gestão de Tráfego Pago</h3>
+                            <p>Campanhas otimizadas no Google Ads, Meta e LinkedIn.</p>
+                        </article>
+                        <article class="service-card">
+                            <svg
+                                class="service-icon"
+                                viewBox="0 0 64 64"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <defs>
+                                    <linearGradient
+                                        id="g3"
+                                        x1="0"
+                                        y1="0"
+                                        x2="64"
+                                        y2="64"
+                                    >
+                                        <stop stop-color="#5CE0FF"/>
+                                        <stop offset="0.55" stop-color="#6D8BFF"/>
+                                        <stop offset="1" stop-color="#F04EFF"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle
+                                    cx="32"
+                                    cy="32"
+                                    r="9"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                    fill="none"
+                                />
+                                <circle
+                                    cx="32"
+                                    cy="32"
+                                    r="17"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                    fill="none"
+                                    opacity="0.85"
+                                />
+                                <path
+                                    d="M32 6v8M32 50v8M6 32h8M50 32h8M13 13l6 6M45 45l6 6M51 13l-6 6M19 45l-6 6"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                    stroke-linecap="round"
+                                />
+                                <rect
+                                    x="8"
+                                    y="8"
+                                    width="10"
+                                    height="10"
+                                    rx="2"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                />
+                                <rect
+                                    x="46"
+                                    y="8"
+                                    width="10"
+                                    height="10"
+                                    rx="2"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                />
+                                <rect
+                                    x="8"
+                                    y="46"
+                                    width="10"
+                                    height="10"
+                                    rx="2"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                />
+                                <rect
+                                    x="46"
+                                    y="46"
+                                    width="10"
+                                    height="10"
+                                    rx="2"
+                                    stroke="url(#g3)"
+                                    stroke-width="3"
+                                />
+                            </svg>
+                            <h3>Produção de Conteúdo</h3>
+                            <p>Criação de conteúdo audiovisual e textual de alta performance.</p>
+                        </article>
+                    </div>
                 </div>
-            </center>
-        </section>
-        <section>
-            <h2>Depoimentos</h2>
-            <center>
-                <div class="testimonials neon-box">
-                    "A Trenia mudou nosso negócio completamente."
+            </section>
+            <section class="contact-lead" id="sobre">
+                <div class="container">
+                    <div class="lead-box">
+                        <div class="lead-copy">
+                            <h2 class="section-title">SOLICITE UM ATENDIMENTO</h2>
+                            <p>Preencha o formulário e envie sua solicitação direto para o WhatsApp da TR3NIA Digital. Ideal para captação rápida de leads sem depender de email ou CRM.</p>
+                            <ul class="lead-list">
+                                <li>Resposta rápida via WhatsApp</li>
+                                <li>Mensagem formatada automaticamente</li>
+                                <li>Integração simples e fácil de trocar o número depois</li>
+                            </ul>
+                        </div>
+                        <form class="lead-form" id="lead-form">
+                            <div class="field-group">
+                                <label for="nome">Nome</label>
+                                <input
+                                    type="text"
+                                    id="nome"
+                                    name="nome"
+                                    placeholder="Seu nome"
+                                    required
+                                >
+                            </div>
+                            <div class="field-group">
+                                <label for="empresa">Empresa</label>
+                                <input
+                                    type="text"
+                                    id="empresa"
+                                    name="empresa"
+                                    placeholder="Nome da sua empresa"
+                                >
+                            </div>
+                            <div class="field-group">
+                                <label for="telefone">Telefone</label>
+                                <input
+                                    type="tel"
+                                    id="telefone"
+                                    name="telefone"
+                                    placeholder="(11) 99999-9999"
+                                    required
+                                >
+                            </div>
+                            <div class="field-group">
+                                <label for="servico">Serviço de interesse</label>
+                                <select id="servico" name="servico" required>
+                                    <option value="" selected disabled>Selecione uma opção</option>
+                                    <option value="Marketing Digital & SEO">Marketing Digital & SEO</option>
+                                    <option value="Gestão de Tráfego Pago">Gestão de Tráfego Pago</option>
+                                    <option value="Produção de Conteúdo">Produção de Conteúdo</option>
+                                    <option value="Consultoria Estratégica">Consultoria Estratégica</option>
+                                </select>
+                            </div>
+                            <div class="field-group field-full">
+                                <label for="mensagem">Objetivo do projeto</label>
+                                <textarea
+                                    id="mensagem"
+                                    name="mensagem"
+                                    rows="5"
+                                    placeholder="Conte um pouco sobre o que você precisa"
+                                    required
+                                ></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary field-full">ENVIAR PARA WHATSAPP</button>
+                            <p class="form-note field-full">
+                                Número fictício configurado no código:
+                                <strong>+55 11 99999-9999</strong>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <section class="results" id="portfolio">
+                <div class="container">
+                    <h2 class="section-title">RESULTADOS</h2>
+                    <div class="results-grid">
+                        <div class="stat">
+                            <strong>+500%</strong>
+                            <span>Crescimento Médio</span>
+                        </div>
+                        <div class="stat">
+                            <strong>R$ 10M+</strong>
+                            <span>Gerenciados</span>
+                        </div>
+                        <div class="stat">
+                            <strong>98%</strong>
+                            <span>Retenção de Clientes</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="site-footer" id="contato">
+            <div class="container">
+                <div class="footer-top">
+                    <a href="#inicio" class="brand" aria-label="TR3NIA Digital">
+                        <svg
+                            class="logo-mark"
+                            viewBox="0 0 100 100"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path d="M50 11C62 11 72.8 17.4 78.7 28l-11.7 6.8C63.4 28.7 57.1 25 50 25c-14 0-25.3 11.3-25.3 25.3S36 75.7 50 75.7c4.7 0 9.2-1.3 13-3.6l6.9 11.8A38.8 38.8 0 0 1 50 89C28.5 89 11 71.5 11 50S28.5 11 50 11Z" stroke="url(#triA)" stroke-width="5.5"/>
+                            <path d="M25 71.5c-6-10.3-6.2-23.2-.5-33.7L36 44.6a25.1 25.1 0 0 0 .1 11.2c1.3 4.4 3.7 8.2 7 11l-6.9 11.8A39.5 39.5 0 0 1 25 71.5Z" stroke="url(#triA)" stroke-width="5.5"/>
+                            <path d="M74.8 71.6A38.8 38.8 0 0 1 39.1 89l.1-13.5A25.3 25.3 0 0 0 61 64.2c7-12.1 2.8-27.5-9.3-34.5L58.5 18c18.6 10.8 24.9 34.6 14.3 53.6Z" stroke="url(#triA)" stroke-width="5.5"/>
+                        </svg>
+                        <span class="brand-text">
+                            <strong>TR3NIA</strong>
+                            <span>Digital</span>
+                        </span>
+                    </a>
+                    <div class="footer-contact">
+                        <span>
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M5 4h4l2 5-2.5 1.5a16 16 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2.2 2A17.8 17.8 0 0 1 3 6.2 2 2 0 0 1 5 4Z"
+                                    stroke="#6DDFFF"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            (89) 99761-0998
+                        </span>
+                        <a href="mailto@tr3niad1@ligoarore.com">
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path d="M4 6h16v12H4z" stroke="#6DDFFF" stroke-width="2"/>
+                                <path
+                                    d="m4 7 8 6 8-6"
+                                    stroke="#6DDFFF"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            @tr3niad1@ligoarore.com
+                        </a>
+                    </div>
+                    <div class="socials">
+                        <a class="social" href="#" aria-label="Facebook">
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v4h4v-4h3.2l.8-4H13V9c0-.8.2-1 1-1Z" fill="url(#g1)"/>
+                            </svg>
+                        </a>
+                        <a class="social" href="#" aria-label="Instagram">
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <rect
+                                    x="3"
+                                    y="3"
+                                    width="18"
+                                    height="18"
+                                    rx="5"
+                                    stroke="url(#g2)"
+                                    stroke-width="2"
+                                />
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="4"
+                                    stroke="url(#g2)"
+                                    stroke-width="2"
+                                />
+                                <circle
+                                    cx="17.5"
+                                    cy="6.5"
+                                    r="1.2"
+                                    fill="url(#g2)"
+                                />
+                            </svg>
+                        </a>
+                        <a class="social" href="#" aria-label="X">
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path d="M5 4h3.3l4.2 5.7L17.2 4H20l-6.1 7.3L20.5 20H17l-4.6-6.2L7 20H4.2l6.6-7.9L5 4Z" fill="url(#g3)"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    © 2026 TR3NIA DIGITAL. Todos os direitos reservados.
                     <br>
-                    <br>
-                    "Resultados absurdos em poucos meses."
+                    Design by
+                    <i>
+                        <b>
+                            <a href="https://bresodev.github.io/BresoDev-App-Store/">BresoDEV</a>
+                        </b>
+                    </i>
                 </div>
-            </center>
-        </section>
-        <section id="contato">
-            <h2>Contato</h2>
-            <form action="send.php" method="POST">
-                <input
-                    type="text"
-                    name="nome"
-                    placeholder="Seu nome"
-                    required
-                >
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Seu email"
-                    required
-                >
-                <textarea name="mensagem" placeholder="Mensagem" required></textarea>
-                <button class="btn">Enviar</button>
-            </form>
-        </section>
-        <a class="whatsapp" href="https://wa.me/5599999999999" target="_blank">
-            <img id="whatsIMG" src="whats.png" alt="">
-        </a>
+            </div>
+        </footer>
         <script>
 
-//---------------------------
-var ct = 0;
-var ctwhatsIMG = 0;
 
-setInterval(() => {
-  if(ct <= 1){
-    ct += 0.001
-    document.getElementById('logo').style.opacity = ct.toFixed(2)  
-  } else{
 
-    if(ctwhatsIMG <= 1){
-      //whatsIMG
-      document.getElementById('whatsIMG').style.opacity = ctwhatsIMG.toFixed(2)  
-      ctwhatsIMG += 0.001
+            //------------------------------
+
+            //original 0.7
+            var ct = 0.7;
+            var b1 = true;
+            var b2 = false;
+            setInterval(() => {
+               
+                //diminue
+                if(b1){
+                    if(ct >= 0.65){
+                        ct -= 0.0005
+                    }
+                    else{
+                        b1 = false;
+                        b2 = true;
+                    }
+                }
+
+                //aumenta
+                if(b2){
+                    if(ct <= 0.75){
+                        ct += 0.0005
+                    }
+                    else{
+                        b2 = false;
+                        b1 = true;
+                    }
+                }
+                
+                document.getElementById('logotipo').style.scale = ct
+                 
+            }, 25);
+
+
+            //------------------------------
+
+
+
+
+
+
+
+
+
+
+    const whatsappNumber = '5511999999999';
+
+    const leadForm = document.getElementById('lead-form');
+    if (leadForm) {
+      leadForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const empresa = document.getElementById('empresa').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+        const servico = document.getElementById('servico').value.trim();
+        const mensagem = document.getElementById('mensagem').value.trim();
+
+        const texto = [
+          'Olá, TR3NIA Digital! Quero solicitar um atendimento.',
+          '',
+          `Nome: ${nome}`,
+          `Empresa: ${empresa || 'Não informado'}`,
+          `Telefone: ${telefone}`,
+          `Serviço de interesse: ${servico}`,
+          `Objetivo do projeto: ${mensagem}`
+        ].join('\n');
+
+        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(texto)}`;
+        window.open(url, '_blank');
+      });
     }
 
+    const navToggle = document.getElementById('navToggle');
+    const navPanel = document.getElementById('navPanel');
+    const navLinks = document.querySelectorAll('.nav a, .header-cta.mobile');
 
-  }
-}, 1);
+    if (navToggle && navPanel) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = navPanel.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+      });
 
-var scala2 = 100
-setInterval(() => {
-  if(scala2 >= 1.5 ){
-      scala2 -= 0.5
-      document.getElementById('logo').style.transform = `scale(${scala2})`;
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navPanel.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        const clickedInside = navPanel.contains(event.target) || navToggle.contains(event.target);
+        if (!clickedInside) {
+          navPanel.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
     }
-}, 10);
 
+    const sections = document.querySelectorAll('section[id], footer[id]');
+    const menuLinks = document.querySelectorAll('.nav a');
 
+    const updateActiveLink = () => {
+      let current = 'inicio';
+      const offset = window.scrollY + 140;
 
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (offset >= top && offset < top + height) current = section.id;
+      });
 
+      menuLinks.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${current}`;
+        link.classList.toggle('active', isActive);
+      });
+    };
 
- 
-
-// APPLE-LIKE SCROLL
-window.addEventListener("scroll", () => {
-  const logo = document.getElementById("logo");
-  const nav = document.getElementById("nav");
-
-  let progress = window.scrollY / 600;
-  let scale = Math.max(0.25, 1 - progress);
-
-  logo.style.transform = `scale(${scale}) translateY(${progress * 200}px)`;
-
-  if(progress > 0.8){ nav.classList.add("show"); }
-});
-
-// SCROLL REVEAL
-ScrollReveal().reveal('.card, .stat, .testimonials, form', {
-  distance: '60px',
-  duration: 1000,
-  origin: 'bottom',
-  interval: 200
-});
-
-
-
-/*
-
-<?php
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-  $nome = $_POST['nome'];
-  $email = $_POST['email'];
-  $mensagem = $_POST['mensagem'];
-
-  $to = "seuemail@exemplo.com";
-  $subject = "Novo contato - Trenia";
-  $body = "Nome: $nome\nEmail: $email\nMensagem:\n$mensagem";
-  $headers = "From: $email";
-
-  mail($to, $subject, $body, $headers);
-  echo "Mensagem enviada!";
-}
-?>
-*/
+    updateActiveLink();
+    window.addEventListener('scroll', updateActiveLink);
         </script>
     </body>
 </html>
