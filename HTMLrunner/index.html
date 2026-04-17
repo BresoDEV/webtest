@@ -1,160 +1,498 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<style>
-  *{
-    font-size: 3vw;
-  }
-  table {
-    width: 80vw;
-    border: 1px solid rgb(255, 255, 255);
-    color: aliceblue;
-  }
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML Runner</title>
 
-  td {
-    text-align: right;
-  }
-  button{
-    background-color: lightgreen;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    min-width: 20%;
-    margin-top: 3px;
-  }
-  .left{
-    text-align: left;
-  }
-  html{
-    background-color: #333;
-    color: aliceblue;
-  }
-  textarea,input{
-    background-color: #666;
-    resize: none;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    width: 80vw;
-    color: aliceblue;
-  }
-  .bg-red{
-    background-color: rgb(171, 84, 101);
-    color: aliceblue;
-  }
-</style>
-
-<body>
-  <center>
-    <hr>
-    <h1>HTML Saver/Run</h1>
-    <input type="text" id="nome" placeholder="Nome do Projeto"><br><br>
-    <textarea name="" id="textarea" cols="30" rows="10"><script>alert('alerta');</script></textarea>
-    <br>
-    <button id="Executar">Executar</button>
-    <button id="Salvar">Salvar</button>
-    <br>
-    <hr>
-    <div id="tables"></div>
-  </center>
-
-  
-</body>
-<script>
-
-  const div = document.getElementById('tables')
-  var s = '<table>'
-  var arraia_nome = []
-  var arraia_html = []
-  var arraia_index = []
-
-
-  //-----------------------------------
-  for (let i = 0; i < 100; i++) {
-    if (localStorage.getItem('deploy_' + i + '_nome')) {
-      arraia_nome.push(localStorage.getItem('deploy_' + i + '_nome'))
-      arraia_html.push(localStorage.getItem('deploy_' + i + '_html'))
-      arraia_index.push(i)
-    }
-  }
-
-  var ct = 0;
-  arraia_nome.forEach(element => {
-    s += '<tr>' +
-      '  <td class="left">' + arraia_nome[ct] + '</td>' +
-      //'  <td>' + ct + '</td>' +
-      '  <td><button id="Executar_' + ct + '">Executar</button>' +
-      '  <button id="Ver_' + ct + '">Ver</button>' +
-      '  <button id="Apagar_' + ct + '" class="bg-red">Apagar</button></td>' +
-      '</tr>'
-
-    ct++
-  });
-  s += '</table>'
-
-  div.innerHTML = s
-  ct = 0
-
-  arraia_nome.forEach(element => {
-
-    var kkk = ct
-    document.getElementById('Executar_' + kkk).addEventListener('click', () => {
-      document.open()
-      document.write(localStorage.getItem('deploy_' + kkk + '_html'))
-      document.close()
-    })
-    document.getElementById('Ver_' + kkk).addEventListener('click', () => {
-      document.body.innerText = localStorage.getItem('deploy_' + kkk + '_html')
-    })
-
-    document.getElementById('Apagar_' + kkk).addEventListener('click', () => {
-      localStorage.removeItem('deploy_' + kkk + '_nome')
-      localStorage.removeItem('deploy_' + kkk + '_html')
-      window.location.reload()
-    })
-
-    ct++
-  });
-
-
-  //-----------------------------
-
-
-  document.getElementById('Executar').addEventListener('click', () => {
-    var sss = document.getElementById('textarea').value
-    document.open()
-    document.write(sss)
-    document.close()
-
-  })
-
-  document.getElementById('Salvar').addEventListener('click', () => {
-
-    if (document.getElementById('nome').value == '') {
-      var t = new Date()
-      document.getElementById('nome').value = 'Codigo '+t.getDay()+'/'+t.getMonth()+'/'+t.getFullYear()+' - '+t.getHours()  +':'+t.getMinutes()  +':' +t.getSeconds()                                              
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #131a2e;
+      --panel: rgba(19, 26, 46, 0.88);
+      --panel-2: rgba(255, 255, 255, 0.04);
+      --text: #e8edf9;
+      --muted: #9aa7c7;
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #6ea8fe;
+      --primary-strong: #4d8dff;
+      --success: #27c281;
+      --danger: #e45d75;
+      --warning: #f3b95f;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
     }
 
-    for (let i = 0; i < 100; i++) {
-      if (!localStorage.getItem('deploy_' + i + '_nome')) {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        localStorage.setItem('deploy_' + i + '_nome', document.getElementById('nome').value)//nome
-        localStorage.setItem('deploy_' + i + '_html', document.getElementById('textarea').value)//nome
+    html, body {
+      min-height: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(110, 168, 254, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(39, 194, 129, 0.14), transparent 26%),
+        linear-gradient(135deg, #0a0f1d 0%, #10182c 55%, #0b1020 100%);
+      color: var(--text);
+    }
 
-        break;
+    body {
+      padding: 32px 18px 56px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      width: fit-content;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .editor-panel {
+      padding: 22px;
+    }
+
+    .projects-panel {
+      padding: 22px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input {
+      height: 52px;
+      padding: 0 16px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      min-height: 430px;
+      resize: vertical;
+      padding: 16px;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      font-family: "Fira Code", "Consolas", monospace;
+    }
+
+    input:focus, textarea:focus {
+      border-color: rgba(110, 168, 254, 0.65);
+      box-shadow: 0 0 0 4px rgba(110, 168, 254, 0.14);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, opacity 0.16s ease, background 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #32d399, #1fb979);
+      color: #062715;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(228, 93, 117, 0.14);
+      color: #ff9fb0;
+      border: 1px solid rgba(228, 93, 117, 0.22);
+    }
+
+    .projects-list {
+      display: grid;
+      gap: 12px;
+      max-height: 72vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .projects-list.empty {
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .project-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .project-name {
+      font-weight: 700;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .project-index {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-actions button {
+      flex: 1;
+      min-width: 92px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+    }
+
+    .helper {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(110, 168, 254, 0.08);
+      border: 1px solid rgba(110, 168, 254, 0.18);
+      color: #cfdcff;
+      line-height: 1.65;
+      font-size: 0.93rem;
+    }
+
+    .helper strong {
+      color: white;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-panel {
+        position: static;
       }
     }
-    window.location.reload()
 
-  })
+    @media (max-width: 640px) {
+      body {
+        padding: 18px 12px 28px;
+      }
 
- 
-</script>
+      .editor-panel,
+      .projects-panel {
+        padding: 16px;
+        border-radius: 18px;
+      }
 
-  </html>
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      textarea {
+        min-height: 320px;
+      }
+
+      .project-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .project-actions button {
+        flex: unset;
+        width: 100%;
+      }
+
+      .actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="badge">HTML Runner</div>
+      <h1>Crie, salve e execute seus projetos HTML com mais conforto</h1>
+      <p>
+        Um editor simples para testar snippets, guardar projetos localmente e abrir tudo com um clique.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="panel editor-panel">
+        <div class="section-head">
+          <div>
+            <h2>Novo projeto</h2>
+            <span>Escreva o nome e cole seu HTML abaixo</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="nome">Nome do projeto</label>
+          <input type="text" id="nome" placeholder="Ex: Landing page de teste" />
+        </div>
+
+        <div class="field">
+          <label for="textarea">Código HTML</label>
+          <textarea id="textarea" spellcheck="false"><script>alert('alerta');</script></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="Executar" class="btn-primary">Executar agora</button>
+          <button id="Salvar" class="btn-success">Salvar projeto</button>
+        </div>
+
+        <div class="helper">
+          <strong>Dica:</strong> o conteúdo fica salvo no navegador via <code>localStorage</code>. Isso é ótimo para testes rápidos e protótipos locais.
+        </div>
+      </section>
+
+      <aside class="panel projects-panel">
+        <div class="section-head">
+          <div>
+            <h2>Projetos salvos</h2>
+            <span id="projectCount">0 itens</span>
+          </div>
+        </div>
+
+        <div id="tables" class="projects-list"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const div = document.getElementById("tables");
+    const inputNome = document.getElementById("nome");
+    const textarea = document.getElementById("textarea");
+    const projectCount = document.getElementById("projectCount");
+
+    const arraia_nome = [];
+    const arraia_html = [];
+    const arraia_index = [];
+
+    for (let i = 0; i < 100; i++) {
+      if (localStorage.getItem("deploy_" + i + "_nome")) {
+        arraia_nome.push(localStorage.getItem("deploy_" + i + "_nome"));
+        arraia_html.push(localStorage.getItem("deploy_" + i + "_html"));
+        arraia_index.push(i);
+      }
+    }
+
+    function renderProjects() {
+      projectCount.textContent = `${arraia_nome.length} ${arraia_nome.length === 1 ? "item" : "itens"}`;
+
+      if (!arraia_nome.length) {
+        div.className = "projects-list empty";
+        div.innerHTML = "Nenhum projeto salvo ainda.";
+        return;
+      }
+
+      div.className = "projects-list";
+
+      let s = "";
+
+      arraia_nome.forEach((nome, ct) => {
+        s += `
+          <div class="project-card">
+            <div class="project-top">
+              <div class="project-name">${nome}</div>
+              <div class="project-index">#${arraia_index[ct]}</div>
+            </div>
+
+            <div class="project-actions">
+              <button id="Executar_${ct}" class="btn-primary">Executar</button>
+              <button id="Ver_${ct}" class="btn-secondary">Ver código</button>
+              <button id="Apagar_${ct}" class="btn-danger">Apagar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      div.innerHTML = s;
+
+      arraia_nome.forEach((_, ct) => {
+        document.getElementById("Executar_" + ct).addEventListener("click", () => {
+          document.open();
+          document.write(localStorage.getItem("deploy_" + arraia_index[ct] + "_html"));
+          document.close();
+        });
+
+        document.getElementById("Ver_" + ct).addEventListener("click", () => {
+          inputNome.value = localStorage.getItem("deploy_" + arraia_index[ct] + "_nome");
+          textarea.value = localStorage.getItem("deploy_" + arraia_index[ct] + "_html");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          textarea.focus();
+        });
+
+        document.getElementById("Apagar_" + ct).addEventListener("click", () => {
+          localStorage.removeItem("deploy_" + arraia_index[ct] + "_nome");
+          localStorage.removeItem("deploy_" + arraia_index[ct] + "_html");
+          window.location.reload();
+        });
+      });
+    }
+
+    document.getElementById("Executar").addEventListener("click", () => {
+      const sss = textarea.value;
+      document.open();
+      document.write(sss);
+      document.close();
+    });
+
+    document.getElementById("Salvar").addEventListener("click", () => {
+      if (inputNome.value.trim() === "") {
+        const t = new Date();
+        inputNome.value =
+          "Codigo " +
+          t.getDate() + "/" +
+          (t.getMonth() + 1) + "/" +
+          t.getFullYear() +
+          " - " +
+          t.getHours() + ":" +
+          t.getMinutes() + ":" +
+          t.getSeconds();
+      }
+
+      for (let i = 0; i < 100; i++) {
+        if (!localStorage.getItem("deploy_" + i + "_nome")) {
+          localStorage.setItem("deploy_" + i + "_nome", inputNome.value);
+          localStorage.setItem("deploy_" + i + "_html", textarea.value);
+          break;
+        }
+      }
+
+      window.location.reload();
+    });
+
+    renderProjects();
+  </script>
+</body>
+</html>
