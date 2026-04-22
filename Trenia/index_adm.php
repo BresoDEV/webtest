@@ -659,7 +659,7 @@ if (!isset($_SESSION['logado'])) {
             <div class="brand">
                 <div class="brand-badge">M</div>
                 <div>
-                    <h1>MailBox Dark</h1>
+                    <h1>Breso MailBox</h1>
                     <span>Caixa de entrada</span>
                 </div>
             </div>
