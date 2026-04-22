@@ -165,8 +165,9 @@ function EscreverEmail($nome,$emailOuWhats,$assunto,$texto){
     date_default_timezone_set("America/Sao_Paulo");
 
     file_put_contents($pastaEmails.'/'.joaat($index).'.txt',
-    encrip($nome.'|'.$emailOuWhats.'|'.$assunto.'|'.$texto.'|'.date("H:i").'|'.date("d/m/Y")));
+    encrip(htmlspecialchars($nome.'|'.$emailOuWhats.'|'.$assunto.'|'.$texto.'|'.date("H:i").'|'.date("d/m/Y"), ENT_QUOTES, 'UTF-8')));
      
+    
 }
 
 

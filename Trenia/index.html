@@ -1493,6 +1493,26 @@
 			document.getElementById('ENVIAR').textContent = "Aguarde...."
 			document.getElementById('ENVIAR').classList.replace("btn-primary", "btn-outline");
 			//$nome,$emailOuWhats,$assunto,$texto
+
+
+      //----------------------------------------------
+        if(document.getElementById('nome').value == ''){
+          msgbox('Ops','Você esqueçeu o seu nome!',5000,1, 'rgb(200,50,50)', 'aliceblue');
+          document.getElementById('ENVIAR').classList.replace("btn-outline", "btn-primary");
+          return
+        }
+        if(document.getElementById('telefone').value == ''){
+          msgbox('Ops','Você esqueçeu o seu contato!',5000,1, 'rgb(200,50,50)', 'aliceblue');
+          document.getElementById('ENVIAR').classList.replace("btn-outline", "btn-primary");
+          return
+        }
+        if(document.getElementById('mensagem').value == ''){
+          msgbox('Ops','Descreva a sua ideia em poucas palavras!',5000,1, 'rgb(200,50,50)', 'aliceblue');
+          document.getElementById('ENVIAR').classList.replace("btn-outline", "btn-primary");
+          return
+        }
+        //----------------------------------------------
+
 			
 			 fetch('api_dashboard.php?enviarEmail=1&nome='+document.getElementById('nome').value+
 			 '&empresa='+document.getElementById('empresa').value+
