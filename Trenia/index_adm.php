@@ -652,7 +652,6 @@ if (!isset($_SESSION['logado'])) {
     </style>
 </head>
 
-<script src="particulas.js"></script>
 
 <body>
     <div class="app">
@@ -766,6 +765,9 @@ if (!isset($_SESSION['logado'])) {
     }
 
     function renderList() {
+
+
+
         mailItems.innerHTML = '';
         mailCount.textContent = `${filteredEmails.length} email${filteredEmails.length !== 1 ? 's' : ''}`;
 
@@ -779,6 +781,7 @@ if (!isset($_SESSION['logado'])) {
         filteredEmails.forEach(email => {
             const item = document.createElement('article');
             item.className = `mail-item ${email.id === selectedId ? 'active' : ''}`;
+            item.id = 'email_' + email.id;
             item.innerHTML = `
           <div class="mail-top">
             <div class="sender">
@@ -797,13 +800,26 @@ if (!isset($_SESSION['logado'])) {
           <div class="snippet">${email.snippet}</div>
         `;
 
+
+
+
+            mailItems.appendChild(item);
+
+            // if (document.getElementById('email_' + email.id)) {
+            //     console.log('existe: email_' + email.id)
+            // }
+            //
+            //
+            // document.getElementById('email_' + email.id).addEventListener('click', () => {
+            //     console.log('bin')
+            // })
+
             item.addEventListener('click', () => {
+
                 selectedId = email.id;
                 renderList();
                 renderView();
             });
-
-            mailItems.appendChild(item);
         });
     }
 
@@ -979,5 +995,6 @@ if (!isset($_SESSION['logado'])) {
     renderView();
     </script>
 </body>
+<script src="particulas.js"></script>
 
 </html>

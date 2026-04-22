@@ -35,8 +35,20 @@ var rgb = options.lineColor.match(/\d+/g);
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  document.body.innerHTML =
-    '<canvas id="canvas" style="z-index: -1; position: fixed;left: -10px; top: -10px"></canvas>' +document.body.innerHTML
+
+
+  const cv = document.createElement('canvas');
+  cv.id = 'canvas'
+  cv.style.zIndex = '-1'
+  cv.style.position = 'fixed'
+  cv.style.left = '-10px'
+  cv.style.top = '-10px'
+  cv.style.zIndex = '-1'
+
+  document.body.append(cv)
+
+ //document.body.innerHTML =
+ //  '<canvas id="canvas" style="z-index: -1; position: fixed;left: -10px; top: -10px"></canvas>' +document.body.innerHTML
 
   while (!document.getElementById("canvas")) {}
   canvas = document.getElementById("canvas");
