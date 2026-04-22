@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TR3NIA Digital</title>
+        <script src="sexyNotification.js"></script>
         <style>
     :root {
       --bg: #04050d;
@@ -1002,7 +1003,7 @@
                         <p>Estratégias de marketing inovadoras com tecnologia de ponta para maximizar seu ROI.</p>
                         <div class="hero-actions">
                             <a href="#portfolio" class="btn btn-primary">VER PROJETOS</a>
-                            <a href="#lead-form" class="btn btn-outline">AGENDAR CONSULTORIA GRATUITA</a>
+                            <a href="#contato" class="btn btn-outline">AGENDAR CONSULTORIA GRATUITA</a>
                         </div>
                     </div>
                     <div class="hero-visual" aria-hidden="true">
@@ -1260,12 +1261,16 @@
                     </div>
                 </div>
             </section>
-            <section class="contact-lead" id="sobre">
+            <section class="contact-lead" id="contato">
+                <br>
+                <br>
+                <br>
+                <br>
                 <div class="container">
-                    <div class="lead-box">
+                    <div class="lead-box" id="formulariodeemail">
                         <div class="lead-copy">
                             <h2 class="section-title">SOLICITE UMA CONSULTORIA GRATUITA</h2>
-                            <p>Preencha o formulário e envie sua solicitação direto para o WhatsApp da TR3NIA Digital, e ganhe uma consultoria de marketing totalmente gratuita!!</p>
+                            <p>Preencha o formulário e envie sua solicitação direto para a equipe da TR3NIA Digital, e ganhe uma consultoria de marketing totalmente gratuita!!</p>
                             <!--
                               <ul class="lead-list">
                                 <li>Resposta rápida via WhatsApp</li>
@@ -1274,7 +1279,7 @@
                             </ul>
                             -->
                         </div>
-                        <form class="lead-form" id="lead-form">
+                        <div class="lead-form" id="lead-form">
                             <div class="field-group">
                                 <label for="nome">Nome</label>
                                 <input
@@ -1295,12 +1300,12 @@
                                 >
                             </div>
                             <div class="field-group">
-                                <label for="telefone">Telefone</label>
+                                <label for="telefone">Contato</label>
                                 <input
                                     type="tel"
                                     id="telefone"
                                     name="telefone"
-                                    placeholder="(11) 99999-9999"
+                                    placeholder="DDD+Telefone ou E-mail"
                                     required
                                 >
                             </div>
@@ -1312,6 +1317,7 @@
                                     <option value="Gestão de Tráfego Pago">Gestão de Tráfego Pago</option>
                                     <option value="Produção de Conteúdo">Produção de Conteúdo</option>
                                     <option value="Consultoria Estratégica">Consultoria Estratégica</option>
+                                    <option value="Outro Assunto">Outro Assunto</option>
                                 </select>
                             </div>
                             <div class="field-group field-full">
@@ -1324,14 +1330,14 @@
                                     required
                                 ></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary field-full">ENVIAR PARA WHATSAPP</button>
+                            <button id="ENVIAR" class="btn btn-primary field-full">ENVIAR</button>
                             <!--
                               <p class="form-note field-full">
                                 Número fictício configurado no código:
                                 <strong>+55 11 99999-9999</strong>
                             </p>
                             -->
-                        </form>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1475,6 +1481,58 @@
             </div>
         </footer>
         <script>
+		
+		
+		//enviar email
+
+   setTimeout(() => {
+     
+      document.getElementById('ENVIAR').addEventListener('click',()=>{
+		
+			 
+			document.getElementById('ENVIAR').textContent = "Aguarde...."
+			document.getElementById('ENVIAR').classList.replace("btn-primary", "btn-outline");
+			//$nome,$emailOuWhats,$assunto,$texto
+			
+			 fetch('api_dashboard.php?enviarEmail=1&nome='+document.getElementById('nome').value+
+			 '&empresa='+document.getElementById('empresa').value+
+			 '&telefone='+document.getElementById('telefone').value+
+			 '&servico='+document.getElementById('servico').value+
+			 '&mensagem='+document.getElementById('mensagem').value
+			 )
+       .then(response=>response.text())
+				.then(html=>{
+
+          document.getElementById('empresa').value = '';
+          document.getElementById('telefone').value = '';
+          document.getElementById('servico').value = '';
+          document.getElementById('mensagem').value = '';
+          document.getElementById('nome').value = '';
+          document.getElementById('ENVIAR').textContent = 'Enviar';
+
+          document.getElementById('ENVIAR').classList.replace("btn-outline", "btn-primary");
+
+				  msgbox('Obrigado','Nossa equipe entrará em contato em breve!',5000,1);
+
+
+				})
+				 
+		  console.log('ja deu fetch')
+		
+		
+		});
+   }, 3000);
+
+  
+   //----------------------------------------------
+
+ 
+   //---------------------------------------------
+ 
+
+  
+
+		
 
 
 
