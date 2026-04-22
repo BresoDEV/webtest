@@ -530,7 +530,7 @@ if(isset($_GET['email']) && isset($_GET['password']))
 
                     <form class="login-form" id="loginForm">
                         <div class="field">
-                            <label for="email">Email</label>
+                            <label for="email">Usuário</label>
                             <div class="input-wrap">
                                 <input id="email" name="email" type="text" placeholder="Nome de Usuario" required />
                             </div>
