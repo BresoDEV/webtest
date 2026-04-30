@@ -61,8 +61,8 @@ https://bresodev.github.io/webtest/Sonhos
 Modelo de Dashboard
 https://bresodev.github.io/webtest/Dashboards
 
- 
-
+Bateria Eletronica (falta terminar)
+https://bresodev.github.io/webtest/BateriaEletronica
 
 
 

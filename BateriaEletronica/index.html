@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Central de Bateria Eletrônica</title>
+  <style>
+    :root {
+      --bg: #050811;
+      --bg-soft: #0a1020;
+      --panel: rgba(11, 18, 33, 0.84);
+      --panel-strong: rgba(9, 14, 27, 0.94);
+      --line: rgba(106, 141, 235, 0.18);
+      --line-strong: rgba(121, 167, 255, 0.4);
+      --text: #eef4ff;
+      --muted: #96a7cb;
+      --blue: #4d8dff;
+      --blue-2: #7bb6ff;
+      --purple: #7453ff;
+      --green: #26d891;
+      --danger: #ff7667;
+      --warning: #ffb35b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.25);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --glass: blur(12px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(87, 96, 255, 0.18), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(140, 68, 255, 0.12), transparent 28%),
+        linear-gradient(180deg, #03050b 0%, #060913 48%, #04070c 100%);
+    }
+
+    body { padding: 18px; }
+
+    .app {
+      max-width: 1480px;
+      margin: 0 auto;
+      border-radius: 30px;
+      border: 1px solid rgba(96, 132, 226, 0.16);
+      overflow: hidden;
+      background: rgba(3, 7, 14, 0.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--glass);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 22px;
+      background: linear-gradient(180deg, rgba(15, 23, 40, 0.9), rgba(10, 16, 30, 0.98));
+      border-bottom: 1px solid rgba(99, 133, 222, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9), rgba(146, 184, 255, 0.35) 22%, rgba(62, 101, 245, 0.25) 38%, rgba(16, 24, 45, 1) 100%);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.06), 0 0 28px rgba(80, 120, 255, 0.2);
+      border: 1px solid rgba(123, 165, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .user-actions, .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .nav button,
+    .user-actions button,
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn,
+    .key-chip,
+    .transport-btn {
+      border: 1px solid rgba(111, 146, 236, 0.16);
+      background: linear-gradient(180deg, rgba(27, 38, 66, 0.95), rgba(13, 20, 35, 0.96));
+      color: var(--text);
+      border-radius: 14px;
+      padding: 11px 16px;
+      cursor: pointer;
+      transition: .18s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), var(--shadow-soft);
+      font-weight: 700;
+    }
+
+    .nav button:hover,
+    .user-actions button:hover,
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .danger-btn:hover,
+    .key-chip:hover,
+    .transport-btn:hover,
+    .drum-part:hover {
+      transform: translateY(-1px);
+      border-color: rgba(124, 177, 255, 0.4);
+      box-shadow: 0 0 0 1px rgba(124, 177, 255, 0.12), 0 0 24px rgba(79, 136, 255, 0.16), var(--shadow-soft);
+    }
+
+    .nav button.active {
+      border-color: rgba(124, 177, 255, 0.38);
+      box-shadow: inset 0 -2px 0 var(--blue), 0 0 18px rgba(79, 136, 255, 0.18);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 320px minmax(580px, 1fr) 360px;
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, var(--panel), var(--panel-strong));
+      border: 1px solid rgba(96, 132, 226, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 0 0 1px rgba(96, 132, 226, 0.05), var(--shadow-soft);
+      padding: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel h2, .panel h3 {
+      margin: 0 0 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-subtitle {
+      margin: -6px 0 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.93rem;
+    }
+
+    .stack { display: grid; gap: 12px; }
+
+    .section-divider {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(105, 141, 230, 0.1);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(105, 141, 230, 0.08);
+    }
+
+    .toggle-row:last-child { border-bottom: 0; }
+
+    .switch {
+      position: relative;
+      width: 54px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(124, 177, 255, 0.12);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      top: 3px;
+      left: 3px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+      transition: .2s ease;
+    }
+
+    .switch input:checked + .slider {
+      background: linear-gradient(90deg, var(--blue), #29b1ff);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(23px);
+    }
+
+    .range-wrap { display: grid; gap: 10px; }
+    .range-wrap input[type="range"] { width: 100%; accent-color: var(--blue); cursor: pointer; }
+
+    .center-panel {
+      position: relative;
+      min-height: 820px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(5, 10, 20, 0.6), rgba(5, 10, 20, 0.84)),
+        url('https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?auto=format&fit=crop&w=1600&q=80') center center / cover no-repeat;
+      isolation: isolate;
+    }
+
+    .center-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(77,141,255,0.16), transparent 30%),
+        linear-gradient(transparent 0 96%, rgba(75, 118, 231, 0.08) 96% 100%),
+        linear-gradient(90deg, transparent 0 96%, rgba(75, 118, 231, 0.08) 96% 100%);
+      background-size: auto, 38px 38px, 38px 38px;
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .center-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(3, 6, 12, 0.2), rgba(3, 6, 12, 0.55));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .stage-title {
+      position: absolute;
+      inset: 20px 20px auto 20px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .stage-title p {
+      margin: 6px 0 0;
+      color: #d7e3ff;
+      max-width: 580px;
+      line-height: 1.5;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+    }
+
+    .status-badge {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(12, 22, 42, 0.72);
+      border: 1px solid rgba(121, 167, 255, 0.2);
+      color: #e4f0ff;
+      font-weight: 800;
+      box-shadow: 0 0 18px rgba(77,141,255,0.14);
+      backdrop-filter: blur(8px);
+    }
+
+    .drum-stage {
+      position: relative;
+      width: 100%;
+      min-height: 820px;
+      z-index: 1;
+    }
+
+    .drum-hotspots {
+      position: absolute;
+      inset: 0;
+    }
+
+    .drum-floor {
+      position: absolute;
+      left: 50%;
+      bottom: 34px;
+      width: 76%;
+      height: 128px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(24, 36, 64, 0.6), rgba(5, 8, 15, 0.96));
+      box-shadow: 0 24px 34px rgba(0,0,0,0.48), inset 0 0 25px rgba(90,130,255,0.08);
+      border: 1px solid rgba(121, 167, 255, 0.1);
+      backdrop-filter: blur(6px);
+    }
+
+    .drum-part {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(134, 177, 255, 0.2);
+      background: radial-gradient(circle at 45% 35%, rgba(255,255,255,0.14), rgba(184, 203, 245, 0.07) 30%, rgba(32, 48, 90, 0.1) 48%, rgba(10, 16, 29, 0.16) 100%);
+      box-shadow: inset 0 0 22px rgba(255,255,255,0.03), 0 10px 20px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease, background .14s ease;
+      backdrop-filter: blur(1.5px);
+      outline: none;
+    }
+
+    .drum-part::before {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      border-radius: inherit;
+      border: 1px dashed rgba(159, 196, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .drum-part .label {
+      position: absolute;
+      left: 50%;
+      top: calc(50% + 28px);
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      background: rgba(5, 9, 17, 0.58);
+      border: 1px solid rgba(121, 167, 255, 0.14);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+
+    .drum-part .key-badge {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(7, 12, 22, 0.86);
+      border: 1px solid rgba(121, 167, 255, 0.18);
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: #e4f0ff;
+      pointer-events: none;
+      box-shadow: 0 0 18px rgba(77,141,255,0.14);
+    }
+
+    .drum-part.active {
+      transform: scale(1.035);
+      border-color: rgba(121, 167, 255, 0.5);
+      background: radial-gradient(circle at 45% 35%, rgba(255,255,255,0.22), rgba(184, 203, 245, 0.12) 30%, rgba(32, 48, 90, 0.16) 48%, rgba(10, 16, 29, 0.22) 100%);
+      box-shadow: 0 0 0 1px rgba(121, 167, 255, 0.14), 0 0 24px rgba(77,141,255,0.18), 0 10px 20px rgba(0,0,0,0.24);
+    }
+
+    .drum-part.playing {
+      animation: hitFlash 120ms ease;
+      border-color: rgba(38, 216, 145, 0.7);
+      box-shadow: 0 0 0 1px rgba(38, 216, 145, 0.18), 0 0 28px rgba(38, 216, 145, 0.28), 0 10px 24px rgba(0,0,0,0.24);
+    }
+
+    .drum-part.armed {
+      border-color: rgba(255, 179, 91, 0.75);
+      box-shadow: 0 0 0 1px rgba(255, 179, 91, 0.22), 0 0 28px rgba(255, 179, 91, 0.22), 0 10px 24px rgba(0,0,0,0.24);
+    }
+
+    @keyframes hitFlash {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.065); }
+      100% { transform: scale(1); }
+    }
+
+    .glass-card {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(121, 167, 255, 0.12);
+      background: rgba(8, 13, 24, 0.56);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .selected-box {
+      display: grid;
+      gap: 14px;
+    }
+
+    .selected-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .piece-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .muted { color: var(--muted); }
+
+    .key-hint {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    .keyboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .key-chip.selected {
+      border-color: rgba(121, 167, 255, 0.52);
+      box-shadow: 0 0 0 1px rgba(121, 167, 255, 0.18), 0 0 18px rgba(77,141,255,0.18);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .danger-btn {
+      background: linear-gradient(180deg, rgba(87, 39, 35, 0.94), rgba(40, 18, 16, 0.98));
+      border-color: rgba(255, 118, 103, 0.18);
+    }
+
+    .knobs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .knob-card {
+      border-radius: 18px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid rgba(121, 167, 255, 0.1);
+      background: rgba(9, 14, 26, 0.58);
+    }
+
+    .knob {
+      width: 68px;
+      height: 68px;
+      margin: 10px auto 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.86), rgba(179, 195, 236, 0.25) 20%, rgba(30, 42, 74, 0.96) 32%, rgba(8, 12, 22, 1) 100%);
+      border: 1px solid rgba(121, 167, 255, 0.18);
+      box-shadow: inset 0 0 16px rgba(255,255,255,0.05), 0 8px 18px rgba(0,0,0,0.34);
+      position: relative;
+    }
+
+    .knob::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 17px;
+      border-radius: 99px;
+      background: linear-gradient(180deg, #d5e7ff, #4d8dff);
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%) rotate(32deg);
+      transform-origin: center 24px;
+      box-shadow: 0 0 10px rgba(77,141,255,0.35);
+    }
+
+    .sound-wave {
+      position: relative;
+      height: 84px;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(121, 167, 255, 0.12);
+      background: linear-gradient(180deg, rgba(10, 16, 30, 0.95), rgba(7, 12, 23, 0.98));
+    }
+
+    .sound-wave::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, rgba(123, 177, 255, 0.08) 0, rgba(123, 177, 255, 0.08) 2px, transparent 2px, transparent 12px);
+    }
+
+    .sound-wave svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .mapping-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .mapping-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(8, 12, 23, 0.56);
+      border: 1px solid rgba(121, 167, 255, 0.08);
+    }
+
+    .mapping-item code {
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(41, 63, 116, 0.42);
+      border: 1px solid rgba(121, 167, 255, 0.12);
+      color: #e4f0ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+
+    .tips {
+      margin-top: 12px;
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(8, 13, 24, 0.6);
+      border: 1px solid rgba(121, 167, 255, 0.1);
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .transport {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(8, 13, 24, 0.98), rgba(6, 11, 20, 1));
+      border-top: 1px solid rgba(99, 133, 222, 0.12);
+    }
+
+    .record-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 22px;
+      border-radius: 18px;
+      border: 1px solid rgba(121, 167, 255, 0.16);
+      background: linear-gradient(180deg, rgba(26, 33, 48, 0.95), rgba(12, 17, 28, 0.98));
+      color: white;
+      font-size: 1.08rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), var(--shadow-soft);
+    }
+
+    .record-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffb0aa, #ff5147 55%, #cb241f 100%);
+      box-shadow: 0 0 16px rgba(255, 81, 71, 0.45);
+    }
+
+    .transport-right {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .transport-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .transport-btn {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .bpm-box, .footer-box {
+      min-height: 62px;
+      border-radius: 18px;
+      border: 1px solid rgba(121, 167, 255, 0.12);
+      background: rgba(9, 14, 25, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      font-weight: 800;
+      white-space: nowrap;
+      gap: 12px;
+    }
+
+    .footer-box.compact { justify-content: flex-start; }
+
+    .performance-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid rgba(121, 167, 255, 0.08);
+      background: rgba(8, 12, 23, 0.5);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 1320px) {
+      .content { grid-template-columns: 1fr; }
+      .center-panel { order: -1; }
+      .transport { grid-template-columns: 1fr; }
+      .transport-right { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 820px) {
+      body { padding: 10px; }
+      .topbar, .content, .transport { padding: 14px; }
+      .topbar { grid-template-columns: 1fr; }
+      .brand { align-items: flex-start; }
+      .keyboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .button-row, .performance-grid, .knobs { grid-template-columns: 1fr; }
+      .center-panel, .drum-stage { min-height: 680px; }
+      .drum-floor { width: 90%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div>
+          <h1>Central de Bateria Eletrônica</h1>
+          <p>Baixa latência com Web Audio API, mapeamento por teclado e visual responsivo para montar seu kit.</p>
+        </div>
+      </div>
+
+      <div class="user-actions">
+        <nav class="nav">
+          <button class="active">Home</button>
+          <button>Kit</button>
+          <button>Presets</button>
+          <button>Mixer</button>
+          <button>Gravação</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content">
+      <aside class="panel">
+        <h2>Configuração</h2>
+        <p class="panel-subtitle">Clique em uma peça da bateria. Para trocar a tecla dela, ative o modo de atribuição. Fora disso, o teclado apenas toca os sons.</p>
+
+        <div class="stack">
+          <button class="primary-btn" id="armKeyAssignBtn">Atribuir tecla à peça selecionada</button>
+          <button class="secondary-btn" id="unlockAudioBtn">Ativar áudio profissional</button>
+          <button class="secondary-btn">Biblioteca de Sons</button>
+          <button class="secondary-btn">Importar Áudio</button>
+          <button class="secondary-btn">Configurações Avançadas</button>
+        </div>
+
+        <div class="section-divider">
+          <h3>Processamento</h3>
+          <div class="toggle-row">
+            <span>Limiter visual</span>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span>Reverb</span>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span>Compressão</span>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="section-divider range-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <h3 style="margin:0;">Volume Master</h3>
+            <strong id="masterVolumeLabel">80%</strong>
+          </div>
+          <input type="range" id="masterVolume" min="0" max="100" value="80" />
+        </div>
+
+        <div class="section-divider">
+          <h3>Performance</h3>
+          <div class="performance-grid">
+            <div class="metric">
+              <span class="muted">Áudio</span>
+              <strong id="audioStatus">Bloqueado</strong>
+            </div>
+            <div class="metric">
+              <span class="muted">Players ativos</span>
+              <strong id="polyphonyCount">0</strong>
+            </div>
+            <div class="metric">
+              <span class="muted">Contexto</span>
+              <strong id="contextState">Inativo</strong>
+            </div>
+            <div class="metric">
+              <span class="muted">Última peça</span>
+              <strong id="lastTriggered">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider">
+          <h3>Mapeamento Atual</h3>
+          <div class="mapping-list" id="mappingList"></div>
+        </div>
+
+        <div class="tips">
+          O mapeamento é salvo em <strong>localStorage</strong>. Os sons são carregados por peça e reproduzidos por <strong>AudioBufferSourceNode</strong>, permitindo sobreposição sem cortar áudio anterior.
+        </div>
+      </aside>
+
+      <section class="panel center-panel">
+        <div class="stage-title">
+          <div>
+            <h2 style="margin:0;">Kit Interativo</h2>
+            <p>O fundo mostra uma bateria real. As áreas transparentes sobre a foto funcionam como zonas clicáveis para seleção e execução das peças.</p>
+          </div>
+          <div class="status-badge" id="selectionStatus">Nenhuma peça selecionada</div>
+        </div>
+
+        <div class="drum-stage">
+          <div class="drum-floor"></div>
+          <div class="drum-hotspots">
+            <button class="drum-part" data-part="crash" style="left:15%;top:16%;width:24%;height:11%;transform:rotate(-6deg);">
+              <span class="label">Crash</span>
+              <span class="key-badge">Q</span>
+            </button>
+            <button class="drum-part" data-part="ride" style="left:62%;top:17%;width:24%;height:11%;transform:rotate(7deg);">
+              <span class="label">Ride</span>
+              <span class="key-badge">E</span>
+            </button>
+            <button class="drum-part" data-part="hihat" style="left:11%;top:35%;width:18%;height:9%;transform:rotate(-6deg);">
+              <span class="label">Hi-Hat</span>
+              <span class="key-badge">A</span>
+            </button>
+            <button class="drum-part" data-part="splash" style="left:74%;top:43%;width:15%;height:8.5%;transform:rotate(7deg);">
+              <span class="label">Splash</span>
+              <span class="key-badge">R</span>
+            </button>
+            <button class="drum-part" data-part="tom1" style="left:37%;top:31%;width:13.5%;height:11%;">
+              <span class="label">Tom 1</span>
+              <span class="key-badge">W</span>
+            </button>
+            <button class="drum-part" data-part="tom2" style="left:50%;top:31%;width:14%;height:11%;">
+              <span class="label">Tom 2</span>
+              <span class="key-badge">D</span>
+            </button>
+            <button class="drum-part" data-part="snare" style="left:26%;top:47%;width:16%;height:12%;">
+              <span class="label">Caixa</span>
+              <span class="key-badge">S</span>
+            </button>
+            <button class="drum-part" data-part="floor" style="left:63%;top:49%;width:18%;height:13%;">
+              <span class="label">Floor</span>
+              <span class="key-badge">F</span>
+            </button>
+            <button class="drum-part" data-part="kick" style="left:39%;top:53%;width:22%;height:24%;">
+              <span class="label">Bumbo</span>
+              <span class="key-badge">Z</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <h2>Painel da Peça</h2>
+
+        <div class="sound-wave glass-card" aria-hidden="true">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <path d="M0 61 C 20 61, 20 56, 40 56 S 60 69, 80 69 S 100 40, 120 40 S 140 86, 160 86 S 180 28, 200 28 S 220 60, 240 60 S 260 20, 280 20 S 300 95, 320 95 S 340 28, 360 28 S 380 66, 400 66 S 420 45, 440 45 S 460 79, 480 79 S 500 38, 520 38 S 540 63, 560 63 S 580 58, 600 58" fill="none" stroke="rgba(132,191,255,0.92)" stroke-width="5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+
+        <div class="selected-box glass-card">
+          <div class="selected-title">
+            <div>
+              <div class="piece-name" id="selectedPieceName">Nenhuma peça selecionada</div>
+              <div class="muted" id="selectedSoundName">Arquivo atual: —</div>
+            </div>
+            <div class="status-badge" id="currentKeyBadge">Sem tecla</div>
+          </div>
+
+          <div class="key-hint">Clique em <strong>Atribuir tecla</strong> para trocar o atalho. Sem esse modo ativo, qualquer tecla mapeada executa o som imediatamente.</div>
+
+          <div class="keyboard-grid" id="keyboardGrid"></div>
+
+          <div class="knobs">
+            <div class="knob-card"><div>Attack</div><div class="knob"></div></div>
+            <div class="knob-card"><div>Decay</div><div class="knob"></div></div>
+            <div class="knob-card"><div>Pan</div><div class="knob"></div></div>
+          </div>
+
+          <div class="button-row">
+            <button class="secondary-btn" id="saveMappingsBtn">Salvar mapeamento</button>
+            <button class="danger-btn" id="resetMappingsBtn">Resetar teclas</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="transport">
+      <button class="record-btn"><span class="record-dot"></span>Gravar</button>
+
+      <div class="transport-right">
+        <div class="transport-controls">
+          <button class="transport-btn">▶</button>
+          <button class="transport-btn">⏯</button>
+          <button class="transport-btn">■</button>
+          <button class="transport-btn">⏮</button>
+        </div>
+
+        <div class="bpm-box">BPM: 120 | 4/4</div>
+
+        <div class="footer-box compact">
+          <label class="switch"><input type="checkbox" id="loopToggle"><span class="slider"></span></label>
+          <span>Loop</span>
+        </div>
+
+        <div class="footer-box" id="latencyModeLabel">Modo: Web Audio</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'electronic-drum-key-mapping-v2';
+
+    const drumConfig = {
+      crash:  { label: 'Crash',  sound: 'SOM1.mp3', defaultKey: 'Q' },
+      ride:   { label: 'Ride',   sound: 'SOM2.mp3', defaultKey: 'E' },
+      hihat:  { label: 'Hi-Hat', sound: 'SOM3.mp3', defaultKey: 'A' },
+      splash: { label: 'Splash', sound: 'SOM4.mp3', defaultKey: 'R' },
+      tom1:   { label: 'Tom 1',  sound: 'SOM5.mp3', defaultKey: 'W' },
+      tom2:   { label: 'Tom 2',  sound: 'SOM6.mp3', defaultKey: 'D' },
+      snare:  { label: 'Caixa',  sound: 'SOM7.mp3', defaultKey: 'S' },
+      floor:  { label: 'Floor',  sound: 'SOM8.mp3', defaultKey: 'F' },
+      kick:   { label: 'Bumbo',  sound: 'SOM9.mp3', defaultKey: 'Z' },
+    };
+
+    const suggestedKeys = ['Q','W','E','R','A','S','D','F','Z','X','C','V','1','2','3','4'];
+
+    let selectedPart = null;
+    let assignMode = false;
+    let activeSources = 0;
+    let pressedKeys = new Set();
+    let keyMapping = loadMappings();
+    let audioContext = null;
+    let masterGain = null;
+    let audioReady = false;
+    let audioBuffers = new Map();
+
+    const partButtons = [...document.querySelectorAll('.drum-part')];
+    const keyboardGrid = document.getElementById('keyboardGrid');
+    const selectedPieceName = document.getElementById('selectedPieceName');
+    const selectedSoundName = document.getElementById('selectedSoundName');
+    const currentKeyBadge = document.getElementById('currentKeyBadge');
+    const selectionStatus = document.getElementById('selectionStatus');
+    const mappingList = document.getElementById('mappingList');
+    const masterVolume = document.getElementById('masterVolume');
+    const masterVolumeLabel = document.getElementById('masterVolumeLabel');
+    const polyphonyCount = document.getElementById('polyphonyCount');
+    const audioStatus = document.getElementById('audioStatus');
+    const contextState = document.getElementById('contextState');
+    const lastTriggered = document.getElementById('lastTriggered');
+    const saveMappingsBtn = document.getElementById('saveMappingsBtn');
+    const resetMappingsBtn = document.getElementById('resetMappingsBtn');
+    const armKeyAssignBtn = document.getElementById('armKeyAssignBtn');
+    const unlockAudioBtn = document.getElementById('unlockAudioBtn');
+    const latencyModeLabel = document.getElementById('latencyModeLabel');
+
+    function buildDefaultMappings() {
+      return Object.fromEntries(Object.entries(drumConfig).map(([part, cfg]) => [part, cfg.defaultKey]));
+    }
+
+    function loadMappings() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return buildDefaultMappings();
+        return { ...buildDefaultMappings(), ...JSON.parse(saved) };
+      } catch (err) {
+        console.warn('Erro ao carregar mapeamento, usando padrão.', err);
+        return buildDefaultMappings();
+      }
+    }
+
+    function saveMappings() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(keyMapping));
+      pulseButton(saveMappingsBtn, 'Salvo!');
+    }
+
+    function pulseButton(button, text) {
+      const original = button.textContent;
+      button.textContent = text;
+      button.disabled = true;
+      setTimeout(() => {
+        button.textContent = original;
+        button.disabled = false;
+      }, 900);
+    }
+
+    function normalizeKey(key) {
+      if (!key) return '';
+      if (key === ' ') return 'SPACE';
+      if (key === 'Escape') return 'ESC';
+      if (key.startsWith('Arrow')) return key.replace('Arrow', '').toUpperCase();
+      return key.length === 1 ? key.toUpperCase() : key.toUpperCase();
+    }
+
+    function findPartByKey(key) {
+      return Object.keys(keyMapping).find(part => keyMapping[part] === key) || null;
+    }
+
+    function updateAssignButton() {
+      armKeyAssignBtn.textContent = assignMode ? 'Aguardando tecla...' : 'Atribuir tecla à peça selecionada';
+      armKeyAssignBtn.style.boxShadow = assignMode
+        ? '0 0 0 1px rgba(255,179,91,0.24), 0 0 22px rgba(255,179,91,0.22)'
+        : '';
+    }
+
+    function updateAudioUI() {
+      audioStatus.textContent = audioReady ? 'Pronto' : 'Bloqueado';
+      contextState.textContent = audioContext ? audioContext.state : 'Inativo';
+      latencyModeLabel.textContent = audioReady ? 'Modo: Web Audio' : 'Modo: aguardando ativação';
+      polyphonyCount.textContent = String(activeSources);
+      unlockAudioBtn.textContent = audioReady ? 'Áudio pronto' : 'Ativar áudio profissional';
+    }
+
+    function updatePartBadges() {
+      partButtons.forEach(button => {
+        const part = button.dataset.part;
+        const badge = button.querySelector('.key-badge');
+        badge.textContent = keyMapping[part] || '—';
+        button.classList.toggle('armed', assignMode && selectedPart === part);
+      });
+    }
+
+    function renderMappingList() {
+      mappingList.innerHTML = '';
+      Object.entries(drumConfig).forEach(([part, cfg]) => {
+        const item = document.createElement('div');
+        item.className = 'mapping-item';
+        item.innerHTML = `<strong>${cfg.label}</strong><code>${keyMapping[part] || '—'}</code>`;
+        mappingList.appendChild(item);
+      });
+    }
+
+    function renderKeyboardGrid() {
+      keyboardGrid.innerHTML = '';
+      suggestedKeys.forEach(key => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'key-chip';
+        btn.textContent = key;
+        if (selectedPart && keyMapping[selectedPart] === key) btn.classList.add('selected');
+        btn.addEventListener('click', () => {
+          if (!assignMode || !selectedPart) return;
+          assignKeyToSelectedPart(key);
+        });
+        keyboardGrid.appendChild(btn);
+      });
+    }
+
+    function setMasterVolumeLabel() {
+      masterVolumeLabel.textContent = `${masterVolume.value}%`;
+      if (masterGain) {
+        masterGain.gain.setValueAtTime(Number(masterVolume.value) / 100, audioContext.currentTime);
+      }
+    }
+
+    function selectPart(part) {
+      selectedPart = part;
+      const cfg = drumConfig[part];
+
+      partButtons.forEach(button => button.classList.toggle('active', button.dataset.part === part));
+      selectedPieceName.textContent = cfg.label;
+      selectedSoundName.textContent = `Arquivo atual: ${cfg.sound}`;
+      currentKeyBadge.textContent = keyMapping[part] || 'Sem tecla';
+      selectionStatus.textContent = assignMode ? `Pressione uma tecla para ${cfg.label}` : `${cfg.label} selecionado`;
+
+      renderKeyboardGrid();
+      updateAssignButton();
+      updatePartBadges();
+    }
+
+    function assignKeyToSelectedPart(key) {
+      if (!selectedPart) return;
+      const normalized = normalizeKey(key);
+      if (!normalized) return;
+
+      const existingPart = findPartByKey(normalized);
+      if (existingPart && existingPart !== selectedPart) {
+        keyMapping[existingPart] = '';
+      }
+
+      keyMapping[selectedPart] = normalized;
+      assignMode = false;
+      saveMappings();
+      updateAllUI();
+      selectionStatus.textContent = `${drumConfig[selectedPart].label} configurado em ${normalized}`;
+    }
+
+    async function ensureAudioContext() {
+      if (!audioContext) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) {
+          alert('Seu navegador não suporta Web Audio API.');
+          return false;
+        }
+        audioContext = new AudioContextClass({ latencyHint: 'interactive' });
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = Number(masterVolume.value) / 100;
+        masterGain.connect(audioContext.destination);
+      }
+
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+      }
+
+      audioReady = true;
+      updateAudioUI();
+      return true;
+    }
+
+    async function loadBufferForPart(part) {
+      if (audioBuffers.has(part)) return audioBuffers.get(part);
+      const cfg = drumConfig[part];
+      const response = await fetch(cfg.sound);
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+      audioBuffers.set(part, buffer);
+      return buffer;
+    }
+
+    function animatePart(part) {
+      const button = document.querySelector(`.drum-part[data-part="${part}"]`);
+      if (!button) return;
+      button.classList.remove('playing');
+      void button.offsetWidth;
+      button.classList.add('playing');
+      setTimeout(() => button.classList.remove('playing'), 130);
+    }
+
+    async function playPartSound(part) {
+      const ok = await ensureAudioContext();
+      if (!ok) return;
+
+      try {
+        const buffer = await loadBufferForPart(part);
+        const source = audioContext.createBufferSource();
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 1;
+
+        source.buffer = buffer;
+        source.connect(gainNode);
+        gainNode.connect(masterGain);
+
+        activeSources += 1;
+        updateAudioUI();
+        lastTriggered.textContent = drumConfig[part].label;
+        animatePart(part);
+
+        source.onended = () => {
+          activeSources = Math.max(0, activeSources - 1);
+          updateAudioUI();
+          source.disconnect();
+          gainNode.disconnect();
+        };
+
+        source.start(0);
+      } catch (error) {
+        console.warn(`Falha ao tocar ${drumConfig[part].sound}`, error);
+        selectionStatus.textContent = `Não foi possível carregar ${drumConfig[part].sound}`;
+      }
+    }
+
+    async function preloadAllSounds() {
+      const ok = await ensureAudioContext();
+      if (!ok) return;
+      const parts = Object.keys(drumConfig);
+      for (const part of parts) {
+        try {
+          await loadBufferForPart(part);
+        } catch (error) {
+          console.warn(`Falha no preload de ${part}`, error);
+        }
+      }
+      selectionStatus.textContent = 'Sons preparados para baixa latência';
+    }
+
+    function resetMappings() {
+      keyMapping = buildDefaultMappings();
+      assignMode = false;
+      saveMappings();
+      updateAllUI();
+      selectionStatus.textContent = 'Mapeamento resetado';
+    }
+
+    function updateAllUI() {
+      updatePartBadges();
+      renderKeyboardGrid();
+      renderMappingList();
+      setMasterVolumeLabel();
+      updateAssignButton();
+      updateAudioUI();
+      if (selectedPart) {
+        currentKeyBadge.textContent = keyMapping[selectedPart] || 'Sem tecla';
+      }
+    }
+
+    partButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        selectPart(button.dataset.part);
+        await ensureAudioContext();
+      });
+
+      button.addEventListener('dblclick', async () => {
+        await playPartSound(button.dataset.part);
+      });
+    });
+
+    document.addEventListener('keydown', async event => {
+      const normalized = normalizeKey(event.key);
+      if (!normalized) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+      if (pressedKeys.has(normalized)) return;
+      pressedKeys.add(normalized);
+
+      if (assignMode && selectedPart) {
+        event.preventDefault();
+        assignKeyToSelectedPart(normalized);
+        return;
+      }
+
+      const matchedPart = findPartByKey(normalized);
+      if (matchedPart) {
+        event.preventDefault();
+        await playPartSound(matchedPart);
+      }
+    });
+
+    document.addEventListener('keyup', event => {
+      const normalized = normalizeKey(event.key);
+      pressedKeys.delete(normalized);
+    });
+
+    armKeyAssignBtn.addEventListener('click', () => {
+      if (!selectedPart) {
+        selectionStatus.textContent = 'Selecione uma peça antes de atribuir uma tecla';
+        return;
+      }
+      assignMode = true;
+      selectionStatus.textContent = `Pressione uma tecla para ${drumConfig[selectedPart].label}`;
+      updateAllUI();
+    });
+
+    unlockAudioBtn.addEventListener('click', async () => {
+      const ok = await ensureAudioContext();
+      if (ok) {
+        await preloadAllSounds();
+      }
+    });
+
+    masterVolume.addEventListener('input', setMasterVolumeLabel);
+    saveMappingsBtn.addEventListener('click', saveMappings);
+    resetMappingsBtn.addEventListener('click', resetMappings);
+
+    updateAllUI();
+    selectPart('snare');
+  </script>
+</body>
+</html>
