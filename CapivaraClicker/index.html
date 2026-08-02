@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Capivara Clicker</title>
+
+<style>
+body{
+    margin:0;
+    background:#202124;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+
+h1{
+    margin-top:20px;
+}
+
+#capivara{
+    font-size:180px;
+    cursor:pointer;
+    user-select:none;
+    transition:.1s;
+}
+
+#capivara:active{
+    transform:scale(.9);
+}
+
+button{
+    padding:10px 20px;
+    margin:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.painel{
+    width:350px;
+    margin:auto;
+    background:#303134;
+    padding:15px;
+    border-radius:10px;
+}
+  button{
+    width:100%;
+    padding:14px;
+    margin-top:12px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(180deg,#6dbb63,#4d8d46);
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+    box-shadow:0 5px 12px rgba(0,0,0,.25);
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+button:disabled{
+    background:#666;
+    cursor:not-allowed;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🦫 Capivara Clicker</h1>
+
+<h2>Moedas: <span id="coins">0</span></h2>
+
+<div id="capivara">🦫</div>
+
+<div class="painel">
+
+<p>Clicks por clique: <span id="clickPower">1</span></p>
+
+<p>Auto Clickers: <span id="autoClickers">0</span></p>
+
+<button onclick="comprarClick()">
+Comprar +1 Click
+(<span id="precoClick"></span>)
+</button>
+
+<br>
+
+<button onclick="comprarAuto()">
+Comprar AutoClicker
+(<span id="precoAuto"></span>)
+</button>
+
+</div>
+
+<script>
+
+let jogo={
+    moedas:0,
+    clickPower:1,
+    autoClickers:0,
+    precoClick:20,
+    precoAuto:100
+};
+
+function salvar(){
+    localStorage.setItem("capivaraClicker",JSON.stringify(jogo));
+}
+
+function carregar(){
+
+    let save=localStorage.getItem("capivaraClicker");
+
+    if(save){
+        jogo=JSON.parse(save);
+    }
+
+    atualizarTela();
+}
+
+function atualizarTela(){
+
+    coins.innerText=Math.floor(jogo.moedas);
+
+    clickPower.innerText=jogo.clickPower;
+
+    autoClickers.innerText=jogo.autoClickers;
+
+    precoClick.innerText=jogo.precoClick;
+
+    precoAuto.innerText=jogo.precoAuto;
+
+}
+
+capivara.onclick=function(){
+
+    jogo.moedas+=jogo.clickPower;
+
+    atualizarTela();
+
+    salvar();
+
+}
+
+function comprarClick(){
+
+    if(jogo.moedas<jogo.precoClick)
+        return;
+
+    jogo.moedas-=jogo.precoClick;
+
+    jogo.clickPower++;
+
+    jogo.precoClick=Math.floor(jogo.precoClick*1.6);
+
+    atualizarTela();
+
+    salvar();
+
+}
+
+function comprarAuto(){
+
+    if(jogo.moedas<jogo.precoAuto)
+        return;
+
+    jogo.moedas-=jogo.precoAuto;
+
+    jogo.autoClickers++;
+
+    jogo.precoAuto=Math.floor(jogo.precoAuto*2);
+
+    atualizarTela();
+
+    salvar();
+
+}
+
+setInterval(function(){
+
+    if(jogo.autoClickers>0){
+
+        jogo.moedas+=jogo.autoClickers*jogo.clickPower;
+
+        atualizarTela();
+
+        salvar();
+
+    }
+
+},1000); //1 segundo
+
+carregar();
+
+</script>
+
+</body>
+</html>
