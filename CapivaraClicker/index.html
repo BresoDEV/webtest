@@ -1,216 +1,738 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta charset="UTF-8">
-<title>Capivara Clicker</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171916">
+    <title>Capivara Clicker</title>
 
-<style>
-    * {
-  -webkit-tap-highlight-color: transparent; /* Remove o flash azul no toque */
-  -webkit-touch-callout: none;             /* Remove menu de toque (iOS) */
-  user-select: none;                       /* Impede seleção de texto acidental (opcional) */
-  -webkit-user-select: none;               /* Compatibilidade com WebKit */
-}
-body{
-    margin:0;
-    background:#202124;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-}
+    <style>
+        :root {
+            --bg: #151714;
+            --bg-2: #1b1e19;
+            --panel: #232720;
+            --panel-2: #2b3028;
+            --border: rgba(255,255,255,.08);
+            --text: #f5f3ea;
+            --muted: #aaa99f;
+            --green: #739d62;
+            --green-2: #557b48;
+            --brown: #9b7355;
+            --brown-2: #6f4f3a;
+            --gold: #e3b85b;
+            --danger: #a85f57;
+            --shadow: 0 18px 55px rgba(0,0,0,.32);
+        }
 
-h1{
-    margin-top:20px;
-}
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-#capivara{
-    font-size:180px;
-    cursor:pointer;
-    user-select:none;
-    transition:.1s;
-}
+        html, body {
+            min-height: 100%;
+        }
 
-#capivara:active{
-    transform:scale(.9);
-}
+        body {
+            margin: 0;
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 50% -20%, rgba(115,157,98,.18), transparent 36%),
+                linear-gradient(180deg, var(--bg-2), var(--bg));
+        }
 
-button{
-    padding:10px 20px;
-    margin:8px;
-    cursor:pointer;
-    font-size:16px;
-}
+        button {
+            font: inherit;
+        }
 
-.painel{
-    width:350px;
-    margin:auto;
-    background:#303134;
-    padding:15px;
-    border-radius:10px;
-}
-  button{
-    width:100%;
-    padding:14px;
-    margin-top:12px;
-    border:none;
-    border-radius:14px;
-    background:linear-gradient(180deg,#6dbb63,#4d8d46);
-    color:white;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
-    box-shadow:0 5px 12px rgba(0,0,0,.25);
-}
+        .app {
+            width: min(100%, 560px);
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 24px 18px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
 
-button:hover{
-    transform:translateY(-2px);
-}
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
 
-button:active{
-    transform:scale(.97);
-}
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
 
-button:disabled{
-    background:#666;
-    cursor:not-allowed;
-}
-</style>
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,.04);
+            box-shadow: inset 0 1px rgba(255,255,255,.04);
+            font-size: 22px;
+        }
 
+        .brand h1 {
+            margin: 0;
+            font-size: clamp(20px, 5vw, 26px);
+            line-height: 1;
+            letter-spacing: -.6px;
+        }
+
+        .brand p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: 24px 20px 22px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(227,184,91,.09), transparent 34%),
+                linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+            box-shadow: var(--shadow);
+        }
+
+        .coin-label {
+            margin: 0 0 3px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+        }
+
+        .coins {
+            margin: 0;
+            text-align: center;
+            color: var(--gold);
+            font-size: clamp(38px, 11vw, 58px);
+            line-height: 1.08;
+            letter-spacing: -2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .coin-subtitle {
+            margin: 7px 0 12px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .capivara-wrap {
+            position: relative;
+            width: 230px;
+            height: 230px;
+            margin: 4px auto 2px;
+            display: grid;
+            place-items: center;
+        }
+
+        .capivara-glow {
+            position: absolute;
+            width: 175px;
+            height: 175px;
+            border-radius: 50%;
+            background: rgba(155,115,85,.12);
+            filter: blur(1px);
+            transition: transform .15s ease, background .15s ease;
+        }
+
+        #capivara {
+            position: relative;
+            z-index: 2;
+            width: 182px;
+            height: 182px;
+            border: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 112px;
+            line-height: 1;
+            color: inherit;
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.07), rgba(0,0,0,.05)),
+                #302b24;
+            box-shadow:
+                0 18px 34px rgba(0,0,0,.32),
+                inset 0 1px rgba(255,255,255,.08),
+                inset 0 -8px 20px rgba(0,0,0,.1);
+            transition: transform .08s ease, box-shadow .15s ease;
+            touch-action: manipulation;
+        }
+
+        #capivara:hover {
+            box-shadow:
+                0 20px 40px rgba(0,0,0,.38),
+                inset 0 1px rgba(255,255,255,.09),
+                inset 0 -8px 20px rgba(0,0,0,.1);
+        }
+
+        #capivara:active,
+        #capivara.clicked {
+            transform: scale(.92);
+        }
+
+        #capivara:focus-visible {
+            outline: 3px solid rgba(115,157,98,.7);
+            outline-offset: 5px;
+        }
+
+        .click-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: -5px;
+        }
+
+        .floating-number {
+            position: absolute;
+            z-index: 5;
+            left: 50%;
+            top: 48%;
+            pointer-events: none;
+            color: #f5d98e;
+            font-size: 19px;
+            font-weight: 900;
+            text-shadow: 0 3px 10px rgba(0,0,0,.45);
+            animation: floatUp .72s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 4px) scale(.85);
+            }
+            15% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -62px) scale(1.08);
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: rgba(255,255,255,.028);
+        }
+
+        .stat-label {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .75px;
+        }
+
+        .stat-value {
+            display: block;
+            margin-top: 5px;
+            font-size: 20px;
+            font-weight: 850;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 16px;
+            background: var(--panel);
+            box-shadow: 0 14px 35px rgba(0,0,0,.2);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .panel-title h2 {
+            margin: 0;
+            font-size: 16px;
+            letter-spacing: -.2px;
+        }
+
+        .panel-title span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .upgrade-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .upgrade {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 17px;
+            padding: 14px;
+            color: var(--text);
+            background: var(--panel-2);
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: 44px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            transition: transform .14s ease, border-color .14s ease, background .14s ease, opacity .14s ease;
+        }
+
+        .upgrade:not(:disabled):hover {
+            transform: translateY(-2px);
+            border-color: rgba(115,157,98,.35);
+            background: #30362c;
+        }
+
+        .upgrade:not(:disabled):active {
+            transform: scale(.985);
+        }
+
+        .upgrade:disabled {
+            cursor: not-allowed;
+            opacity: .46;
+        }
+
+        .upgrade-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,.05);
+            font-size: 21px;
+        }
+
+        .upgrade-info strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .upgrade-info small {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .price {
+            text-align: right;
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .footer {
+            padding: 2px 4px 0;
+            color: #777a72;
+            text-align: center;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 420px) {
+            .app {
+                padding-inline: 12px;
+            }
+
+            .hero {
+                padding-inline: 14px;
+            }
+
+            .capivara-wrap {
+                width: 205px;
+                height: 205px;
+            }
+
+            #capivara {
+                width: 162px;
+                height: 162px;
+                font-size: 98px;
+            }
+
+            .upgrade {
+                grid-template-columns: 40px 1fr auto;
+                padding: 12px;
+                gap: 9px;
+            }
+
+            .upgrade-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <main class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-icon">&#127807;</div>
+                <div>
+                    <h1>Capivara Clicker</h1>
+                    <p>Clique, evolua e deixe as capivaras trabalharem.</p>
+                </div>
+            </div>
+        </header>
 
-<h1 onclick="muda()">🔥</h1><h1>Capivara Clicker</h1>
+        <section class="hero">
+            <p class="coin-label">Moedas</p>
+            <h2 class="coins" id="coins">0</h2>
+            <p class="coin-subtitle" id="incomeText">0 moedas por segundo</p>
 
-<h2>Moedas: <span id="coins">0</span></h2>
+            <div class="capivara-wrap" id="capivaraWrap">
+                <div class="capivara-glow"></div>
+                <button id="capivara" type="button" aria-label="Clicar na capivara">&#129451;</button>
+            </div>
 
-<div id="capivara">🐥</div>
+            <div class="click-hint">Toque na capivara para ganhar moedas</div>
+        </section>
 
-<div class="painel">
+        <section class="stats" aria-label="Estat&#237;sticas">
+            <div class="stat">
+                <span class="stat-label">Por clique</span>
+                <span class="stat-value" id="clickPower">1</span>
+            </div>
 
-<p>Clicks por clique: <span id="clickPower">1</span></p>
+            <div class="stat">
+                <span class="stat-label">Auto Clickers</span>
+                <span class="stat-value" id="autoClickers">0</span>
+            </div>
 
-<p>Auto Clickers: <span id="autoClickers">0</span></p>
+            <div class="stat">
+                <span class="stat-label">Multiplicador</span>
+                <span class="stat-value" id="multiplicador">x1</span>
+            </div>
 
-<button onclick="comprarClick()">
-Comprar +1 Click
-(<span id="precoClick"></span>)
-</button>
+            <div class="stat">
+                <span class="stat-label">Ganho real</span>
+                <span class="stat-value" id="ganhoReal">1</span>
+            </div>
+        </section>
 
-<br>
+        <section class="panel">
+            <div class="panel-title">
+                <h2>Melhorias</h2>
+                <span>Invista suas moedas</span>
+            </div>
 
-<button onclick="comprarAuto()">
-Comprar AutoClicker
-(<span id="precoAuto"></span>)
-</button>
+            <div class="upgrade-list">
+                <button class="upgrade" id="btnClick" type="button">
+                    <span class="upgrade-icon">&#128070;</span>
+                    <span class="upgrade-info">
+                        <strong>For&#231;a do clique</strong>
+                        <small>+1 moeda por clique</small>
+                    </span>
+                    <span class="price"><span id="precoClick">20</span> &#129689;</span>
+                </button>
 
-</div>
+                <button class="upgrade" id="btnAuto" type="button">
+                    <span class="upgrade-icon">&#9881;&#65039;</span>
+                    <span class="upgrade-info">
+                        <strong>Auto Clicker</strong>
+                        <small>Gera moedas automaticamente</small>
+                    </span>
+                    <span class="price"><span id="precoAuto">100</span> &#129689;</span>
+                </button>
 
-<script>
+                <button class="upgrade" id="btnMultiplicador" type="button">
+                    <span class="upgrade-icon">&#10006;&#65039;</span>
+                    <span class="upgrade-info">
+                        <strong>Multiplicador</strong>
+                        <small>Dobra todos os ganhos: x2, x4, x8...</small>
+                    </span>
+                    <span class="price"><span id="precoMultiplicador">1.000</span> &#129689;</span>
+                </button>
+            </div>
+        </section>
 
-let jogo={
-    moedas:0,
-    clickPower:1,
-    autoClickers:0,
-    precoClick:20,
-    precoAuto:100
-};
+        <div class="footer">
+            O progresso &#233; salvo automaticamente a cada 10 segundos.<br>
+            Multiplicadores dobram os ganhos dos cliques e dos Auto Clickers.
+        </div>
+    </main>
 
-function salvar(){
-    localStorage.setItem("capivaraClicker",JSON.stringify(jogo));
-}
+    <script>
+        "use strict";
 
-function carregar(){
+        /*
+         * O jogo original executava o auto clicker em um setInterval de 1 ms
+         * e chamava localStorage nesse mesmo loop.
+         *
+         * Aqui o ganho r\u00E1pido \u00E9 calculado pelo tempo realmente decorrido,
+         * usando requestAnimationFrame. Assim mantemos a velocidade equivalente
+         * ao loop de 1 ms sem criar centenas/milhares de callbacks por segundo.
+         *
+         * O salvamento autom\u00E1tico acontece separadamente, a cada 10 segundos.
+         */
 
-    let save=localStorage.getItem("capivaraClicker");
+        const STORAGE_KEY = "capivaraClicker";
+        const SAVE_INTERVAL = 10000;
 
-    if(save){
-        jogo=JSON.parse(save);
-    }
+        const estadoPadrao = {
+            moedas: 0,
+            clickPower: 1,
+            autoClickers: 0,
+            multiplicador: 1,
+            precoClick: 20,
+            precoAuto: 100,
+            precoMultiplicador: 1000
+        };
 
-    atualizarTela();
-}
+        let jogo = { ...estadoPadrao };
+        let ultimoFrame = performance.now();
+        let ultimaAtualizacaoVisual = 0;
 
-function atualizarTela(){
+        const el = {
+            coins: document.getElementById("coins"),
+            clickPower: document.getElementById("clickPower"),
+            autoClickers: document.getElementById("autoClickers"),
+            multiplicador: document.getElementById("multiplicador"),
+            ganhoReal: document.getElementById("ganhoReal"),
+            precoClick: document.getElementById("precoClick"),
+            precoAuto: document.getElementById("precoAuto"),
+            precoMultiplicador: document.getElementById("precoMultiplicador"),
+            incomeText: document.getElementById("incomeText"),
+            capivara: document.getElementById("capivara"),
+            capivaraWrap: document.getElementById("capivaraWrap"),
+            btnClick: document.getElementById("btnClick"),
+            btnAuto: document.getElementById("btnAuto"),
+            btnMultiplicador: document.getElementById("btnMultiplicador")
+        };
 
-    coins.innerText=Math.floor(jogo.moedas);
+        function numeroValido(valor, fallback) {
+            const n = Number(valor);
+            return Number.isFinite(n) && n >= 0 ? n : fallback;
+        }
 
-    clickPower.innerText=jogo.clickPower;
+        function normalizarEstado() {
+            jogo.moedas = numeroValido(jogo.moedas, 0);
+            jogo.clickPower = Math.max(1, numeroValido(jogo.clickPower, 1));
+            jogo.autoClickers = numeroValido(jogo.autoClickers, 0);
+            jogo.multiplicador = Math.max(1, numeroValido(jogo.multiplicador, 1));
+            jogo.precoClick = Math.max(1, numeroValido(jogo.precoClick, 20));
+            jogo.precoAuto = Math.max(1, numeroValido(jogo.precoAuto, 100));
+            jogo.precoMultiplicador = Math.max(1, numeroValido(jogo.precoMultiplicador, 1000));
+        }
 
-    autoClickers.innerText=jogo.autoClickers;
+        function carregar() {
+            try {
+                const save = localStorage.getItem(STORAGE_KEY);
 
-    precoClick.innerText=jogo.precoClick;
+                if (save) {
+                    const dados = JSON.parse(save);
 
-    precoAuto.innerText=jogo.precoAuto;
+                    jogo = {
+                        moedas: numeroValido(dados.moedas, estadoPadrao.moedas),
+                        clickPower: Math.max(1, numeroValido(dados.clickPower, estadoPadrao.clickPower)),
+                        autoClickers: numeroValido(dados.autoClickers, estadoPadrao.autoClickers),
+                        multiplicador: Math.max(1, numeroValido(dados.multiplicador, estadoPadrao.multiplicador)),
+                        precoClick: Math.max(1, numeroValido(dados.precoClick, estadoPadrao.precoClick)),
+                        precoAuto: Math.max(1, numeroValido(dados.precoAuto, estadoPadrao.precoAuto)),
+                        precoMultiplicador: Math.max(1, numeroValido(dados.precoMultiplicador, estadoPadrao.precoMultiplicador))
+                    };
+                }
+            } catch (erro) {
+                console.warn("N\u00E3o foi poss\u00EDvel carregar o save:", erro);
+                jogo = { ...estadoPadrao };
+            }
 
-}
+            normalizarEstado();
+            atualizarTela(true);
+        }
 
-capivara.onclick=function(){
+        function salvar() {
+            try {
+                normalizarEstado();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(jogo));
+            } catch (erro) {
+                console.warn("N\u00E3o foi poss\u00EDvel salvar o progresso:", erro);
+            }
+        }
 
-    jogo.moedas+=jogo.clickPower;
+        function formatarNumero(valor) {
+            if (!Number.isFinite(valor)) return "0";
 
-    atualizarTela();
+            return Math.floor(valor).toLocaleString("pt-BR");
+        }
 
-    salvar();
+        function atualizarTela(forcar = false) {
+            const agora = performance.now();
 
-}
+            // Evita atualizar o DOM 1000x/segundo. ~30 FPS j\u00E1 fica totalmente fluido.
+            if (!forcar && agora - ultimaAtualizacaoVisual < 33) return;
+            ultimaAtualizacaoVisual = agora;
 
-function comprarClick(){
+            el.coins.textContent = formatarNumero(jogo.moedas);
+            el.clickPower.textContent = formatarNumero(jogo.clickPower);
+            el.autoClickers.textContent = formatarNumero(jogo.autoClickers);
+            el.multiplicador.textContent = "x" + formatarNumero(jogo.multiplicador);
+            el.ganhoReal.textContent = formatarNumero(jogo.clickPower * jogo.multiplicador);
+            el.precoClick.textContent = formatarNumero(jogo.precoClick);
+            el.precoAuto.textContent = formatarNumero(jogo.precoAuto);
+            el.precoMultiplicador.textContent = formatarNumero(jogo.precoMultiplicador);
 
-    if(jogo.moedas<jogo.precoClick)
-        return;
+            /*
+             * Como o jogo original concedia:
+             * autoClickers * clickPower A CADA 1 ms,
+             * o equivalente por segundo \u00E9 multiplicar por 1000.
+             */
+            const ganhoPorSegundo = jogo.autoClickers * jogo.clickPower * jogo.multiplicador * 1000;
+            el.incomeText.textContent =
+                formatarNumero(ganhoPorSegundo) +
+                (ganhoPorSegundo === 1 ? " moeda por segundo" : " moedas por segundo");
 
-    jogo.moedas-=jogo.precoClick;
+            el.btnClick.disabled = jogo.moedas < jogo.precoClick;
+            el.btnAuto.disabled = jogo.moedas < jogo.precoAuto;
+            el.btnMultiplicador.disabled = jogo.moedas < jogo.precoMultiplicador;
+        }
 
-    jogo.clickPower++;
+        function mostrarGanho(valor) {
+            const numero = document.createElement("span");
+            numero.className = "floating-number";
+            numero.textContent = "+" + formatarNumero(valor);
 
-    jogo.precoClick=Math.floor(jogo.precoClick*1.6);
+            // Pequena varia\u00E7\u00E3o horizontal para os n\u00FAmeros n\u00E3o nascerem todos iguais.
+            numero.style.marginLeft = ((Math.random() * 50) - 25) + "px";
 
-    atualizarTela();
+            el.capivaraWrap.appendChild(numero);
+            numero.addEventListener("animationend", () => numero.remove(), { once: true });
+        }
 
-    salvar();
+        function clicarCapivara() {
+            jogo.clickPower = Math.max(1, numeroValido(jogo.clickPower, 1));
+            jogo.multiplicador = Math.max(1, numeroValido(jogo.multiplicador, 1));
 
-}
+            const ganho = jogo.clickPower * jogo.multiplicador;
+            jogo.moedas += ganho;
+            mostrarGanho(ganho);
 
-function comprarAuto(){
+            el.capivara.classList.remove("clicked");
+            void el.capivara.offsetWidth;
+            el.capivara.classList.add("clicked");
 
-    if(jogo.moedas<jogo.precoAuto)
-        return;
+            setTimeout(() => el.capivara.classList.remove("clicked"), 90);
+            atualizarTela(true);
 
-    jogo.moedas-=jogo.precoAuto;
+            // IMPORTANTE: n\u00E3o salva aqui.
+            // O autosave \u00E9 respons\u00E1vel pela grava\u00E7\u00E3o peri\u00F3dica.
+        }
 
-    jogo.autoClickers++;
+        function comprarClick() {
+            if (jogo.moedas < jogo.precoClick) return;
 
-    jogo.precoAuto=Math.floor(jogo.precoAuto*2);
+            jogo.moedas -= jogo.precoClick;
+            jogo.clickPower++;
+            jogo.precoClick = Math.floor(jogo.precoClick * 1.6);
 
-    atualizarTela();
+            atualizarTela(true);
 
-    salvar();
+            // N\u00E3o salva a cada compra.
+        }
 
-}
+        function comprarAuto() {
+            if (jogo.moedas < jogo.precoAuto) return;
 
-    var l = 1000;
+            jogo.moedas -= jogo.precoAuto;
+            jogo.autoClickers++;
+            jogo.precoAuto = Math.floor(jogo.precoAuto * 2);
 
-    function muda(){l=1}
+            atualizarTela(true);
 
-setInterval(function(){
+            // N\u00E3o salva a cada compra.
+        }
 
-    if(jogo.autoClickers>0){
+        function comprarMultiplicador() {
+            if (jogo.moedas < jogo.precoMultiplicador) return;
 
-        jogo.moedas+=jogo.autoClickers*jogo.clickPower;
+            jogo.moedas -= jogo.precoMultiplicador;
+            jogo.multiplicador *= 2;
+            jogo.precoMultiplicador = Math.floor(jogo.precoMultiplicador * 4);
 
-        atualizarTela();
+            atualizarTela(true);
 
-        salvar();
+            // O multiplicador dobra todos os ganhos, mas o save continua periodico.
+        }
 
-    }
+        function loop(agora) {
+            let deltaMs = agora - ultimoFrame;
+            ultimoFrame = agora;
 
-},1); //1 segundo
+            // Evita um salto enorme ao voltar para a aba depois de muito tempo.
+            // O m\u00E1ximo contabilizado de uma vez \u00E9 1 segundo.
+            deltaMs = Math.min(deltaMs, 1000);
 
-carregar();
+            if (jogo.autoClickers > 0) {
+                /*
+                 * Mant\u00E9m a matem\u00E1tica do setInterval(..., 1):
+                 * ganho por milissegundo = autoClickers * clickPower
+                 */
+                jogo.moedas += jogo.autoClickers * jogo.clickPower * jogo.multiplicador * deltaMs;
+                atualizarTela();
+            }
 
-</script>
+            requestAnimationFrame(loop);
+        }
 
+        el.capivara.addEventListener("click", clicarCapivara);
+        el.btnClick.addEventListener("click", comprarClick);
+        el.btnAuto.addEventListener("click", comprarAuto);
+        el.btnMultiplicador.addEventListener("click", comprarMultiplicador);
+
+        // \u00DANICO autosave peri\u00F3dico: uma grava\u00E7\u00E3o a cada 10 segundos.
+        setInterval(salvar, SAVE_INTERVAL);
+/*
+         * Save final ao sair/fechar a p\u00E1gina.
+         * Isso n\u00E3o roda dentro do loop do jogo e evita perder os \u00FAltimos segundos.
+         */
+        window.addEventListener("pagehide", salvar);
+
+        carregar();
+        requestAnimationFrame(loop);
+    </script>
 </body>
 </html>
