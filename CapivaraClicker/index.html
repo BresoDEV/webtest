@@ -492,7 +492,7 @@
 
         <div class="footer">
             O progresso &#233; salvo automaticamente a cada 10 segundos.<br>
-            Multiplicadores dobram os ganhos dos cliques e dos Auto Clickers.
+            Auto Clickers geram moedas uma vez por segundo.
         </div>
     </main>
 
@@ -500,14 +500,11 @@
         "use strict";
 
         /*
-         * O jogo original executava o auto clicker em um setInterval de 1 ms
-         * e chamava localStorage nesse mesmo loop.
+         * O Auto Clicker agora funciona em um tick real de 1 segundo.
+         * A cada segundo ele adiciona:
+         * autoClickers x clickPower x multiplicador.
          *
-         * Aqui o ganho r\u00E1pido \u00E9 calculado pelo tempo realmente decorrido,
-         * usando requestAnimationFrame. Assim mantemos a velocidade equivalente
-         * ao loop de 1 ms sem criar centenas/milhares de callbacks por segundo.
-         *
-         * O salvamento autom\u00E1tico acontece separadamente, a cada 10 segundos.
+         * O salvamento automatico continua separado, a cada 10 segundos.
          */
 
         const STORAGE_KEY = "capivaraClicker";
@@ -524,8 +521,6 @@
         };
 
         let jogo = { ...estadoPadrao };
-        let ultimoFrame = performance.now();
-        let ultimaAtualizacaoVisual = 0;
 
         const el = {
             coins: document.getElementById("coins"),
@@ -582,7 +577,7 @@
             }
 
             normalizarEstado();
-            atualizarTela(true);
+            atualizarTela();
         }
 
         function salvar() {
@@ -600,12 +595,7 @@
             return Math.floor(valor).toLocaleString("pt-BR");
         }
 
-        function atualizarTela(forcar = false) {
-            const agora = performance.now();
-
-            // Evita atualizar o DOM 1000x/segundo. ~30 FPS j\u00E1 fica totalmente fluido.
-            if (!forcar && agora - ultimaAtualizacaoVisual < 33) return;
-            ultimaAtualizacaoVisual = agora;
+        function atualizarTela() {
 
             el.coins.textContent = formatarNumero(jogo.moedas);
             el.clickPower.textContent = formatarNumero(jogo.clickPower);
@@ -616,12 +606,7 @@
             el.precoAuto.textContent = formatarNumero(jogo.precoAuto);
             el.precoMultiplicador.textContent = formatarNumero(jogo.precoMultiplicador);
 
-            /*
-             * Como o jogo original concedia:
-             * autoClickers * clickPower A CADA 1 ms,
-             * o equivalente por segundo \u00E9 multiplicar por 1000.
-             */
-            const ganhoPorSegundo = jogo.autoClickers * jogo.clickPower * jogo.multiplicador * 1000;
+            const ganhoPorSegundo = jogo.autoClickers * jogo.clickPower * jogo.multiplicador;
             el.incomeText.textContent =
                 formatarNumero(ganhoPorSegundo) +
                 (ganhoPorSegundo === 1 ? " moeda por segundo" : " moedas por segundo");
@@ -656,7 +641,7 @@
             el.capivara.classList.add("clicked");
 
             setTimeout(() => el.capivara.classList.remove("clicked"), 90);
-            atualizarTela(true);
+            atualizarTela();
 
             // IMPORTANTE: n\u00E3o salva aqui.
             // O autosave \u00E9 respons\u00E1vel pela grava\u00E7\u00E3o peri\u00F3dica.
@@ -669,7 +654,7 @@
             jogo.clickPower++;
             jogo.precoClick = Math.floor(jogo.precoClick * 1.6);
 
-            atualizarTela(true);
+            atualizarTela();
 
             // N\u00E3o salva a cada compra.
         }
@@ -681,7 +666,7 @@
             jogo.autoClickers++;
             jogo.precoAuto = Math.floor(jogo.precoAuto * 2);
 
-            atualizarTela(true);
+            atualizarTela();
 
             // N\u00E3o salva a cada compra.
         }
@@ -693,29 +678,17 @@
             jogo.multiplicador *= 2;
             jogo.precoMultiplicador = Math.floor(jogo.precoMultiplicador * 4);
 
-            atualizarTela(true);
+            atualizarTela();
 
             // O multiplicador dobra todos os ganhos, mas o save continua periodico.
         }
 
-        function loop(agora) {
-            let deltaMs = agora - ultimoFrame;
-            ultimoFrame = agora;
+        function executarAutoClick() {
+            if (jogo.autoClickers <= 0) return;
 
-            // Evita um salto enorme ao voltar para a aba depois de muito tempo.
-            // O m\u00E1ximo contabilizado de uma vez \u00E9 1 segundo.
-            deltaMs = Math.min(deltaMs, 1000);
-
-            if (jogo.autoClickers > 0) {
-                /*
-                 * Mant\u00E9m a matem\u00E1tica do setInterval(..., 1):
-                 * ganho por milissegundo = autoClickers * clickPower
-                 */
-                jogo.moedas += jogo.autoClickers * jogo.clickPower * jogo.multiplicador * deltaMs;
-                atualizarTela();
-            }
-
-            requestAnimationFrame(loop);
+            const ganhoAutomatico = jogo.autoClickers * jogo.clickPower * jogo.multiplicador;
+            jogo.moedas += ganhoAutomatico;
+            atualizarTela();
         }
 
         el.capivara.addEventListener("click", clicarCapivara);
@@ -723,7 +696,10 @@
         el.btnAuto.addEventListener("click", comprarAuto);
         el.btnMultiplicador.addEventListener("click", comprarMultiplicador);
 
-        // \u00DANICO autosave peri\u00F3dico: uma grava\u00E7\u00E3o a cada 10 segundos.
+        // Auto Clicker: um ganho a cada 1 segundo.
+        setInterval(executarAutoClick, 1000);
+
+        // Autosave: uma gravacao a cada 10 segundos.
         setInterval(salvar, SAVE_INTERVAL);
 /*
          * Save final ao sair/fechar a p\u00E1gina.
@@ -732,7 +708,6 @@
         window.addEventListener("pagehide", salvar);
 
         carregar();
-        requestAnimationFrame(loop);
     </script>
 </body>
 </html>
